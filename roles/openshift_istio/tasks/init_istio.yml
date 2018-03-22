@@ -1,0 +1,29 @@
+- name: Initialise prefix
+  set_fact:
+    openshift_istio_image_prefix: "{{ openshift_istio_image_dict[openshift_deployment_type]['prefix'] }}"
+  when: openshift_istio_image_prefix is not defined
+
+- name: Initialise suffix
+  set_fact:
+    openshift_istio_image_suffix: "{{ openshift_istio_image_dict[openshift_deployment_type]['suffix'] }}"
+  when: openshift_istio_image_suffix is not defined
+
+- name: Initialise version
+  set_fact:
+    openshift_istio_image_version: "{{ openshift_istio_image_dict[openshift_deployment_type]['version'] }}"
+  when: openshift_istio_image_version is not defined
+
+- name: Initialise namespace
+  set_fact:
+    openshift_istio_namespace: "{{ openshift_istio_image_dict[openshift_deployment_type]['namespace'] }}"
+  when: openshift_istio_namespace is not defined
+
+- name: Initialise Istio Image names
+  set_fact:
+    openshift_istio_image_names:
+      "docker.io/istio/istio-ca:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}istio-ca{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
+      "docker.io/istio/pilot:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}pilot{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
+      "docker.io/istio/mixer:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}mixer{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
+      "docker.io/istio/sidecar_injector:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}sidecar-injector{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
+      "docker.io/istio/proxy_init:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}proxy-init{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
+      "docker.io/istio/proxy:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}proxy{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"

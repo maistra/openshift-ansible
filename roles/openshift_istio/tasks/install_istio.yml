@@ -1,0 +1,18 @@
+---
+- name: Update images in the configuration files if not running community
+  include_tasks: modify_image_names.yml
+    image_names="{{ openshift_istio_image_names }}"
+  with_items: "{{ openshift_istio_yaml_configuration_files }}"
+  loop_control:
+    loop_var: configuration
+  when: not {{ openshift_istio_install_community }}
+
+- name: Create Istio components
+  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_auth_yaml }}"
+  ignore_errors: yes
+
+- name: Expose Istio ingress service
+  command: "{{ openshift_client_binary }} expose -n {{ openshift_istio_namespace }} svc istio-ingress"
+
+- name: Install sidecar injector
+  include_tasks: install_sidecar_injector.yml

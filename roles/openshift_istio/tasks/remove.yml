@@ -1,0 +1,5 @@
+---
+- name: Remove istio project
+  oc_project:
+    name: "{{ openshift_istio_namespace }}"
+    state: absent

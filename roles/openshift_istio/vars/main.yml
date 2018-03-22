@@ -1,0 +1,24 @@
+---
+
+openshift_istio_files: "roles/openshift_istio/files"
+
+openshift_istio_auth_yaml: "{{ openshift_istio_files }}/istio-auth.yaml"
+openshift_istio_sidecar_injector_yaml: "{{ openshift_istio_files }}/istio-sidecar-injector.yaml"
+openshift_istio_sidecar_injector_configmap_yaml: "{{ openshift_istio_files }}/istio-sidecar-injector-configmap-release.yaml"
+
+openshift_istio_sidecar_injector_server_key: "{{ openshift_istio_files}}/server-key.pem"
+openshift_istio_sidecar_injector_server_csr: "{{ openshift_istio_files}}/server.csr"
+openshift_istio_sidecar_injector_csr_conf: "{{ openshift_istio_files}}/csr.conf"
+openshift_istio_sidecar_injector_csr_yaml: "{{ openshift_istio_files}}/csr.yaml"
+openshift_istio_sidecar_injector_server_cert: "{{ openshift_istio_files}}/server-cert.pem"
+openshift_istio_sidecar_injector_secret: "sidecar-injector-certs"
+
+openshift_grafana_yaml: "{{ openshift_istio_files }}/grafana.yaml"
+openshift_prometheus_yaml: "{{ openshift_istio_files }}/prometheus.yaml"
+openshift_jaeger_yaml: "{{ openshift_istio_files }}/jaeger-all-in-one-template.yml"
+
+
+openshift_istio_yaml_configuration_files:
+  - "{{ openshift_istio_auth_yaml }}"
+  - "{{ openshift_istio_sidecar_injector_yaml }}"
+  - "{{ openshift_istio_sidecar_injector_configmap_yaml }}"

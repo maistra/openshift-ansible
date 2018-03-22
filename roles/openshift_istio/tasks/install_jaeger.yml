@@ -1,0 +1,3 @@
+---
+- name: Create jaeger components
+  shell: "{{ openshift_client_binary }} process -f {{ openshift_jaeger_yaml }} | {{ openshift_client_binary }} create -n {{ openshift_istio_namespace }} -f -"

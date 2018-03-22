@@ -1,0 +1,23 @@
+---
+- name: Ensure istio project exists
+  oc_project:
+    name: "{{ openshift_istio_namespace }}"
+    state: present
+
+- name: Ensure service accounts have the correct permissions
+  include_tasks: setup_service_account.yml
+  with_items: "{{ openshift_istio_service_accounts }} + {{ openshift_istio_additional_scc_service_accounts }}"
+  loop_control:
+    loop_var: service_account
+
+- name: Install Istio
+  include_tasks: install_istio.yml
+
+- name: Install Grafana
+  include_tasks: install_grafana.yml
+
+- name: Install Prometheus
+  include_tasks: install_prometheus.yml
+
+- name: Install Jaeger
+  include_tasks: install_jaeger.yml

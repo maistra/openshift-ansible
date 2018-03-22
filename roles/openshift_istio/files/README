@@ -1,0 +1,10 @@
+The files in this directory come from the Istio distribution, we make some minor (significant) changes during installation
+
+- istio-auth.yaml
+  This is the standard file, we will replace image names during installation depending on the options chosen
+
+- istio-sidecar-injector
+  This is the standard file, we will replace image names during installation depending on the options chosen
+
+- istio-sidecar-injector-configmap-release
+  This is the standard file, we will replace image names during installation depending on the options chosen.  We will also switch the default policy from enabled to disabled.

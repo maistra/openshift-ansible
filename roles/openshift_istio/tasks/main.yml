@@ -1,0 +1,13 @@
+---
+# do any asserts here
+
+- name: Initialise information
+  include_tasks: init_istio.yml
+
+- name: Install Istio
+  include_tasks: install.yml
+  when: openshift_istio_install
+
+- name: Remove Istio
+  include_tasks: remove.yml
+  when: not openshift_istio_install

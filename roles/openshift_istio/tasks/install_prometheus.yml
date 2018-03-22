@@ -1,0 +1,7 @@
+---
+- name: Create prometheus components
+  command: "{{ openshift_client_binary }} create -f {{ openshift_prometheus_yaml }}"
+  ignore_errors: yes
+
+- name: Expose prometheus service
+  command: "{{ openshift_client_binary }} expose -n {{ openshift_istio_namespace }} svc prometheus"

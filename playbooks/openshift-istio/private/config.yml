@@ -1,0 +1,40 @@
+---
+- name: Istio Install Checkpoint Start
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Set Istio install 'In Progress'
+    run_once: true
+    set_stats:
+      data:
+        installer_phase_istio:
+          status: "In Progress"
+          start: "{{ lookup('pipe', 'date +%Y%m%d%H%M%SZ') }}"
+
+- name: Define openshift_version is not already present
+  hosts: all
+  tasks:
+  - set_fact:
+      openshift_version: "{{ openshift_release[1:] }}"
+    when: openshift_version is not defined
+
+- name: Istio
+  hosts: all
+  tasks:
+  - debug: msg="{{ openshift_version }}"
+  - debug: msg="{{ openshift_version | version_compare('3.9', '>=') }}"
+  - import_role:
+      name: openshift_istio
+    when: openshift_version | version_compare('3.9', '>=')
+
+- name: Istio Install Checkpoint End
+  hosts: all
+  gather_facts: false
+  tasks:
+  - name: Set Istio install 'Complete'
+    run_once: true
+    set_stats:
+      data:
+        installer_phase_istio:
+          status: "Complete"
+          end: "{{ lookup('pipe', 'date +%Y%m%d%H%M%SZ') }}"

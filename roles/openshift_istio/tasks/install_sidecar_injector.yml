@@ -1,0 +1,81 @@
+---
+- name: Set the CSR name
+  set_fact:
+    openshift_istio_sidecar_csr: "{{ openshift_istio_sidecar_service }}.{{ openshift_istio_namespace }}"
+
+- name: Generate private key
+  command: openssl genrsa -out {{ openshift_istio_sidecar_injector_server_key }} 2048
+
+- name: Modify the CSR conf
+  blockinfile:
+    path: "{{ openshift_istio_sidecar_injector_csr_conf }}"
+    block: |
+      DNS.1 = {{ openshift_istio_sidecar_service }}
+      DNS.2 = {{ openshift_istio_sidecar_service }}.{{ openshift_istio_namespace }}
+      DNS.3 = {{ openshift_istio_sidecar_service }}.{{ openshift_istio_namespace }}.svc
+
+- name: Create CSR
+  command: openssl req -new -key {{ openshift_istio_sidecar_injector_server_key }} -subj /CN=istio-sidecar-injector.istio-system.svc -out {{ openshift_istio_sidecar_injector_server_csr }} -config {{ openshift_istio_sidecar_injector_csr_conf }}
+
+- name: Base64 CSR
+  shell: cat {{ openshift_istio_sidecar_injector_server_csr }} | base64 | tr -d '\n'
+  register: csr_base64
+
+- name: Update CSR_NAME in CSR yaml
+  lineinfile:
+    path: "{{ openshift_istio_sidecar_injector_csr_yaml }}"
+    regexp: '^  name: CSR_NAME'
+    line: '  name: {{ openshift_istio_sidecar_csr }}'
+
+- name: Update CSR_BASE64 in CSR yaml
+  lineinfile:
+    path: "{{ openshift_istio_sidecar_injector_csr_yaml }}"
+    regexp: '^  request: CSR_BASE64'
+    line: '  request: {{ csr_base64.stdout }}'
+
+- name: Create CSR
+  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_sidecar_injector_csr_yaml }}"
+
+- name: Approve CSR
+  command: "{{ openshift_client_binary }} adm certificate approve {{ openshift_istio_sidecar_csr }}"
+
+- name: Retrieve the server certificate
+  command: "{{ openshift_client_binary }} get csr {{ openshift_istio_sidecar_csr }} -o 'jsonpath={.status.certificate}'"
+  register: serverCert  
+
+- name: Create PEM for certificate
+  shell: echo "{{ serverCert.stdout }}" | openssl base64 -d -A -out {{ openshift_istio_sidecar_injector_server_cert }}
+
+- name: Create a secret containing the key.pem and cert.pem
+  oc_secret:
+    namespace: "{{ openshift_istio_namespace }}"
+    state: present
+    name: "{{ openshift_istio_sidecar_injector_secret }}"
+    force: True
+    files:
+    - name: key.pem
+      path: "{{ openshift_istio_sidecar_injector_server_key }}"
+    - name: cert.pem
+      path: "{{ openshift_istio_sidecar_injector_server_cert }}"
+
+- name: Disable injection policy by default
+  lineinfile:
+    path: "{{ openshift_istio_sidecar_injector_configmap_yaml }}"
+    regexp: '^    policy: enabled'
+    line: '    policy: disabled'
+
+- name: Install the configmap
+  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_sidecar_injector_configmap_yaml }}"
+
+- name: Retrieve CA Bundle
+  shell: "{{ openshift_client_binary }} get configmap -n kube-system extension-apiserver-authentication -o=jsonpath='{.data.client-ca-file}' | base64 | tr -d '\n'"
+  register: cabundle
+
+- name: Populate CA_BUNDLE in sidecar injector yaml
+  lineinfile:
+    path: "{{ openshift_istio_sidecar_injector_yaml }}"
+    regexp: '^      caBundle: '
+    line: "      caBundle: {{ cabundle.stdout }}"
+
+- name: Install the sidecar injector webhook
+  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_sidecar_injector_yaml }}"

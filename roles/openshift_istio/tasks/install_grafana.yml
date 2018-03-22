@@ -1,0 +1,7 @@
+---
+- name: Create grafana components
+  command: "{{ openshift_client_binary }} create -f {{ openshift_grafana_yaml }}"
+  ignore_errors: yes
+
+- name: Expose grafana service
+  command: "{{ openshift_client_binary }} expose -n {{ openshift_istio_namespace }} svc grafana"

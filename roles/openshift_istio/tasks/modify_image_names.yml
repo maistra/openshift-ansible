@@ -1,0 +1,9 @@
+---
+- name: Modify image names in configuration file {{ configuration }}
+  replace:
+    path: "{{ configuration }}"
+    regexp: "{{ config_item.key }}"
+    replace: "{{ config_item.value }}" 
+  with_dict: "{{ image_names }}"
+  loop_control:
+    loop_var: config_item

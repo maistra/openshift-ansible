@@ -2,7 +2,9 @@
 
 openshift_istio_files: "roles/openshift_istio/files"
 
+openshift_istio_yaml: "{{ openshift_istio_files }}/istio.yaml"
 openshift_istio_auth_yaml: "{{ openshift_istio_files }}/istio-auth.yaml"
+openshift_istio_mixer_validator_yaml: "{{ openshift_istio_files }}/istio-mixer-validator.yaml"
 openshift_istio_sidecar_injector_yaml: "{{ openshift_istio_files }}/istio-sidecar-injector.yaml"
 openshift_istio_sidecar_injector_configmap_yaml: "{{ openshift_istio_files }}/istio-sidecar-injector-configmap-release.yaml"
 
@@ -19,6 +21,8 @@ openshift_jaeger_yaml: "{{ openshift_istio_files }}/jaeger-all-in-one-template.y
 
 
 openshift_istio_yaml_configuration_files:
+  - "{{ openshift_istio_yaml }}"
   - "{{ openshift_istio_auth_yaml }}"
+  - "{{ openshift_istio_mixer_validator_yaml }}"
   - "{{ openshift_istio_sidecar_injector_yaml }}"
   - "{{ openshift_istio_sidecar_injector_configmap_yaml }}"

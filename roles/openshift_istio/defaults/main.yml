@@ -1,5 +1,5 @@
 ---
-default_istio_image_tag: "0.6.0"
+default_istio_image_tag: "0.7.1"
 default_istio_namespace: "istio-system"
 
 openshift_istio_image_dict:
@@ -18,6 +18,7 @@ openshift_deployment_type: "origin"
 
 openshift_istio_install: true
 openshift_istio_install_community: false
+openshift_istio_install_auth: false
 openshift_client_binary: "/usr/bin/oc --config=/etc/origin/master/admin.kubeconfig"
 
 addons_needing_sa:
@@ -28,6 +29,7 @@ openshift_istio_service_accounts:
   - "istio-ca-service-account"
   - "istio-ingress-service-account"
   - "istio-mixer-service-account"
+  - "istio-mixer-validator-service-account"
   - "istio-pilot-service-account"
   - "istio-sidecar-injector-service-account"
 

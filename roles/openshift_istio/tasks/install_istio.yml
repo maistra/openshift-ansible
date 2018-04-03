@@ -5,11 +5,20 @@
   with_items: "{{ openshift_istio_yaml_configuration_files }}"
   loop_control:
     loop_var: configuration
-  when: not {{ openshift_istio_install_community }}
+  when: not (openshift_istio_install_community | bool)
 
-- name: Create Istio components
+- name: Create Istio components with auth
   command: "{{ openshift_client_binary }} create -f {{ openshift_istio_auth_yaml }}"
   ignore_errors: yes
+  when: openshift_istio_install_auth | bool
+
+- name: Create Istio components without auth
+  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_yaml }}"
+  ignore_errors: yes
+  when: not (openshift_istio_install_auth| bool)
+
+- name: Install Istio Mixer Validator
+  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_mixer_validator_yaml }}"
 
 - name: Expose Istio ingress service
   command: "{{ openshift_client_binary }} expose -n {{ openshift_istio_namespace }} svc istio-ingress"

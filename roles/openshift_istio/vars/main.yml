@@ -17,7 +17,9 @@ openshift_istio_sidecar_injector_secret: "sidecar-injector-certs"
 
 openshift_grafana_yaml: "{{ openshift_istio_files }}/grafana.yaml"
 openshift_prometheus_yaml: "{{ openshift_istio_files }}/prometheus.yaml"
-openshift_jaeger_yaml: "{{ openshift_istio_files }}/jaeger-all-in-one-template.yml"
+openshift_jaeger_production_yaml: "{{ openshift_istio_files }}/jaeger-production-template.yml"
+openshift_elasticsearch_yaml: "{{ openshift_istio_files }}/elasticsearch.yml"
+openshift_elasticsearch_configmap_yaml: "{{ openshift_istio_files }}/elasticsearch_configmap.yml"
 
 
 openshift_istio_yaml_configuration_files:
@@ -26,3 +28,6 @@ openshift_istio_yaml_configuration_files:
   - "{{ openshift_istio_mixer_validator_yaml }}"
   - "{{ openshift_istio_sidecar_injector_yaml }}"
   - "{{ openshift_istio_sidecar_injector_configmap_yaml }}"
+
+openshift_istio_jaeger_yaml_configuration_files:
+  - "{{ openshift_jaeger_production_yaml }}"

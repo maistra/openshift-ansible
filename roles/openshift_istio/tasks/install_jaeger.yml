@@ -1,3 +1,33 @@
 ---
+- name: Create service account for jaeger
+  oc_serviceaccount:
+    name: "{{ openshift_istio_jaeger_service_account }}"
+    namespace: "{{ openshift_istio_namespace }}"
+    state: present
+
+- name: Create elasticsearch configmap
+  shell: "{{ openshift_client_binary }} create -n {{ openshift_istio_namespace }} -f {{ openshift_elasticsearch_configmap_yaml }}"
+
+- name: Create elasticsearch
+  shell: "{{ openshift_client_binary }} create -n {{ openshift_istio_namespace }} -f {{ openshift_elasticsearch_yaml }}"
+
+- name: Wait for elastic search to be ready
+  shell: "{{ openshift_client_binary }} get pods -n {{ openshift_istio_namespace }} elasticsearch-0 | egrep '1/1.*Running'"
+  register: result
+  until: result.rc == 0
+  retries: 30
+  delay: 1
+  ignore_errors: yes
+
 - name: Create jaeger components
-  shell: "{{ openshift_client_binary }} process -f {{ openshift_jaeger_yaml }} | {{ openshift_client_binary }} create -n {{ openshift_istio_namespace }} -f -"
+  shell: "{{ openshift_client_binary }} create -n {{ openshift_istio_namespace }} -f {{ openshift_jaeger_production_yaml }}"
+
+- name: Create route for jaeger-query
+  oc_route:
+    name: jaeger-query
+    namespace: "{{ openshift_istio_namespace }}"
+    state: present
+    labels:
+      app: jaeger-query
+    service_name: jaeger-query
+    tls_termination: edge

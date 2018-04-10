@@ -11,10 +11,11 @@ openshift_deployment_type=origin
 
 openshift_istio_image_prefix=openshiftistio/
 openshift_istio_image_suffix=
-openshift_istio_image_version=0.6.0
+openshift_istio_image_version=0.7.1
 openshift_istio_install_community=false
 openshift_istio_install_auth=false
 openshift_istio_master_public_url=https://127.0.0.1:8443
+openshift_istio_jaeger_image_version=0.6
 
 [masters]
 127.0.0.1 ansible_connection=local

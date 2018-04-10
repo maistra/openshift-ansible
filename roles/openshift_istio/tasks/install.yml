@@ -10,6 +10,12 @@
   loop_control:
     loop_var: service_account
 
+- name: Ensure service accounts are privileged
+  include_tasks: setup_privileged_service_account.yml
+  with_items: "{{ openshift_istio_additional_scc_privileged_service_accounts }}"
+  loop_control:
+    loop_var: service_account
+
 - name: Install Istio
   include_tasks: install_istio.yml
 

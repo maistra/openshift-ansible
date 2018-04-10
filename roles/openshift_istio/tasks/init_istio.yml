@@ -13,12 +13,22 @@
     openshift_istio_image_version: "{{ openshift_istio_image_dict[openshift_deployment_type]['version'] }}"
   when: openshift_istio_image_version is not defined
 
+- name: Initialise Jaeger version
+  set_fact:
+    openshift_istio_jaeger_image_version: "{{ openshift_istio_image_dict[openshift_deployment_type]['jaeger_version'] }}"
+  when: openshift_istio_jaeger_image_version is not defined
+
 - name: Initialise namespace
   set_fact:
     openshift_istio_namespace: "{{ openshift_istio_image_dict[openshift_deployment_type]['namespace'] }}"
   when: openshift_istio_namespace is not defined
 
-- name: Initialise Istio Image names
+- name: Initialise Installation Type
+  set_fact:
+    openshift_istio_install_enterprise: "{{ openshift_deployment_type == 'openshift-enterprise' }}"
+
+# Split name initialisation up into CentOS/RHEL until we have CentOS jaeger images
+- name: Initialise Istio Image names when running CentOS images
   set_fact:
     openshift_istio_image_names:
       "docker.io/istio/istio-ca:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}istio-ca{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
@@ -27,3 +37,18 @@
       "docker.io/istio/sidecar_injector:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}sidecar-injector{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
       "docker.io/istio/proxy_init:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}proxy-init{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
       "docker.io/istio/proxy:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}proxy{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
+  when: not openshift_istio_install_enterprise
+
+- name: Initialise Istio Image names when running RHEL images
+  set_fact:
+    openshift_istio_image_names:
+      "docker.io/istio/istio-ca:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}istio-ca{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
+      "docker.io/istio/pilot:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}pilot{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
+      "docker.io/istio/mixer:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}mixer{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
+      "docker.io/istio/sidecar_injector:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}sidecar-injector{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
+      "docker.io/istio/proxy_init:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}proxy-init{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
+      "docker.io/istio/proxy:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}proxy{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
+      "jaegertracing/jaeger-collector:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_image_prefix}}jaeger-collector{{openshift_istio_image_suffix}}:{{openshift_istio_jaeger_image_version}}"
+      "jaegertracing/jaeger-query:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_image_prefix}}jaeger-query{{openshift_istio_image_suffix}}:{{openshift_istio_jaeger_image_version}}"
+      "jaegertracing/jaeger-agent:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_image_prefix}}jaeger-agent{{openshift_istio_image_suffix}}:{{openshift_istio_jaeger_image_version}}"
+  when: openshift_istio_install_enterprise

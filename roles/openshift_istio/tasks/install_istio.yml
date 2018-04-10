@@ -2,7 +2,7 @@
 - name: Update images in the configuration files if not running community
   include_tasks: modify_image_names.yml
     image_names="{{ openshift_istio_image_names }}"
-  with_items: "{{ openshift_istio_yaml_configuration_files }}"
+  with_items: "{{ openshift_istio_yaml_configuration_files }} + {{ openshift_istio_jaeger_yaml_configuration_files }}"
   loop_control:
     loop_var: configuration
   when: not (openshift_istio_install_community | bool)

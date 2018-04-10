@@ -1,6 +1,7 @@
 ---
 default_istio_image_tag: "0.7.1"
 default_istio_namespace: "istio-system"
+default_istio_jaeger_image_tag: "1.2"
 
 openshift_istio_image_dict:
   origin:
@@ -8,11 +9,13 @@ openshift_istio_image_dict:
     suffix: "-centos7"
     version: "{{ default_istio_image_tag }}"
     namespace: "{{ default_istio_namespace }}"
+    jaeger_version: "{{ default_istio_jaeger_image_tag }}"
   openshift-enterprise:
     prefix: "registry.access.redhat.com/openshift3-istio-tech-preview/"
     suffix: ""
     version: "{{ default_istio_image_tag }}"
     namespace: "{{ default_istio_namespace }}"
+    jaeger_version: "{{ default_istio_jaeger_image_tag }}"
 
 openshift_deployment_type: "origin"
 
@@ -20,10 +23,6 @@ openshift_istio_install: true
 openshift_istio_install_community: false
 openshift_istio_install_auth: false
 openshift_client_binary: "/usr/bin/oc --config=/etc/origin/master/admin.kubeconfig"
-
-addons_needing_sa:
-  - "grafana"
-  - "prometheus"
 
 openshift_istio_service_accounts:
   - "istio-ca-service-account"
@@ -35,10 +34,14 @@ openshift_istio_service_accounts:
 
 openshift_istio_grafana_service_account: "grafana"
 openshift_istio_prometheus_service_account: "prometheus"
+openshift_istio_jaeger_service_account: "jaeger"
 
 openshift_istio_additional_scc_service_accounts:
   - "{{ openshift_istio_grafana_service_account }}"
   - "{{ openshift_istio_prometheus_service_account }}"
+
+openshift_istio_additional_scc_privileged_service_accounts:
+  - "{{ openshift_istio_jaeger_service_account }}"
 
 openshift_istio_sidecar_service: "istio-sidecar-injector"
 openshift_istio_sidecar_secret: "sidecar-injector-certs"

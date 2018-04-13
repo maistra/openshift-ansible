@@ -64,6 +64,12 @@
     regexp: '^    policy: enabled'
     line: '    policy: disabled'
 
+- name: Make init container privileged
+  lineinfile:
+    path: "{{ openshift_istio_sidecar_injector_configmap_yaml }}"
+    insertafter: '^            - NET_ADMIN'
+    line: '          privileged: true'
+
 - name: Install the configmap
   command: "{{ openshift_client_binary }} create -f {{ openshift_istio_sidecar_injector_configmap_yaml }}"
 

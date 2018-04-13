@@ -83,5 +83,10 @@
     regexp: '^      caBundle: '
     line: "      caBundle: {{ cabundle.stdout }}"
 
+- name: Remove project label selector
+  replace:
+    path: "{{ openshift_istio_sidecar_injector_yaml }}"
+    regexp: '^.*namespaceSelector.*\n.*matchLabels.*\n.*istio-injection: enabled.*\n'
+
 - name: Install the sidecar injector webhook
   command: "{{ openshift_client_binary }} create -f {{ openshift_istio_sidecar_injector_yaml }}"

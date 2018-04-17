@@ -16,7 +16,7 @@
   register: result
   until: result.rc == 0
   retries: 30
-  delay: 1
+  delay: 2
   ignore_errors: yes
 
 - name: Create jaeger components

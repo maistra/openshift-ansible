@@ -77,16 +77,28 @@
   shell: "{{ openshift_client_binary }} get configmap -n kube-system extension-apiserver-authentication -o=jsonpath='{.data.client-ca-file}' | base64 | tr -d '\n'"
   register: cabundle
 
-- name: Populate CA_BUNDLE in sidecar injector yaml
+- name: Install the sidecar injector
+  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_sidecar_injector_yaml }}"
+
+- name: Wait for sidecar to be ready
+  shell: "{{ openshift_client_binary }} get pods -n {{ openshift_istio_namespace }} | egrep 'istio-sidecar-injector.*1/1.*Running'"
+  register: result
+  until: result.rc == 0
+  retries: 30
+  delay: 2
+  ignore_errors: yes
+
+
+- name: Populate CA_BUNDLE in sidecar injector webhook yaml
   lineinfile:
-    path: "{{ openshift_istio_sidecar_injector_yaml }}"
+    path: "{{ openshift_istio_sidecar_injector_webhook_yaml }}"
     regexp: '^      caBundle: '
     line: "      caBundle: {{ cabundle.stdout }}"
 
 - name: Remove project label selector
   replace:
-    path: "{{ openshift_istio_sidecar_injector_yaml }}"
+    path: "{{ openshift_istio_sidecar_injector_webhook_yaml }}"
     regexp: '^.*namespaceSelector.*\n.*matchLabels.*\n.*istio-injection: enabled.*\n'
 
 - name: Install the sidecar injector webhook
-  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_sidecar_injector_yaml }}"
+  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_sidecar_injector_webhook_yaml }}"

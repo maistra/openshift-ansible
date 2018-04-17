@@ -1,78 +1,133 @@
-#
-# Copyright 2017-2018 The Jaeger Authors
-#
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
-# in compliance with the License. You may obtain a copy of the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software distributed under the License
-# is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-# or implied. See the License for the specific language governing permissions and limitations under
-# the License.
-#
-
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: elasticsearch
+  annotations:
+    image.openshift.io/triggers: |
+      [{
+      "from": {
+        "kind": "ImageStreamTag",
+        "name": "elasticsearch:5.5.2"
+        },
+        "fieldPath": "spec.template.spec.containers[?(@.name==\"elasticsearch\")].image"
+      }]
+  labels:
+    app: elasticsearch
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 2
+  selector:
+    matchLabels:
+      app: elasticsearch
+  serviceName: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+      - name: elasticsearch
+        env:
+        - name: SERVICE
+          value: elasticsearch-cluster
+        - name: LOG_LEVEL
+          value: info
+        image: ' '
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9200
+          initialDelaySeconds: 30
+        readinessProbe:
+          tcpSocket:
+            port: 9300
+        ports:
+        - containerPort: 9200
+          name: api
+          protocol: TCP
+        - containerPort: 9300
+          name: cluster
+          protocol: TCP
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 512Mi
+        volumeMounts:
+        - mountPath: /elasticsearch/persistent
+          name: elasticsearch-persistent
+      securityContext: {}
+      serviceAccount: elasticsearch
+      serviceAccountName: elasticsearch
+      volumes:
+      - emptyDir: {}
+        name: elasticsearch-persistent
+---
 apiVersion: v1
-kind: List
-items:
-- apiVersion: apps/v1beta1
-  kind: StatefulSet
-  metadata:
-    name: elasticsearch
-    labels:
-      app: jaeger
-      jaeger-infra: elasticsearch-statefulset
-  spec:
-    serviceName: elasticsearch
-    replicas: 1
-    template:
-      metadata:
-        labels:
-          app: jaeger-elasticsearch
-          jaeger-infra: elasticsearch-replica
-      spec:
-        serviceAccountName: jaeger
-        containers:
-          - name: elasticsearch
-            image: quay.io/pires/docker-elasticsearch-kubernetes:5.6.2
-            imagePullPolicy: Always
-            command:
-              - bin/elasticsearch
-            args:
-              - "-Ehttp.host=0.0.0.0"
-              - "-Etransport.host=127.0.0.1"
-            env:
-              - name: NODE_NAME
-                value: master
-            volumeMounts:
-              - name: data
-                mountPath: /data
-            readinessProbe:
-              exec:
-                command:
-                - wget
-                - -O
-                - /dev/null
-                - localhost:9200
-              initialDelaySeconds: 5
-              periodSeconds: 5
-              timeoutSeconds: 4
-        volumes:
-          - name: data
-            emptyDir: {}
-- apiVersion: v1
-  kind: Service
-  metadata:
-    name: elasticsearch
-    labels:
-      app: jaeger
-      jaeger-infra: elasticsearch-service
-  spec:
-    clusterIP: None
-    selector:
-      app: jaeger-elasticsearch
-    ports:
-    - port: 9200
-      name: elasticsearch
-    - port: 9300
-      name: transport
+kind: Service
+metadata:
+  name: elasticsearch
+  labels:
+    app: elasticsearch
+spec:
+  ports:
+  - name: api
+    port: 9200
+    protocol: TCP
+    targetPort: 9200
+  selector:
+    app: elasticsearch
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-cluster
+  labels:
+    app: elasticsearch
+spec:
+  ports:
+  - name: cluster
+    port: 9300
+    protocol: TCP
+    targetPort: 9300
+  selector:
+    app: elasticsearch
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ImageStream
+metadata:
+  name: elasticsearch
+  labels:
+    app: elasticsearch
+spec:
+  lookupPolicy:
+    local: false
+  tags:
+  - name: latest
+    from:
+      kind: DockerImage
+      name: registry.centos.org/rhsyseng/elasticsearch:latest
+  - name: 6.2.2
+    from:
+      kind: DockerImage
+      name: registry.centos.org/rhsyseng/elasticsearch:6.2.2
+  - name: 6.1.2
+    from:
+      kind: DockerImage
+      name: registry.centos.org/rhsyseng/elasticsearch:6.1.2
+  - name: 5.5.2
+    from:
+      kind: DockerImage
+      name: registry.centos.org/rhsyseng/elasticsearch:5.5.2
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: elasticsearch
+  labels:
+    app: elasticsearch

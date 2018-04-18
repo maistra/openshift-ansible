@@ -52,8 +52,8 @@ openshift_istio_api_url: "https://{{ ansible_env.KUBERNETES_SERVICE_HOST + ':' +
 launcher_project_name: devex
 launcher_keycloak_url:
 launcher_keycloak_realm:
-launcher_catalog_git_repo: https://github.com/fabric8-launcher/launcher-booster-catalog.git
-launcher_catalog_git_branch: master
+launcher_catalog_git_repo: https://github.com/snowdrop/launcher-booster-catalog.git
+launcher_catalog_git_branch: istio
 
 launcher_github_username:
 launcher_github_token:

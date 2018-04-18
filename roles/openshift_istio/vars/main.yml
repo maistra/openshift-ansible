@@ -22,6 +22,7 @@ openshift_jaeger_production_yaml: "{{ openshift_istio_files }}/jaeger-production
 openshift_elasticsearch_yaml: "{{ openshift_istio_files }}/elasticsearch.yml"
 openshift_elasticsearch_configmap_yaml: "{{ openshift_istio_files }}/elasticsearch_configmap.yml"
 
+launcher_template_yaml: "{{ openshift_istio_files }}/launcher-template.yaml"
 
 openshift_istio_yaml_configuration_files:
   - "{{ openshift_istio_yaml }}"

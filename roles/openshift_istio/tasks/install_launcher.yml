@@ -1,0 +1,25 @@
+- name: Ensure launcher project exists
+  oc_project:
+    name: "{{ launcher_project_name }}"
+    state: present
+
+- name: Update {{ launcher_openshift_user }} user to grant cluster-admin
+  oc_adm_policy_user:
+    user: "{{ launcher_openshift_user }}"
+    resource_kind: cluster-role
+    resource_name: cluster-admin
+    state: present
+
+- name: Create Launcher components
+  command: >
+    {{ openshift_client_binary }} new-app --file= {{ launcher_template_yaml }}  -n {{ launcher_project_name }}
+        -p LAUNCHER_BOOSTER_CATALOG_REPOSITORY={{ launcher_catalog_git_repo }}
+        -p LAUNCHER_BOOSTER_CATALOG_REF={{ launcher_catalog_git_branch }}
+        -p LAUNCHER_KEYCLOAK_URL={{ launcher_keycloak_url }}
+        -p LAUNCHER_KEYCLOAK_REALM={{ launcher_keycloak_realm }}
+        -p LAUNCHER_MISSIONCONTROL_OPENSHIFT_USERNAME={{ launcher_openshift_user }}
+        -p LAUNCHER_MISSIONCONTROL_OPENSHIFT_PASSWORD={{ launcher_openshift_pwd }}
+        -p LAUNCHER_MISSIONCONTROL_OPENSHIFT_CONSOLE_URL={{ openshift_istio_master_public_url }}
+        -p LAUNCHER_MISSIONCONTROL_OPENSHIFT_API_URL={{ openshift_istio_api_url }}
+        -p LAUNCHER_MISSIONCONTROL_GITHUB_USERNAME={{ launcher_github_username }}
+        -p LAUNCHER_MISSIONCONTROL_GITHUB_TOKEN={{ launcher_github_token }}

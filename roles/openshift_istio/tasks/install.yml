@@ -27,3 +27,7 @@
 
 - name: Install Jaeger
   include_tasks: install_jaeger.yml
+
+- name: Install Launcher
+  include_tasks: install_launcher.yml
+  when: openshift_istio_install_launcher | bool

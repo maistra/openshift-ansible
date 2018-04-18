@@ -1,10 +1,19 @@
 The files in this directory come from the Istio distribution, we make some minor (significant) changes during installation
 
+- istio.yaml
+  This is the standard file from the Istio distribution, we will replace image names during installation depending on the options chosen
+
 - istio-auth.yaml
-  This is the standard file, we will replace image names during installation depending on the options chosen
+  This is the standard file from the Istio distribution, we will replace image names during installation depending on the options chosen
 
 - istio-sidecar-injector
-  This is the standard file, we will replace image names during installation depending on the options chosen
+  This is the standard file from the Istio distribution, we will replace image names during installation depending on the options chosen
+
+- istio-mixer-validator
+  This is the standard file from the Istio distribution, we will replace image names during installation depending on the options chosen
 
 - istio-sidecar-injector-configmap-release
-  This is the standard file, we will replace image names during installation depending on the options chosen.  We will also switch the default policy from enabled to disabled.
+  This is the standard file from the Istio distribution, we will replace image names during installation depending on the options chosen.  We will also switch the default policy from enabled to disabled.
+
+- jaeger-production-template.yml
+  This is a modified version of the Jaeger configuration file, we have added the service account name and updated the jaeger-configuration configmap to add the ui key.  We will also replace image names during installation depending on the options chosen.

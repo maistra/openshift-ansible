@@ -22,6 +22,7 @@ openshift_deployment_type: "origin"
 openshift_istio_install: true
 openshift_istio_install_community: false
 openshift_istio_install_auth: false
+openshift_istio_install_launcher: false
 openshift_client_binary: "/usr/bin/oc --config=/etc/origin/master/admin.kubeconfig"
 
 openshift_istio_service_accounts:
@@ -45,3 +46,16 @@ openshift_istio_additional_scc_privileged_service_accounts:
 
 openshift_istio_sidecar_service: "istio-sidecar-injector"
 openshift_istio_sidecar_secret: "sidecar-injector-certs"
+
+openshift_istio_api_url: "https://{{ ansible_env.KUBERNETES_SERVICE_HOST + ':' + ansible_env.KUBERNETES_SERVICE_PORT }}"
+
+launcher_project_name: devex
+launcher_keycloak_url:
+launcher_keycloak_realm:
+launcher_catalog_git_repo: https://github.com/fabric8-launcher/launcher-booster-catalog.git
+launcher_catalog_git_branch: master
+
+launcher_github_username:
+launcher_github_token:
+launcher_openshift_user: developer
+launcher_openshift_pwd: developer

@@ -1,21 +1,22 @@
 ---
 default_istio_image_tag: "0.7.1"
 default_istio_namespace: "istio-system"
-default_istio_jaeger_image_tag: "1.2"
+default_istio_jaeger_image_tag: "1.4.1"
+default_istio_jaeger_productised_image_tag: "0.6"
 
 openshift_istio_image_dict:
   origin:
-    prefix: "docker.io/openshiftistio/"
+    prefix: "openshiftistio/"
     suffix: "-centos7"
     version: "{{ default_istio_image_tag }}"
     namespace: "{{ default_istio_namespace }}"
     jaeger_version: "{{ default_istio_jaeger_image_tag }}"
   openshift-enterprise:
-    prefix: "registry.access.redhat.com/openshift3-istio-tech-preview/"
+    prefix: "openshift3-istio-tech-preview/"
     suffix: ""
     version: "{{ default_istio_image_tag }}"
     namespace: "{{ default_istio_namespace }}"
-    jaeger_version: "{{ default_istio_jaeger_image_tag }}"
+    jaeger_version: "{{ default_istio_jaeger_productised_image_tag }}"
 
 openshift_deployment_type: "origin"
 

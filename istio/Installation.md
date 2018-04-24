@@ -4,12 +4,12 @@ This document describes the steps for installing the Istio Tech Preview release 
 
 **Table of Contents**
 
-- [Preparing the OCP 3.9 Installation](#Preparing-the-OCP-3.9-Installation)
-   - [Updating the Master](#Updating-the-Master)
-   - [Updating the Nodes](#Updating-the-Nodes)
-   - [Restart OCP 3.9 installation](#Restart-OCP-3.9-installation)
-- [Installing Istio](#Installing-Istio)
-- [Verifying Installation](#Verifying-Installation)
+- [Preparing the OCP 3.9 Installation](#preparing-the-ocp-39-installation)
+   - [Updating the Master](#updating-the-master)
+   - [Updating the Nodes](#updating-the-nodes)
+   - [Restart OCP 3.9 installation](#restart-ocp-39-installation)
+- [Installing Istio](#installing-istio)
+- [Verifying Installation](#verifying-installation)
 
 
 ## Preparing the OCP 3.9 Installation

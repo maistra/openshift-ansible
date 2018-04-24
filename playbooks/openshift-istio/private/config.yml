@@ -21,10 +21,9 @@
 - name: Istio
   hosts: all
   tasks:
-  - debug: msg="{{ openshift_version }}"
-  - debug: msg="{{ openshift_version | version_compare('3.9', '>=') }}"
   - import_role:
       name: openshift_istio
+    run_once: true
     when: openshift_version | version_compare('3.9', '>=')
 
 - name: Istio Install Checkpoint End

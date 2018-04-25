@@ -23,3 +23,7 @@
         -p LAUNCHER_MISSIONCONTROL_OPENSHIFT_API_URL={{ openshift_istio_api_url }}
         -p LAUNCHER_MISSIONCONTROL_GITHUB_USERNAME={{ launcher_github_username }}
         -p LAUNCHER_MISSIONCONTROL_GITHUB_TOKEN={{ launcher_github_token }}
+        -p BACKEND_IMAGE_TAG={{ launcher_backend_image_tag }}
+        -p FRONTEND_IMAGE_TAG={{ launcher_frontend_image_tag }}
+        -p CONTROLLER_IMAGE_TAG={{ launcher_controller_image_tag }}
+        -p LAUNCHER_BOOSTER_CATALOG_FILTER={{ launcher_booster_catalog_filter }}

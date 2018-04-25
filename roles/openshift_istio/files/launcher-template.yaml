@@ -68,9 +68,13 @@ parameters:
   required: true
 - name: LAUNCHER_BOOSTER_CATALOG_REF
   displayName: Catalog Git Reference
-  description: The Git reference to use for the above repository. 'latest' means the latest release
-  value: latest
+  description: The Git reference to use for the above repository
+  value: master
   required: true
+- name: LAUNCHER_BOOSTER_CATALOG_FILTER
+  displayName: Catalog Filter
+  description: Optional expression to filter a subset of boosters for the above repository (eg. booster.mission.id == 'rest-http')
+  value:
 - name: LAUNCHER_BACKEND_CATALOG_REINDEX_TOKEN
   displayName: Catalog Reindex Token
   description: A token that must be passed to the catalog reindex service to trigger the catalog
@@ -85,15 +89,79 @@ parameters:
 - name: BACKEND_IMAGE
   value: fabric8/launcher-backend
   required: true
+
 - name: BACKEND_IMAGE_TAG
   value: latest
   required: true
+
+- description: CPU request
+  displayName: CPU request
+  required: true
+  name: BACKEND_CPU_REQUEST
+  value: "10m"
+
+- description: CPU limit
+  displayName: CPU limit
+  required: true
+  name: BACKEND_CPU_LIMIT
+  value: "1000m"
+
+- description: Memory request
+  displayName: Memory request
+  required: true
+  name: BACKEND_MEMORY_REQUEST
+  value: "768Mi"
+
+- description: Memory limit
+  displayName: Memory limit
+  required: true
+  name: BACKEND_MEMORY_LIMIT
+  value: "2G"
+
+- description: Number of deployment replicas
+  displayName: Number of deployment replicas
+  required: true
+  name: BACKEND_REPLICAS
+  value: "1"
+
 - name: FRONTEND_IMAGE
   value: fabric8/launcher-frontend
   required: true
+
 - name: FRONTEND_IMAGE_TAG
   value: latest
   required: true
+
+- description: CPU request
+  displayName: CPU request
+  required: true
+  name: FRONTEND_CPU_REQUEST
+  value: "10m"
+
+- description: CPU limit
+  displayName: CPU limit
+  required: true
+  name: FRONTEND_CPU_LIMIT
+  value: "50m"
+
+- description: Memory request
+  displayName: Memory request
+  required: true
+  name: FRONTEND_MEMORY_REQUEST
+  value: "8M"
+
+- description: Memory limit
+  displayName: Memory limit
+  required: true
+  name: FRONTEND_MEMORY_LIMIT
+  value: "64M"
+
+- description: Number of deployment replicas
+  displayName: Number of deployment replicas
+  required: true
+  name: FRONTEND_REPLICAS
+  value: "1"
+
 - name: CONTROLLER_IMAGE
   value: fabric8/configmapcontroller
   required: true
@@ -112,15 +180,23 @@ objects:
     launcher.missioncontrol.openshift.password: ${LAUNCHER_MISSIONCONTROL_OPENSHIFT_PASSWORD}
     launcher.missioncontrol.openshift.api.url: ${LAUNCHER_MISSIONCONTROL_OPENSHIFT_API_URL}
     launcher.missioncontrol.openshift.console.url: ${LAUNCHER_MISSIONCONTROL_OPENSHIFT_CONSOLE_URL}
+    launcher.backend.catalog.filter: ${LAUNCHER_BOOSTER_CATALOG_FILTER}
     launcher.backend.catalog.git.repository: ${LAUNCHER_BOOSTER_CATALOG_REPOSITORY}
     launcher.backend.catalog.git.ref: ${LAUNCHER_BOOSTER_CATALOG_REF}
     launcher.backend.catalog.reindex.token: ${LAUNCHER_BACKEND_CATALOG_REINDEX_TOKEN}
+    launcher.backend.documentation.reload.token: ${LAUNCHER_BACKEND_CATALOG_REINDEX_TOKEN}
     launcher.backend.environment: ${LAUNCHER_BACKEND_ENVIRONMENT}
     launcher.keycloak.url: ${LAUNCHER_KEYCLOAK_URL}
     launcher.keycloak.realm: ${LAUNCHER_KEYCLOAK_REALM}
     launcher.tracker.segment.token: ${LAUNCHER_TRACKER_SEGMENT_TOKEN}
     launcher.backend.url: /launch/api
     launcher.missioncontrol.url: /launch
+    osio.keycloak.saas.url: https://api.prod-preview.openshift.io
+    osio.openshift.api.url: https://f8osoproxy-test-dsaas-preview.b6ff.rh-idev.openshiftapps.com
+    osio.wit.url: https://api.prod-preview.openshift.io
+    osio.auth.url: https://auth.prod-preview.openshift.io
+    osio.jenkins.url: https://jenkins.prod-preview.openshift.io
+    osio.sentry.dsn: ""
 - kind: ConfigMap
   apiVersion: v1
   metadata:
@@ -163,7 +239,7 @@ objects:
     annotations:
       configmap.fabric8.io/update-on-change: "launcher,launcher-clusters"
   spec:
-    replicas: 1
+    replicas: "${{BACKEND_REPLICAS}}"
     selector:
       service: launcher-backend
     strategy:
@@ -192,31 +268,60 @@ objects:
               configMapKeyRef:
                 name: launcher
                 key: launcher.backend.catalog.git.ref
+          - name: LAUNCHER_BOOSTER_CATALOG_FILTER
+            valueFrom:
+              configMapKeyRef:
+                name: launcher
+                key: launcher.backend.catalog.filter
+                optional: true
           - name: LAUNCHER_BACKEND_CATALOG_REINDEX_TOKEN
             valueFrom:
               configMapKeyRef:
                 name: launcher
                 key: launcher.backend.catalog.reindex.token
+                optional: true
+          - name: LAUNCHER_BACKEND_DOCUMENTATION_RELOAD_TOKEN
+            valueFrom:
+              configMapKeyRef:
+                name: launcher
+                key: launcher.backend.documentation.reload.token
+                optional: true
           - name: LAUNCHER_MISSIONCONTROL_OPENSHIFT_API_URL
             valueFrom:
               configMapKeyRef:
                 name: launcher
                 key: launcher.missioncontrol.openshift.api.url
+                optional: true
           - name: LAUNCHER_MISSIONCONTROL_OPENSHIFT_CONSOLE_URL
             valueFrom:
               configMapKeyRef:
                 name: launcher
                 key: launcher.missioncontrol.openshift.console.url
+                optional: true
+          - name: LAUNCHER_MISSIONCONTROL_OPENSHIFT_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: launcher
+                key: launcher.missioncontrol.openshift.username
+                optional: true
+          - name: LAUNCHER_MISSIONCONTROL_OPENSHIFT_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: launcher
+                key: launcher.missioncontrol.openshift.password
+                optional: true
           - name: LAUNCHER_MISSIONCONTROL_GITHUB_USERNAME
             valueFrom:
               configMapKeyRef:
                 name: launcher
                 key: launcher.missioncontrol.github.username
+                optional: true
           - name: LAUNCHER_MISSIONCONTROL_GITHUB_TOKEN
             valueFrom:
               configMapKeyRef:
                 name: launcher
                 key: launcher.missioncontrol.github.token
+                optional: true
           - name: LAUNCHER_KEYCLOAK_URL
             valueFrom:
               configMapKeyRef:
@@ -227,16 +332,6 @@ objects:
               configMapKeyRef:
                 name: launcher
                 key: launcher.keycloak.realm
-          - name: LAUNCHER_MISSIONCONTROL_OPENSHIFT_USERNAME
-            valueFrom:
-              configMapKeyRef:
-                name: launcher
-                key: launcher.missioncontrol.openshift.username
-          - name: LAUNCHER_MISSIONCONTROL_OPENSHIFT_PASSWORD
-            valueFrom:
-              configMapKeyRef:
-                name: launcher
-                key: launcher.missioncontrol.openshift.password
           - name: LAUNCHER_TRACKER_SEGMENT_TOKEN
             valueFrom:
               configMapKeyRef:
@@ -249,19 +344,47 @@ objects:
                 key: launcher.backend.environment
           - name: LAUNCHER_MISSIONCONTROL_OPENSHIFT_CLUSTERS_FILE
             value: /etc/fabric8-launcher/openshift-clusters.yaml
-          resources:
-            requests:
-              cpu: 10m
-              memory: 768M
-            limits:
-              cpu: 1000m
-              memory: 2G
+          - name: KEYCLOAK_SAAS_URL
+            valueFrom:
+              configMapKeyRef:
+                name: launcher
+                key: osio.keycloak.saas.url
+          - name: OPENSHIFT_API_URL
+            valueFrom:
+              configMapKeyRef:
+                name: launcher
+                key: osio.openshift.api.url
+          - name: WIT_URL
+            valueFrom:
+              configMapKeyRef:
+                name: launcher
+                key: osio.wit.url
+                optional: true
+          - name: AUTH_URL
+            valueFrom:
+              configMapKeyRef:
+                name: launcher
+                key: osio.auth.url
+                optional: true
+          - name: JENKINS_URL
+            valueFrom:
+              configMapKeyRef:
+                name: launcher
+                key: osio.jenkins.url
+                optional: true
+          - name: SENTRY_DSN
+            valueFrom:
+              configMapKeyRef:
+                name: launcher
+                key: osio.sentry.dsn
+                optional: true
           image: ${BACKEND_IMAGE}:${BACKEND_IMAGE_TAG}
           imagePullPolicy: Always
           name: launcher-backend
           ports:
           - containerPort: 8080
             protocol: TCP
+          resources: {}
           terminationMessagePath: /dev/termination-log
           volumeMounts:
           - mountPath: /etc/fabric8-launcher/
@@ -282,6 +405,13 @@ objects:
             initialDelaySeconds: 30
             periodSeconds: 20
             timeoutSeconds: 10
+          resources:
+            requests:
+              cpu: ${BACKEND_CPU_REQUEST}
+              memory: ${BACKEND_MEMORY_REQUEST}
+            limits:
+              cpu: ${BACKEND_CPU_LIMIT}
+              memory: ${BACKEND_MEMORY_LIMIT}
         dnsPolicy: ClusterFirst
         restartPolicy: Always
         securityContext: {}
@@ -316,7 +446,7 @@ objects:
     annotations:
       configmap.fabric8.io/update-on-change: "launcher"
   spec:
-    replicas: 1
+    replicas: "${{FRONTEND_REPLICAS}}"
     selector:
       service: launcher-frontend
     strategy:
@@ -366,13 +496,7 @@ objects:
               configMapKeyRef:
                 name: launcher
                 key: launcher.tracker.segment.token
-          resources:
-            requests:
-              cpu: 10m
-              memory: 8M
-            limits:
-              cpu: 50m
-              memory: 64M
+          resources: {}
           terminationMessagePath: /dev/termination-log
           readinessProbe:
             httpGet:
@@ -388,6 +512,13 @@ objects:
             initialDelaySeconds: 30
             timeoutSeconds: 10
             periodSeconds: 20
+          resources:
+            requests:
+              cpu: ${FRONTEND_CPU_REQUEST}
+              memory: ${FRONTEND_MEMORY_REQUEST}
+            limits:
+              cpu: ${FRONTEND_CPU_LIMIT}
+              memory: ${FRONTEND_MEMORY_LIMIT}
         restartPolicy: Always
         dnsPolicy: ClusterFirst
         securityContext: {}

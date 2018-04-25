@@ -55,8 +55,13 @@ launcher_keycloak_url:
 launcher_keycloak_realm:
 launcher_catalog_git_repo: https://github.com/snowdrop/launcher-booster-catalog.git
 launcher_catalog_git_branch: istio
+launcher_booster_catalog_filter: booster.mission.metadata.istio
 
 launcher_github_username:
 launcher_github_token:
 launcher_openshift_user: developer
 launcher_openshift_pwd: developer
+
+launcher_backend_image_tag: latest
+launcher_frontend_image_tag: latest
+launcher_controller_image_tag: 2.3.7

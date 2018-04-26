@@ -26,4 +26,4 @@
         -p BACKEND_IMAGE_TAG={{ launcher_backend_image_tag }}
         -p FRONTEND_IMAGE_TAG={{ launcher_frontend_image_tag }}
         -p CONTROLLER_IMAGE_TAG={{ launcher_controller_image_tag }}
-        -p LAUNCHER_BOOSTER_CATALOG_FILTER={{ launcher_booster_catalog_filter }}
+        -p LAUNCHER_BACKEND_CATALOG_FILTER={{ launcher_booster_catalog_filter }}

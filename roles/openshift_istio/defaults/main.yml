@@ -62,6 +62,6 @@ launcher_github_token:
 launcher_openshift_user: developer
 launcher_openshift_pwd: developer
 
-launcher_backend_image_tag: latest
-launcher_frontend_image_tag: latest
+launcher_backend_image_tag: ab535bc
+launcher_frontend_image_tag: 4571dfc
 launcher_controller_image_tag: 2.3.7

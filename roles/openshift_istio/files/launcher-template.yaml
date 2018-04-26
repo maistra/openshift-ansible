@@ -69,9 +69,9 @@ parameters:
 - name: LAUNCHER_BOOSTER_CATALOG_REF
   displayName: Catalog Git Reference
   description: The Git reference to use for the above repository
-  value: master
+  value: v30
   required: true
-- name: LAUNCHER_BOOSTER_CATALOG_FILTER
+- name: LAUNCHER_BACKEND_CATALOG_FILTER
   displayName: Catalog Filter
   description: Optional expression to filter a subset of boosters for the above repository (eg. booster.mission.id == 'rest-http')
   value:
@@ -91,7 +91,7 @@ parameters:
   required: true
 
 - name: BACKEND_IMAGE_TAG
-  value: latest
+  value: ab535bc
   required: true
 
 - description: CPU request
@@ -129,7 +129,7 @@ parameters:
   required: true
 
 - name: FRONTEND_IMAGE_TAG
-  value: latest
+  value: 4571dfc
   required: true
 
 - description: CPU request
@@ -180,7 +180,7 @@ objects:
     launcher.missioncontrol.openshift.password: ${LAUNCHER_MISSIONCONTROL_OPENSHIFT_PASSWORD}
     launcher.missioncontrol.openshift.api.url: ${LAUNCHER_MISSIONCONTROL_OPENSHIFT_API_URL}
     launcher.missioncontrol.openshift.console.url: ${LAUNCHER_MISSIONCONTROL_OPENSHIFT_CONSOLE_URL}
-    launcher.backend.catalog.filter: ${LAUNCHER_BOOSTER_CATALOG_FILTER}
+    launcher.backend.catalog.filter: ${LAUNCHER_BACKEND_CATALOG_FILTER}
     launcher.backend.catalog.git.repository: ${LAUNCHER_BOOSTER_CATALOG_REPOSITORY}
     launcher.backend.catalog.git.ref: ${LAUNCHER_BOOSTER_CATALOG_REF}
     launcher.backend.catalog.reindex.token: ${LAUNCHER_BACKEND_CATALOG_REINDEX_TOKEN}

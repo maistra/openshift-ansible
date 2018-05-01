@@ -6,8 +6,8 @@
 
 - name: Install Istio
   include_tasks: install.yml
-  when: openshift_istio_install
+  when: openshift_istio_install | bool
 
 - name: Remove Istio
   include_tasks: remove.yml
-  when: not openshift_istio_install
+  when: not (openshift_istio_install | bool)

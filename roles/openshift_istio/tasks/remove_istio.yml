@@ -1,0 +1,60 @@
+---
+- name: Obtain list of Mutating Webhook Configurations
+  shell: "{{ openshift_client_binary }} get mutatingwebhookconfiguration -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | grep istio"
+  register: openshift_istio_mutatingwebhookconfiguration
+
+- name: Remove Mutating Webhook
+  oc_obj:
+    name: "{{ item }}"
+    kind: "mutatingwebhookconfiguration"
+    state: absent
+  with_items: "{{ openshift_istio_mutatingwebhookconfiguration.stdout_lines|list }}"
+
+- name: Obtain list of Certificate Signing Requests
+  shell: "{{ openshift_client_binary }} get certificatesigningrequest -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | grep istio"
+  register: openshift_istio_certificatesigningrequest
+
+- name: Remove Certificate Signing Requests
+  oc_obj:
+    name: "{{ item }}"
+    kind: "certificatesigningrequest"
+    state: absent
+  with_items: "{{ openshift_istio_certificatesigningrequest.stdout_lines|list }}"
+
+- name: Obtain list of Cluster Role Bindings
+  shell: "{{ openshift_client_binary }} get clusterrolebinding -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | egrep 'istio|prometheus'"
+  register: openshift_istio_clusterrolebinding
+
+- name: Remove Cluster Role Bindings
+  oc_obj:
+    name: "{{ item }}"
+    kind: "clusterrolebinding"
+    state: absent
+  with_items: "{{ openshift_istio_clusterrolebinding.stdout_lines|list }}"
+
+- name: Obtain list of Cluster Roles
+  shell: "{{ openshift_client_binary }} get clusterrole -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | egrep 'istio|prometheus'"
+  register: openshift_istio_clusterrole
+
+- name: Remove Cluster Roles
+  oc_obj:
+    name: "{{ item }}"
+    kind: "clusterrole"
+    state: absent
+  with_items: "{{ openshift_istio_clusterrole.stdout_lines|list }}"
+
+- name: Obtain list of Custom Resource Definitions
+  shell: "{{ openshift_client_binary }} get customresourcedefinition -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | grep istio"
+  register: openshift_istio_customresourcedefinition
+
+- name: Remove Custom Resource Definitions
+  oc_obj:
+    name: "{{ item }}"
+    kind: "customresourcedefinition"
+    state: absent
+  with_items: "{{ openshift_istio_customresourcedefinition.stdout_lines|list }}"
+
+- name: Remove istio project
+  oc_project:
+    name: "{{ openshift_istio_namespace }}"
+    state: absent

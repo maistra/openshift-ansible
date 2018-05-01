@@ -1,5 +1,6 @@
 ---
-- name: Remove istio project
-  oc_project:
-    name: "{{ openshift_istio_namespace }}"
-    state: absent
+- name: Remove Launcher
+  include_tasks: remove_launcher.yml
+
+- name: Remove Istio
+  include_tasks: remove_istio.yml

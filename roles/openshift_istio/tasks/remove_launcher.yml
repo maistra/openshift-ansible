@@ -1,0 +1,5 @@
+---
+- name: Remove istio project
+  oc_project:
+    name: "{{ launcher_project_name }}"
+    state: absent

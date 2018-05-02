@@ -10,6 +10,10 @@
     resource_name: cluster-admin
     state: present
 
+- name: Obtain user token
+  shell: "curl -i -u {{ launcher_openshift_user }}:{{ launcher_openshift_pwd }} -k -H \"X-CSRF-Token: xxx\" \"https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}/oauth/authorize?client_id=openshift-challenging-client&response_type=token\" 2>/dev/null | grep Location | sed -e 's+^.*access_token=++' -e 's+\\&.*$++'"
+  register: launcher_openshift_token
+
 - name: Create Launcher components
   command: >
     {{ openshift_client_binary }} new-app --file= {{ launcher_template_yaml }}  -n {{ launcher_project_name }}
@@ -17,8 +21,7 @@
         -p LAUNCHER_BOOSTER_CATALOG_REF={{ launcher_catalog_git_branch }}
         -p LAUNCHER_KEYCLOAK_URL={{ launcher_keycloak_url }}
         -p LAUNCHER_KEYCLOAK_REALM={{ launcher_keycloak_realm }}
-        -p LAUNCHER_MISSIONCONTROL_OPENSHIFT_USERNAME={{ launcher_openshift_user }}
-        -p LAUNCHER_MISSIONCONTROL_OPENSHIFT_PASSWORD={{ launcher_openshift_pwd }}
+        -p LAUNCHER_MISSIONCONTROL_OPENSHIFT_TOKEN={{ launcher_openshift_token.stdout }}
         -p LAUNCHER_MISSIONCONTROL_OPENSHIFT_CONSOLE_URL={{ openshift_istio_master_public_url }}
         -p LAUNCHER_MISSIONCONTROL_OPENSHIFT_API_URL={{ openshift_istio_api_url }}
         -p LAUNCHER_MISSIONCONTROL_GITHUB_USERNAME={{ launcher_github_username }}

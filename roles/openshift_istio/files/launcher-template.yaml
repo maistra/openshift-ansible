@@ -38,14 +38,10 @@ parameters:
     can most likely look at this page's address bar of your browser and copy the URL
     Example value (https://$HOSTNAMEORIP:8443)
   value:
-- name: LAUNCHER_MISSIONCONTROL_OPENSHIFT_USERNAME
-  displayName: OpenShift user name
-  description: OpenShift user (leave empty when using Keycloak)
-  value: developer
-- name: LAUNCHER_MISSIONCONTROL_OPENSHIFT_PASSWORD
-  displayName: OpenShift password
-  description: OpenShift password (leave empty when using Keycloak)  
-  value: developer
+- name: LAUNCHER_MISSIONCONTROL_OPENSHIFT_TOKEN
+  displayName: OpenShift access token
+  description: OpenShift access token
+  required: true
 - name: LAUNCHER_KEYCLOAK_URL
   displayName: KeyCloak URL
   description: The URL (with the /auth part) of a Keycloak installation to perform SSO
@@ -176,8 +172,7 @@ objects:
   data:
     launcher.missioncontrol.github.username: ${LAUNCHER_MISSIONCONTROL_GITHUB_USERNAME}
     launcher.missioncontrol.github.token: ${LAUNCHER_MISSIONCONTROL_GITHUB_TOKEN}
-    launcher.missioncontrol.openshift.username: ${LAUNCHER_MISSIONCONTROL_OPENSHIFT_USERNAME}
-    launcher.missioncontrol.openshift.password: ${LAUNCHER_MISSIONCONTROL_OPENSHIFT_PASSWORD}
+    launcher.missioncontrol.openshift.token: ${LAUNCHER_MISSIONCONTROL_OPENSHIFT_TOKEN}
     launcher.missioncontrol.openshift.api.url: ${LAUNCHER_MISSIONCONTROL_OPENSHIFT_API_URL}
     launcher.missioncontrol.openshift.console.url: ${LAUNCHER_MISSIONCONTROL_OPENSHIFT_CONSOLE_URL}
     launcher.backend.catalog.filter: ${LAUNCHER_BACKEND_CATALOG_FILTER}
@@ -298,17 +293,11 @@ objects:
                 name: launcher
                 key: launcher.missioncontrol.openshift.console.url
                 optional: true
-          - name: LAUNCHER_MISSIONCONTROL_OPENSHIFT_USERNAME
+          - name: LAUNCHER_MISSIONCONTROL_OPENSHIFT_TOKEN
             valueFrom:
               configMapKeyRef:
                 name: launcher
-                key: launcher.missioncontrol.openshift.username
-                optional: true
-          - name: LAUNCHER_MISSIONCONTROL_OPENSHIFT_PASSWORD
-            valueFrom:
-              configMapKeyRef:
-                name: launcher
-                key: launcher.missioncontrol.openshift.password
+                key: launcher.missioncontrol.openshift.token
                 optional: true
           - name: LAUNCHER_MISSIONCONTROL_GITHUB_USERNAME
             valueFrom:
@@ -603,4 +592,3 @@ objects:
       weight: 100
     wildcardPolicy: None
   status: {}
-

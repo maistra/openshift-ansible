@@ -45,12 +45,8 @@ data:
           "label": "About Jaeger",
           "items": [
             {
-              "label": "GitHub",
-              "url": "https://github.com/jaegertracing/jaeger"
-            },
-            {
               "label": "Docs",
-              "url": "http://jaeger.readthedocs.io/en/latest/"
+              "url": "https://www.jaegertracing.io/docs/"
             }
           ]
         }

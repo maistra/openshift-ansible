@@ -25,6 +25,12 @@
     regexp: '(\s+kind:\s+Service\s*\n\s+metadata:\s*\n)(\s+)(name:\s+zipkin\s*\n)'
     replace: '\1\2\3\2annotations:\n\2  auth.istio.io/9411: NONE\n'
 
+- name: Exclude jaeger-collector service from mTLS
+  replace:
+    path: "{{ openshift_jaeger_production_yaml }}"
+    regexp: '(\s+kind:\s+Service\s*\n\s+metadata:\s*\n)(\s+)(name:\s+jaeger-collector\s*\n)'
+    replace: '\1\2\3\2annotations:\n\2  auth.istio.io/14267: NONE\n\2  auth.istio.io/14268: NONE\n\2  auth.istio.io/9411: NONE\n'
+
 - name: Create jaeger components
   shell: "{{ openshift_client_binary }} create -n {{ openshift_istio_namespace }} -f {{ openshift_jaeger_production_yaml }}"
 

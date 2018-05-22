@@ -16,7 +16,7 @@ metadata:
     app: elasticsearch
 spec:
   podManagementPolicy: OrderedReady
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: elasticsearch
@@ -35,14 +35,6 @@ spec:
           value: info
         image: ' '
         imagePullPolicy: IfNotPresent
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 9200
-          initialDelaySeconds: 30
-        readinessProbe:
-          tcpSocket:
-            port: 9300
         ports:
         - containerPort: 9200
           name: api

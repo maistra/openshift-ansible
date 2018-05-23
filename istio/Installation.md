@@ -112,7 +112,7 @@ openshift_istio_master_public_url=https://127.0.0.1:8443
 - Upload the `istio_installer_job.yaml` template to the master node and execute the following commands
 
 ```
-oc login —config=/etc/origin/master/admin.kubeconfig
+oc login -u system:admin --config=/etc/origin/master/admin.kubeconfig
 oc new-project istio-system
 oc create sa openshift-ansible
 oc adm policy add-scc-to-user privileged -z openshift-ansible

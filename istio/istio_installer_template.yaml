@@ -1,0 +1,168 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: istio-installer-job
+parameters:
+- displayName: Master Public URL
+  description: The public URL for master
+  name: OPENSHIFT_ISTIO_MASTER_PUBLIC_URL
+  value: https://127.0.0.1:8443
+- displayName: Enable mTLS
+  description: Enable mTLS between Istio components
+  name: OPENSHIFT_ISTIO_INSTALL_AUTH
+  value: "false"
+- displayName: OpenShift Release
+  description: The version of the OpenShift release.
+  name: OPENSHIFT_RELEASE
+  value: v3.9.0
+  required: true
+- displayName: Jaeger Image Version
+  description: The version of the Jaeger images to use
+  name: OPENSHIFT_ISTIO_JAEGER_IMAGE_VERSION
+  value: "0.6"
+- displayName: OpenShift Deployment Type
+  description: The OpenShift deployment type, either origin or openshift-enterprise
+  name: OPENSHIFT_DEPLOYMENT_TYPE
+  value: origin
+  required: true
+- displayName: Istio Image Prefix
+  description: The prefix for the Istio images
+  name: OPENSHIFT_ISTIO_IMAGE_PREFIX
+  value: openshiftistio/
+- displayName: Istio Image Version
+  description: The version of the Istio images
+  name: OPENSHIFT_ISTIO_IMAGE_VERSION
+  value: "0.7.1"
+- displayName: Istio Namespace
+  description: The namespace for the Istio components
+  name: OPENSHIFT_ISTIO_NAMESPACE
+  value: istio-system
+- displayName: Install Community
+  description: Use upstream community images instead of CentOS/RHEL images
+  name: OPENSHIFT_ISTIO_INSTALL_COMMUNITY
+  value: "false"
+- displayName: Install Fabric8 Launcher
+  description: Install the Fabric8 Launcher for boosters
+  name: OPENSHIFT_ISTIO_INSTALL_LAUNCHER
+  value: "false"
+- displayName: OpenShift User for Boosters
+  description: The name of the openshift user used by the launcher
+  name: LAUNCHER_OPENSHIFT_USER
+  value: developer
+- displayName: OpenShift Password for Boosters
+  description: The password of the openshift user used by the launcher
+  name: LAUNCHER_OPENSHIFT_PWD
+  value: developer
+- displayName: GitHub User Name for Boosters
+  description: The GitHub username used by the launcher
+  name: LAUNCHER_GITHUB_USERNAME
+- displayName: GitHub Token for Boosters
+  description: The GitHub token used by the launcher
+  name: LAUNCHER_GITHUB_TOKEN
+- displayName: Booster Catalog Repository
+  description: The GitHub catalog repository used by the launcher
+  name: LAUNCHER_CATALOG_GIT_REPO
+- displayName: Booster Catalog Branch
+  description: The GitHub catalog branch used by the launcher
+  name: LAUNCHER_CATALOG_GIT_BRANCH
+objects:
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: install.istio.inventory
+    namespace: ${OPENSHIFT_ISTIO_NAMESPACE}
+  data: 
+    istio.inventory: |-
+      [OSEv3:children]
+      masters
+      
+      [OSEv3:vars]
+      openshift_release=${OPENSHIFT_RELEASE}
+      openshift_istio_jaeger_image_version=${OPENSHIFT_ISTIO_JAEGER_IMAGE_VERSION}
+      
+      # origin or openshift-enterprise
+      openshift_deployment_type=${OPENSHIFT_DEPLOYMENT_TYPE}
+      
+      # The following are needed only if you are not using the default settings
+      openshift_istio_image_prefix=${OPENSHIFT_ISTIO_IMAGE_PREFIX}
+      openshift_istio_image_version=${OPENSHIFT_ISTIO_IMAGE_VERSION}
+      openshift_istio_namespace=${OPENSHIFT_ISTIO_NAMESPACE}
+      
+      # true if the upstream community should be installed
+      openshift_istio_install_community=${OPENSHIFT_ISTIO_INSTALL_COMMUNITY}
+      
+      # true if mTLS should be enabled
+      openshift_istio_install_auth=${OPENSHIFT_ISTIO_INSTALL_AUTH}
+      
+      # true if the fabric8 launcher should be installed
+      openshift_istio_install_launcher=${OPENSHIFT_ISTIO_INSTALL_LAUNCHER}
+      
+      # The public endpoint for accessing the master
+      openshift_istio_master_public_url=${OPENSHIFT_ISTIO_MASTER_PUBLIC_URL}
+      
+      # Uncomment the following to override the name of the openshift user used by the launcher
+      launcher_openshift_user=${LAUNCHER_OPENSHIFT_USER}
+      # Uncomment the following to override the password of the openshift user used by the launcher
+      launcher_openshift_pwd=${LAUNCHER_OPENSHIFT_PWD}
+      # Uncomment the following to override the GitHub username used by the launcher
+      launcher_github_username=${LAUNCHER_GITHUB_USERNAME}
+      # Uncomment the following to override the GitHub token used by the launcher
+      launcher_github_token=${LAUNCHER_GITHUB_TOKEN}
+      # Uncomment the following to override the GitHub catalog repository used by the launcher
+      launcher_catalog_git_repo=${LAUNCHER_CATALOG_GIT_REPO}
+      # Uncomment the following to override the GitHub catalog branch used by the launcher
+      launcher_catalog_git_branch=${LAUNCHER_CATALOG_GIT_BRANCH}
+      
+      [masters]
+      127.0.0.1 ansible_connection=local
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    labels:
+      job-name: openshift-ansible-istio-job
+    name: openshift-ansible-istio-job
+    namespace: ${OPENSHIFT_ISTIO_NAMESPACE}
+  spec:
+    activeDeadlineSeconds: 300
+    backoffLimit: 6
+    completions: 1
+    parallelism: 1
+    template:
+      metadata:
+        labels:
+          job-name: openshift-ansible-istio-job
+      spec:
+        containers:
+        - env:
+          - name: INVENTORY_FILE
+            value: /tmp/inventory/istio.inventory
+          - name: PLAYBOOK_FILE
+            value: playbooks/openshift-istio/config.yml
+          - name: OPTS
+            value: -vvv
+          image: ${OPENSHIFT_ISTIO_IMAGE_PREFIX}${OPENSHIFT_DEPLOYMENT_TYPE}-ansible:${OPENSHIFT_ISTIO_IMAGE_VERSION}
+          imagePullPolicy: IfNotPresent
+          name: openshift-ansible-istio-job
+          securityContext:
+            runAsUser: 0
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/origin/master
+            name: configdir
+          - mountPath: /tmp/inventory
+            name: configmap
+        dnsPolicy: ClusterFirst
+        hostNetwork: true
+        restartPolicy: Never
+        schedulerName: default-scheduler
+        serviceAccount: openshift-ansible
+        serviceAccountName: openshift-ansible
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - hostPath:
+            path: /etc/origin/master
+          name: configdir
+        - name: configmap
+          configMap:
+            name: install.istio.inventory

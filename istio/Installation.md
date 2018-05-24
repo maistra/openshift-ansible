@@ -7,7 +7,6 @@ This document describes the steps for installing the Istio Tech Preview release 
 - [Preparing the OCP 3.9 Installation](#preparing-the-ocp-39-installation)
    - [Updating the Master](#updating-the-master)
    - [Updating the Nodes](#updating-the-nodes)
-   - [Restart OCP 3.9 installation](#restart-ocp-39-installation)
 - [Installing Istio](#installing-istio)
 - [Verifying Installation](#verifying-installation)
 
@@ -18,30 +17,35 @@ Before Istio can be installed into an OCP 3.9 installation it is necessary to ma
 
 ### Updating the Master
 
-To enable the automatic injection of the Istio sidecar we first need to modify the master configuration to include support for webhooks and signing of Certificate Siging Requests (CSRs).
+To enable the automatic injection of the Istio sidecar we first need to modify the master configuration on each master to include support for webhooks and signing of Certificate Siging Requests (CSRs).
 
-Edit the master configuration (master-config.yaml) and make the following changes
+Make the following changes on each master within your OCP 3.9 installation.
 
-  - locate the admissionConfig section and add the following
-(indentation should be the same as GenericAdmissionWebhook)
+- Change to the directory containing the master configuration file (master-config.yaml)
+- create a file named master-config.patch with the following contents (also in `master-config.patch`)
 
 ```
+admissionConfig:
+  pluginConfig:
     MutatingAdmissionWebhook:
       configuration:
         apiVersion: v1
         disable: false
         kind: DefaultAdmissionConfig
-```
-
-  - locate the kubernetesMasterConfig and add the following
-(indentation should be the same as admissionConfig)
-
-```
+kubernetesMasterConfig:
   controllerArguments:
     cluster-signing-cert-file:
     - ca.crt
     cluster-signing-key-file:
     - ca.key
+```
+
+- within the same directory issue the following commands
+
+```
+cp -p master-config.yaml master-config.yaml.prepatch
+oc ex config patch master-config.yaml.prepatch -p "$(cat ~/master-config.patch)" > master-config.yaml
+systemctl restart atomic-openshift-master*
 ```
 
 ### Updating the Nodes
@@ -53,70 +57,24 @@ Make the following changes on each node within your OCP 3.9 installation
 
 `vm.max_map_count = 262144`
 
-### Restart OCP 3.9 installation
+- execte the foolowing command
 
-Once the above changes have been applied restart your master/nodes.
+```
+sysctl vm.max_map_count=262144
+```
 
 ## Installing Istio
 
 The following steps will install Istio into an existing OCP 3.9 installation
 
-- Create an inventory file named /var/lib/origin/openshift.local.config/istio.inventory, with the following contents (also in `istio.inventory`)
+- Upload the `istio_installer_template.yaml` template to the master node
+- Execute the following commands, specifying the public URL of your master as the value of the parameter
 
 ```
-[OSEv3:children]
-masters
-
-[OSEv3:vars]
-openshift_release=v3.9.0
-openshift_istio_jaeger_image_version=0.6
-
-# origin or openshift-enterprise
-openshift_deployment_type=origin
-
-# The following are needed only if you are not using the default settings
-#openshift_istio_image_prefix=openshiftistio/
-#openshift_istio_image_version=0.7.1
-#openshift_istio_namespace=istio-system
-
-# true if the upstream community should be installed
-openshift_istio_install_community=false
-
-# true if mTLS should be enabled
-openshift_istio_install_auth=false
-
-# true if the fabric8 launcher should be installed
-openshift_istio_install_launcher=false
-
-# The public endpoint for accessing the master
-openshift_istio_master_public_url=https://127.0.0.1:8443
-
-# Uncomment the following to override the name of the openshift user used by the launcher, this defaults to developer
-# launcher_openshift_user=
-# Uncomment the following to override the password of the openshift user used by the launcher, this defaults to developer
-# launcher_openshift_pwd=
-# Uncomment the following to override the GitHub username used by the launcher, this is empty by default
-# launcher_github_username=
-# Uncomment the following to override the GitHub token used by the launcher, this is empty by default
-# launcher_github_token=
-# Uncomment the following to override the GitHub catalog repository used by the launcher, this defaults to https://github.com/snowdrop/launcher-booster-catalog.git
-# launcher_catalog_git_repo=
-# Uncomment the following to override the GitHub catalog branch used by the launcher, this defaults to istio
-# launcher_catalog_git_branch=
-
-[masters]
-127.0.0.1 ansible_connection=local
-```
-
-- Modify the contents of the istio.inventory file to reflect your master URL configuration and whether mTLS should be enabled
-- Upload the `istio_installer_job.yaml` template to the master node and execute the following commands
-
-```
-oc login -u system:admin --config=/etc/origin/master/admin.kubeconfig
 oc new-project istio-system
 oc create sa openshift-ansible
 oc adm policy add-scc-to-user privileged -z openshift-ansible
-oc create -f istio_installer_job.yaml
+oc new-app istio_installer_template.yaml --param=OPENSHIFT_ISTIO_MASTER_PUBLIC_URL=<master public url>
 ```
 
 ## Verifying Installation
@@ -156,6 +114,3 @@ configmapcontroller-1-8rr6w   1/1       Running   0          1m
 launcher-backend-2-2wg86      1/1       Running   0          1m
 launcher-frontend-2-jxjsd     1/1       Running   0          1m
 ```
-
-
-

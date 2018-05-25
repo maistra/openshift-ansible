@@ -41,7 +41,7 @@
 
 - name: Retrieve the server certificate
   command: "{{ openshift_client_binary }} get csr {{ openshift_istio_sidecar_csr }} -o 'jsonpath={.status.certificate}'"
-  register: serverCert  
+  register: serverCert
 
 - name: Create PEM for certificate
   shell: echo "{{ serverCert.stdout }}" | openssl base64 -d -A -out {{ openshift_istio_sidecar_injector_server_cert }}
@@ -84,7 +84,7 @@
   shell: "{{ openshift_client_binary }} get pods -n {{ openshift_istio_namespace }} | egrep 'istio-sidecar-injector.*1/1.*Running'"
   register: result
   until: result.rc == 0
-  retries: 30
+  retries: 180
   delay: 2
   ignore_errors: yes
 

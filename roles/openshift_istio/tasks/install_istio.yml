@@ -17,11 +17,25 @@
   ignore_errors: yes
   when: not (openshift_istio_install_auth| bool)
 
-- name: Install Istio Mixer Validator
-  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_mixer_validator_yaml }}"
+- name: Retrieve istio-mixer-custom-resources ConfigMap
+  command: "{{ openshift_client_binary }} get configmap -o json -n {{ openshift_istio_namespace }} istio-mixer-custom-resources"
+  register: mixer_resources_configmap_output
+
+- name: set config
+  set_fact:
+    mixer_resources_configmap: "{{ mixer_resources_configmap_output.stdout | from_json }}"
+
+- name: Copy mixer custom resources
+  copy: content="{{ mixer_resources_configmap.data['custom-resources.yaml'] }}" dest=/tmp/custom-resources.yaml
+
+- name: Install mixer custom resources
+  command: "{{ openshift_client_binary }} create -f /tmp/custom-resources.yaml"
 
 - name: Expose Istio ingress service
   command: "{{ openshift_client_binary }} expose -n {{ openshift_istio_namespace }} svc istio-ingress"
 
-- name: Install sidecar injector
-  include_tasks: install_sidecar_injector.yml
+- name: Expose Istio ingress gateway service
+  command: "{{ openshift_client_binary }} expose -n {{ openshift_istio_namespace }} svc istio-ingressgateway"
+
+- name: Expose prometheus service
+  command: "{{ openshift_client_binary }} expose -n {{ openshift_istio_namespace }} svc prometheus"

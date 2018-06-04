@@ -4,6 +4,8 @@ kind: Service
 metadata:
   name: grafana
   namespace: istio-system
+  annotations:
+    auth.istio.io/3000: NONE
 spec:
   ports:
   - port: 3000
@@ -29,7 +31,7 @@ spec:
       serviceAccountName: grafana
       containers:
       - name: grafana
-        image: docker.io/istio/grafana:0.7.1
+        image: docker.io/istio/grafana:0.8.0
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 3000

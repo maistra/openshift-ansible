@@ -4,32 +4,15 @@
   register: openshift_istio_mutatingwebhookconfiguration
 
 - name: Remove Mutating Webhook
-  oc_obj:
-    name: "{{ item }}"
-    kind: "mutatingwebhookconfiguration"
-    state: absent
+  command: "{{ openshift_client_binary }} delete mutatingwebhookconfiguration {{ item }}"
   with_items: "{{ openshift_istio_mutatingwebhookconfiguration.stdout_lines|list }}"
-
-- name: Obtain list of Certificate Signing Requests
-  shell: "{{ openshift_client_binary }} get certificatesigningrequest -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | grep istio"
-  register: openshift_istio_certificatesigningrequest
-
-- name: Remove Certificate Signing Requests
-  oc_obj:
-    name: "{{ item }}"
-    kind: "certificatesigningrequest"
-    state: absent
-  with_items: "{{ openshift_istio_certificatesigningrequest.stdout_lines|list }}"
 
 - name: Obtain list of Cluster Role Bindings
   shell: "{{ openshift_client_binary }} get clusterrolebinding -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | egrep 'istio|prometheus'"
   register: openshift_istio_clusterrolebinding
 
 - name: Remove Cluster Role Bindings
-  oc_obj:
-    name: "{{ item }}"
-    kind: "clusterrolebinding"
-    state: absent
+  command: "{{ openshift_client_binary }} delete clusterrolebinding {{ item }}"
   with_items: "{{ openshift_istio_clusterrolebinding.stdout_lines|list }}"
 
 - name: Obtain list of Cluster Roles
@@ -37,10 +20,7 @@
   register: openshift_istio_clusterrole
 
 - name: Remove Cluster Roles
-  oc_obj:
-    name: "{{ item }}"
-    kind: "clusterrole"
-    state: absent
+  command: "{{ openshift_client_binary }} delete clusterrole {{ item }}"
   with_items: "{{ openshift_istio_clusterrole.stdout_lines|list }}"
 
 - name: Obtain list of Custom Resource Definitions
@@ -48,13 +28,14 @@
   register: openshift_istio_customresourcedefinition
 
 - name: Remove Custom Resource Definitions
-  oc_obj:
-    name: "{{ item }}"
-    kind: "customresourcedefinition"
-    state: absent
+  command: "{{ openshift_client_binary }} delete customresourcedefinition {{ item }}"
   with_items: "{{ openshift_istio_customresourcedefinition.stdout_lines|list }}"
 
-- name: Remove istio project
-  oc_project:
-    name: "{{ openshift_istio_namespace }}"
-    state: absent
+- name: Check istio project exists
+  command: "{{ openshift_client_binary }} get namespace {{ openshift_istio_namespace }}"
+  register: istio_namespace
+  ignore_errors: yes
+
+- name: Remove istio project if necessary
+  command: "{{ openshift_client_binary }} delete project {{ openshift_istio_namespace }}"
+  when: istio_namespace.rc == 0

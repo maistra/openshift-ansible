@@ -32,19 +32,13 @@ admissionConfig:
         apiVersion: v1
         disable: false
         kind: DefaultAdmissionConfig
-kubernetesMasterConfig:
-  controllerArguments:
-    cluster-signing-cert-file:
-    - ca.crt
-    cluster-signing-key-file:
-    - ca.key
 ```
 
 - within the same directory issue the following commands
 
 ```
 cp -p master-config.yaml master-config.yaml.prepatch
-oc ex config patch master-config.yaml.prepatch -p "$(cat ~/master-config.patch)" > master-config.yaml
+oc ex config patch master-config.yaml.prepatch -p "$(cat master-config.patch)" > master-config.yaml
 systemctl restart atomic-openshift-master*
 ```
 
@@ -73,7 +67,7 @@ The following steps will install Istio into an existing OCP 3.9 installation
 ```
 oc new-project istio-system
 oc create sa openshift-ansible
-oc adm policy add-scc-to-user privileged -z openshift-ansible
+oc adm policy add-cluster-role-to-user cluster-admin -z openshift-ansible
 oc new-app istio_installer_template.yaml --param=OPENSHIFT_ISTIO_MASTER_PUBLIC_URL=<master public url>
 ```
 

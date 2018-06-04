@@ -5,9 +5,3 @@ admissionConfig:
         apiVersion: v1
         disable: false
         kind: DefaultAdmissionConfig
-kubernetesMasterConfig:
-  controllerArguments:
-    cluster-signing-cert-file:
-    - ca.crt
-    cluster-signing-key-file:
-    - ca.key

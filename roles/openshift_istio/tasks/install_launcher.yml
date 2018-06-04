@@ -1,14 +1,14 @@
-- name: Ensure launcher project exists
-  oc_project:
-    name: "{{ launcher_project_name }}"
-    state: present
+- name: Check launcher project exists
+  command: "{{ openshift_client_binary }} get namespace {{ launcher_project_name }}"
+  register: launcher_namespace
+  ignore_errors: yes
+
+- name: Create launcher project if necessary
+  command: "{{ openshift_client_binary }} new-project {{ launcher_project_name }}"
+  when: launcher_namespace.rc != 0
 
 - name: Update {{ launcher_openshift_user }} user to grant cluster-admin
-  oc_adm_policy_user:
-    user: "{{ launcher_openshift_user }}"
-    resource_kind: cluster-role
-    resource_name: cluster-admin
-    state: present
+  command: "{{ openshift_client_binary }} adm policy add-cluster-role-to-user cluster-admin {{ launcher_openshift_user }} -n {{ openshift_istio_namespace }}"
 
 - name: Obtain user token
   shell: "curl -i -u {{ launcher_openshift_user }}:{{ launcher_openshift_pwd }} -k -H \"X-CSRF-Token: xxx\" \"https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}/oauth/authorize?client_id=openshift-challenging-client&response_type=token\" 2>/dev/null | grep Location | sed -e 's+^.*access_token=++' -e 's+\\&.*$++'"

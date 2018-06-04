@@ -4,20 +4,8 @@ openshift_istio_files: "roles/openshift_istio/files"
 
 openshift_istio_yaml: "{{ openshift_istio_files }}/istio.yaml"
 openshift_istio_auth_yaml: "{{ openshift_istio_files }}/istio-auth.yaml"
-openshift_istio_mixer_validator_yaml: "{{ openshift_istio_files }}/istio-mixer-validator.yaml"
-openshift_istio_sidecar_injector_yaml: "{{ openshift_istio_files }}/istio-sidecar-injector.yaml"
-openshift_istio_sidecar_injector_webhook_yaml: "{{ openshift_istio_files }}/istio-sidecar-injector-webhook.yaml"
-openshift_istio_sidecar_injector_configmap_yaml: "{{ openshift_istio_files }}/istio-sidecar-injector-configmap-release.yaml"
-
-openshift_istio_sidecar_injector_server_key: "{{ openshift_istio_files}}/server-key.pem"
-openshift_istio_sidecar_injector_server_csr: "{{ openshift_istio_files}}/server.csr"
-openshift_istio_sidecar_injector_csr_conf: "{{ openshift_istio_files}}/csr.conf"
-openshift_istio_sidecar_injector_csr_yaml: "{{ openshift_istio_files}}/csr.yaml"
-openshift_istio_sidecar_injector_server_cert: "{{ openshift_istio_files}}/server-cert.pem"
-openshift_istio_sidecar_injector_secret: "sidecar-injector-certs"
 
 openshift_grafana_yaml: "{{ openshift_istio_files }}/grafana.yaml"
-openshift_prometheus_yaml: "{{ openshift_istio_files }}/prometheus.yaml"
 openshift_jaeger_production_yaml: "{{ openshift_istio_files }}/jaeger-production-template.yml"
 openshift_elasticsearch_yaml: "{{ openshift_istio_files }}/elasticsearch.yml"
 openshift_elasticsearch_configmap_yaml: "{{ openshift_istio_files }}/elasticsearch_configmap.yml"
@@ -27,9 +15,6 @@ launcher_template_yaml: "{{ openshift_istio_files }}/launcher-template.yaml"
 openshift_istio_yaml_configuration_files:
   - "{{ openshift_istio_yaml }}"
   - "{{ openshift_istio_auth_yaml }}"
-  - "{{ openshift_istio_mixer_validator_yaml }}"
-  - "{{ openshift_istio_sidecar_injector_yaml }}"
-  - "{{ openshift_istio_sidecar_injector_configmap_yaml }}"
 
 openshift_istio_jaeger_yaml_configuration_files:
   - "{{ openshift_jaeger_production_yaml }}"

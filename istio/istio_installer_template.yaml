@@ -19,7 +19,7 @@ parameters:
 - displayName: Jaeger Image Version
   description: The version of the Jaeger images to use
   name: OPENSHIFT_ISTIO_JAEGER_IMAGE_VERSION
-  value: "0.6"
+  value: "1.4.1"
 - displayName: OpenShift Deployment Type
   description: The OpenShift deployment type, either origin or openshift-enterprise
   name: OPENSHIFT_DEPLOYMENT_TYPE
@@ -28,11 +28,11 @@ parameters:
 - displayName: Istio Image Prefix
   description: The prefix for the Istio images
   name: OPENSHIFT_ISTIO_IMAGE_PREFIX
-  value: openshiftistio/
+  value: docker.io/openshiftistio/
 - displayName: Istio Image Version
   description: The version of the Istio images
   name: OPENSHIFT_ISTIO_IMAGE_VERSION
-  value: "0.7.1"
+  value: "0.8.0"
 - displayName: Istio Namespace
   description: The namespace for the Istio components
   name: OPENSHIFT_ISTIO_NAMESPACE
@@ -88,6 +88,7 @@ objects:
       openshift_istio_image_version=${OPENSHIFT_ISTIO_IMAGE_VERSION}
       openshift_istio_namespace=${OPENSHIFT_ISTIO_NAMESPACE}
       
+      openshift_istio_install=true
       # true if the upstream community should be installed
       openshift_istio_install_community=${OPENSHIFT_ISTIO_INSTALL_COMMUNITY}
       
@@ -99,6 +100,8 @@ objects:
       
       # The public endpoint for accessing the master
       openshift_istio_master_public_url=${OPENSHIFT_ISTIO_MASTER_PUBLIC_URL}
+      
+      openshift_istio_oc_token=true
       
       # Uncomment the following to override the name of the openshift user used by the launcher
       launcher_openshift_user=${LAUNCHER_OPENSHIFT_USER}
@@ -141,7 +144,7 @@ objects:
           - name: OPTS
             value: -vvv
           image: ${OPENSHIFT_ISTIO_IMAGE_PREFIX}${OPENSHIFT_DEPLOYMENT_TYPE}-ansible:${OPENSHIFT_ISTIO_IMAGE_VERSION}
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           name: openshift-ansible-istio-job
           securityContext:
             runAsUser: 0

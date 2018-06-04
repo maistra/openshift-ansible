@@ -1,5 +1,9 @@
 ---
-- name: Remove istio project
-  oc_project:
-    name: "{{ launcher_project_name }}"
-    state: absent
+- name: Check launcher project exists
+  command: "{{ openshift_client_binary }} get namespace {{ launcher_project_name }}"
+  register: launcher_namespace
+  ignore_errors: yes
+
+- name: Remove launcher project if necessary
+  command: "{{ openshift_client_binary }} delete project {{ launcher_project_name }}"
+  when: launcher_namespace.rc == 0

@@ -1,8 +1,12 @@
 ---
-- name: Ensure istio project exists
-  oc_project:
-    name: "{{ openshift_istio_namespace }}"
-    state: present
+- name: Check istio project exists
+  command: "{{ openshift_client_binary }} get namespace {{ openshift_istio_namespace }}"
+  register: istio_namespace
+  ignore_errors: yes
+
+- name: Create istio project if necessary
+  command: "{{ openshift_client_binary }} new-project {{ openshift_istio_namespace }}"
+  when: istio_namespace.rc != 0
 
 - name: Ensure service accounts have the correct permissions
   include_tasks: setup_service_account.yml
@@ -21,9 +25,6 @@
 
 - name: Install Grafana
   include_tasks: install_grafana.yml
-
-- name: Install Prometheus
-  include_tasks: install_prometheus.yml
 
 - name: Install Jaeger
   include_tasks: install_jaeger.yml

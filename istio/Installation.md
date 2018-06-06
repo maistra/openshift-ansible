@@ -67,6 +67,7 @@ The following steps will install Istio into an existing OCP 3.9 installation
 ```
 oc new-project istio-system
 oc create sa openshift-ansible
+oc adm policy add-scc-to-user privileged -z openshift-ansible
 oc adm policy add-cluster-role-to-user cluster-admin -z openshift-ansible
 oc new-app istio_installer_template.yaml --param=OPENSHIFT_ISTIO_MASTER_PUBLIC_URL=<master public url>
 ```

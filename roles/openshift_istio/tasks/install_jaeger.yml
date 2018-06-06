@@ -31,7 +31,10 @@
 - name: Create jaeger components
   shell: "{{ openshift_client_binary }} create -n {{ openshift_istio_namespace }} -f {{ openshift_jaeger_production_yaml }}"
 
-- name: Check jaeger route exists
+- name: Create jaeger tracing service
+  shell: "{{ openshift_client_binary }} create -n {{ openshift_istio_namespace }} -f {{ openshift_jaeger_tracing_yaml }}"
+
+- name: Check jaeger-query route exists
   command: "{{ openshift_client_binary }} get route jaeger-query -n {{ openshift_istio_namespace }}"
   register: jaeger_route
   ignore_errors: yes
@@ -42,4 +45,17 @@
 
 - name: Label route for jaeger-query
   command: "{{ openshift_client_binary }} label route jaeger-query -n {{ openshift_istio_namespace }} --overwrite app=jaeger-query"
+  when: jaeger_route != 0
+
+- name: Check tracing route exists
+  command: "{{ openshift_client_binary }} get route tracing -n {{ openshift_istio_namespace }}"
+  register: jaeger_route
+  ignore_errors: yes
+
+- name: Create route for tracing
+  command: "{{ openshift_client_binary }} create route edge tracing --service=tracing -n {{ openshift_istio_namespace }}"
+  when: jaeger_route != 0
+
+- name: Label route for tracing
+  command: "{{ openshift_client_binary }} label route tracing -n {{ openshift_istio_namespace }} --overwrite app=tracing"
   when: jaeger_route != 0

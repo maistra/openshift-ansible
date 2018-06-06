@@ -7,6 +7,7 @@ openshift_istio_auth_yaml: "{{ openshift_istio_files }}/istio-auth.yaml"
 
 openshift_grafana_yaml: "{{ openshift_istio_files }}/grafana.yaml"
 openshift_jaeger_production_yaml: "{{ openshift_istio_files }}/jaeger-production-template.yml"
+openshift_jaeger_tracing_yaml: "{{ openshift_istio_files }}/jaeger-tracing-service.yml"
 openshift_elasticsearch_yaml: "{{ openshift_istio_files }}/elasticsearch.yml"
 openshift_elasticsearch_configmap_yaml: "{{ openshift_istio_files }}/elasticsearch_configmap.yml"
 

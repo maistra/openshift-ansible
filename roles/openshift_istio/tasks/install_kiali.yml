@@ -1,0 +1,24 @@
+---
+- name: Update kiali username
+  replace:
+    path: "{{ openshift_kiali_yaml }}"
+    regexp: 'username: admin'
+    replace: 'username: {{ openshift_istio_kiali_username }}'
+
+- name: Update kiali password
+  replace:
+    path: "{{ openshift_kiali_yaml }}"
+    regexp: 'password: admin'
+    replace: 'password: {{ openshift_istio_kiali_password }}'
+
+- name: Add Kiali components
+  command: "{{ openshift_client_binary }} create -f {{ openshift_kiali_yaml }} -n {{ openshift_istio_namespace }}"
+
+- name: Check kiali route exists
+  command: "{{ openshift_client_binary }} get route kiali -n {{ openshift_istio_namespace }}"
+  register: kiali_route
+  ignore_errors: yes
+
+- name: Expose kiali service
+  command: "{{ openshift_client_binary }} expose -n {{ openshift_istio_namespace }} svc kiali"
+  when: kiali_route != 0

@@ -19,7 +19,7 @@ parameters:
 - displayName: Jaeger Image Version
   description: The version of the Jaeger images to use
   name: OPENSHIFT_ISTIO_JAEGER_IMAGE_VERSION
-  value: "1.4.1"
+  value: ""
 - displayName: OpenShift Deployment Type
   description: The OpenShift deployment type, either origin or openshift-enterprise
   name: OPENSHIFT_DEPLOYMENT_TYPE
@@ -45,6 +45,18 @@ parameters:
   description: Install the Fabric8 Launcher for boosters
   name: OPENSHIFT_ISTIO_INSTALL_LAUNCHER
   value: "false"
+- displayName: Kiali Image Version
+  description: The version of the Kiali images to use
+  name: OPENSHIFT_ISTIO_KIALI_IMAGE_VERSION
+  value: "0.3.0.Alpha"
+- displayName: Kiali Username
+  description: The username for accessing the Kiali console
+  name: OPENSHIFT_ISTIO_KIALI_USERNAME
+  value: ""
+- displayName: Kiali Password
+  description: The password for accessing the Kiali console
+  name: OPENSHIFT_ISTIO_KIALI_PASSWORD
+  value: ""
 - displayName: OpenShift User for Boosters
   description: The name of the openshift user used by the launcher
   name: LAUNCHER_OPENSHIFT_USER
@@ -102,6 +114,10 @@ objects:
       openshift_istio_master_public_url=${OPENSHIFT_ISTIO_MASTER_PUBLIC_URL}
       
       openshift_istio_oc_token=true
+      
+      openshift_istio_kiali_image_version=${OPENSHIFT_ISTIO_KIALI_IMAGE_VERSION}
+      openshift_istio_kiali_username=${OPENSHIFT_ISTIO_KIALI_USERNAME}
+      openshift_istio_kiali_password=${OPENSHIFT_ISTIO_KIALI_PASSWORD}
       
       # Uncomment the following to override the name of the openshift user used by the launcher
       launcher_openshift_user=${LAUNCHER_OPENSHIFT_USER}

@@ -69,7 +69,7 @@ oc new-project istio-system
 oc create sa openshift-ansible
 oc adm policy add-scc-to-user privileged -z openshift-ansible
 oc adm policy add-cluster-role-to-user cluster-admin -z openshift-ansible
-oc new-app istio_installer_template.yaml --param=OPENSHIFT_ISTIO_MASTER_PUBLIC_URL=<master public url>
+oc new-app istio_installer_template.yaml --param=OPENSHIFT_ISTIO_MASTER_PUBLIC_URL=<master public url> --param=OPENSHIFT_ISTIO_KIALI_USERNAME=<username> --param=OPENSHIFT_ISTIO_KIALI_PASSWORD=<password>
 ```
 
 ## Verifying Installation
@@ -84,21 +84,24 @@ oc get pods -n istio-system -w
 Once the `openshift-ansible-istio-job` has completed run `oc get pods -n istio-system` and verify you have state similar to the following
 
 ```
-NAME                                      READY     STATUS      RESTARTS   AGE
-elasticsearch-0                           1/1       Running     0          18s
-elasticsearch-1                           1/1       Running     0          3s
-grafana-6f4fd4986f-tzkzl                  1/1       Running     0          25s
-istio-ca-ddb878d84-mknp6                  1/1       Running     0          43s
-istio-ingress-76b5496c58-4v9s8            1/1       Running     0          43s
-istio-mixer-56f49dc667-4nl2v              3/3       Running     0          44s
-istio-mixer-validator-65c7fccc64-rj8dd    1/1       Running     0          43s
-istio-pilot-76dd785958-tb2fn              2/2       Running     0          44s
-istio-sidecar-injector-599d8c454c-7pv7b   1/1       Running     0          35s
-jaeger-agent-rfkkk                        1/1       Running     0          1s
-jaeger-collector-b86c6bf8d-p5g7p          1/1       Running     0          2s
-jaeger-query-6c8c85454-kzz82              1/1       Running     0          2s
-openshift-ansible-istio-job-zg6nv         0/1       Completed   0          1m
-prometheus-cf8456855-n4qd9                1/1       Running     0          24s
+NAME                                        READY     STATUS      RESTARTS   AGE
+elasticsearch-0                             1/1       Running     0          24s
+grafana-6bb556d859-hwsgp                    1/1       Running     0          26s
+istio-citadel-69cc84849c-pz4bb              1/1       Running     0          31s
+istio-egressgateway-7f8bbcbc4f-h5vk7        1/1       Running     0          31s
+istio-ingress-7d945799fc-l2zhd              1/1       Running     0          31s
+istio-ingressgateway-7f6d5ccc65-ztt58       1/1       Running     0          31s
+istio-pilot-578b974bcc-d5txk                1/2       Running     0          31s
+istio-policy-b5bf474cc-qk58f                2/2       Running     0          31s
+istio-sidecar-injector-57c6b96dc4-wgbld     1/1       Running     0          31s
+istio-statsd-prom-bridge-6dbb7dcc7f-jml7l   1/1       Running     0          31s
+istio-telemetry-9445d68d5-9jv2j             2/2       Running     0          31s
+jaeger-agent-k9dzd                          1/1       Running     0          12s
+jaeger-collector-68fd846775-j74gf           1/1       Running     0          13s
+jaeger-query-58f4655965-6248n               1/1       Running     0          12s
+kiali-795b86cfc7-fs9xn                      1/1       Running     0          8s
+openshift-ansible-istio-job-t8mpn           0/1       Completed   0          54s
+prometheus-586d95b8d9-c6xhx                 1/1       Running     0          31s
 ```
 
 If you have also chosen to install the Farbic8 launcher then you should monitor the containers within the devex project until the following state has been reached

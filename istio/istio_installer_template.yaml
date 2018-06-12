@@ -138,8 +138,8 @@ objects:
   kind: Job
   metadata:
     labels:
-      job-name: openshift-ansible-istio-job
-    name: openshift-ansible-istio-job
+      job-name: openshift-ansible-istio-installer-job
+    name: openshift-ansible-istio-installer-job
     namespace: ${OPENSHIFT_ISTIO_NAMESPACE}
   spec:
     activeDeadlineSeconds: 300
@@ -149,7 +149,7 @@ objects:
     template:
       metadata:
         labels:
-          job-name: openshift-ansible-istio-job
+          job-name: openshift-ansible-istio-installer-job
       spec:
         containers:
         - env:
@@ -160,8 +160,8 @@ objects:
           - name: OPTS
             value: -vvv
           image: ${OPENSHIFT_ISTIO_IMAGE_PREFIX}${OPENSHIFT_DEPLOYMENT_TYPE}-ansible:${OPENSHIFT_ISTIO_IMAGE_VERSION}
-          imagePullPolicy: Always
-          name: openshift-ansible-istio-job
+          imagePullPolicy: IfNotPresent
+          name: openshift-ansible-istio-installer-job
           securityContext:
             runAsUser: 0
           terminationMessagePath: /dev/termination-log

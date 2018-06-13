@@ -7,6 +7,9 @@
   command: "{{ openshift_client_binary }} new-project {{ launcher_project_name }}"
   when: launcher_namespace.rc != 0
 
+- name: Label Launcher namespace so it is ignored by injection
+  command: "{{ openshift_client_binary }} label namespace {{ launcher_project_name }} istio.openshift.com/ignore-namespace=ignore"
+
 - name: Update {{ launcher_openshift_user }} user to grant cluster-admin
   command: "{{ openshift_client_binary }} adm policy add-cluster-role-to-user cluster-admin {{ launcher_openshift_user }} -n {{ openshift_istio_namespace }}"
 

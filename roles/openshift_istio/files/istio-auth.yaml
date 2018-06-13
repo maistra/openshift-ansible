@@ -3367,6 +3367,9 @@ webhooks:
         apiVersions: ["v1"]
         resources: ["pods"]
     failurePolicy: Fail
+    namespaceSelector:
+      matchExpressions:
+        - {key: istio.openshift.com/ignore-namespace, operator: DoesNotExist}
 
 ---
 # Source: istio/charts/egressgateway/templates/autoscale.yaml

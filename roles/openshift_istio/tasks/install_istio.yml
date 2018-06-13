@@ -7,6 +7,9 @@
     loop_var: configuration
   when: not (openshift_istio_install_community | bool)
 
+- name: Label Istio namespace so it is ignored by injection
+  command: "{{ openshift_client_binary }} label namespace {{ openshift_istio_namespace }} istio.openshift.com/ignore-namespace=ignore"
+
 - name: Create Istio components with auth
   command: "{{ openshift_client_binary }} create -f {{ openshift_istio_auth_yaml }}"
   ignore_errors: yes

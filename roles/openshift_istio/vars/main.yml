@@ -25,3 +25,13 @@ openshift_istio_jaeger_yaml_configuration_files:
 
 openshift_istio_kiali_yaml_configuration_files:
   - "{{ openshift_kiali_yaml }}"
+
+openshift_istio_resources:
+  - "attributemanifests"
+  - "kuberneteses"
+  - "kubernetesenvs"
+  - "logentries"
+  - "metrics"
+  - "prometheuses"
+  - "rules"
+  - "stdios"

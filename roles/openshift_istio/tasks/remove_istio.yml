@@ -44,6 +44,19 @@
   command: "{{ openshift_client_binary }} delete customresourcedefinition {{ item }}"
   with_items: "{{ openshift_istio_customresourcedefinition.stdout_lines|list }}"
 
+- name: Remove all Istio components
+  command: "{{ openshift_client_binary }} delete {{ item }} -n {{ openshift_istio_namespace }} --all"
+  with_items: " {{ openshift_istio_component_types }}"
+
+- name: Wait for Istio components to be removed
+  command: "{{ openshift_client_binary }} get {{ item }} -n {{ openshift_istio_namespace }}"
+  register: result
+  until: result.stderr == "No resources found."
+  retries: 15
+  delay: 2
+  ignore_errors: yes
+  with_items: " {{ openshift_istio_component_types }}"
+
 - name: Check istio project exists
   command: "{{ openshift_client_binary }} get namespace {{ openshift_istio_namespace }}"
   register: istio_namespace

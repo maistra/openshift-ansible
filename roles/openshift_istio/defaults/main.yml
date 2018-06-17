@@ -39,6 +39,15 @@ openshift_istio_service_accounts:
   - "istio-pilot-service-account"
   - "istio-sidecar-injector-service-account"
 
+openshift_istio_component_types:
+  - "route"
+  - "service"
+  - "deployment"
+  - "daemonset"
+  - "statefulset"
+  - "configmap"
+  - "imagestream"
+
 openshift_istio_grafana_service_account: "grafana"
 openshift_istio_prometheus_service_account: "prometheus"
 openshift_istio_jaeger_service_account: "jaeger"

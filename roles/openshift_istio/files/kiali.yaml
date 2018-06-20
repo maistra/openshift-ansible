@@ -57,6 +57,12 @@ rules:
   - get
   - list
   - watch
+- apiGroups: ["route.openshift.io"]
+  attributeRestrictions: null
+  resources:
+  - routes
+  verbs:
+  - get
 - apiGroups: ["config.istio.io"]
   attributeRestrictions: null
   resources:

@@ -3,7 +3,7 @@ default_istio_image_tag: "0.8.0"
 default_istio_namespace: "istio-system"
 default_istio_jaeger_image_tag: "1.5"
 default_istio_jaeger_productised_image_tag: "1.4.1"
-default_istio_kiali_image_tag: "0.3.0.Alpha"
+default_istio_kiali_image_tag: "v0.4.0"
 
 openshift_istio_image_dict:
   origin:

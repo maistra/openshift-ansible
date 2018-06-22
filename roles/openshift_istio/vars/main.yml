@@ -13,6 +13,7 @@ openshift_elasticsearch_yaml: "{{ openshift_istio_files }}/elasticsearch.yml"
 openshift_elasticsearch_configmap_yaml: "{{ openshift_istio_files }}/elasticsearch_configmap.yml"
 
 openshift_kiali_yaml: "{{ openshift_istio_files }}/kiali.yaml"
+openshift_istio_kiali_secret: "kiali"
 
 launcher_template_yaml: "{{ openshift_istio_files }}/launcher-template.yaml"
 

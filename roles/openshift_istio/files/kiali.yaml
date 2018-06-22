@@ -12,9 +12,6 @@ data:
     server:
       port: 20001
       static_content_root_directory: /opt/kiali/console
-      credentials:
-        username: admin
-        password: admin
 
 ---
 # Source: istio/charts/kiali/templates/serviceaccount.yaml
@@ -26,7 +23,7 @@ metadata:
   namespace: istio-system
   labels:
     app: kiali
-    chart: kiali-0.3.0.Alpha
+    chart: kiali-v0.4.0
     heritage: Tiller
     release: redhat-0.8.0
 
@@ -41,7 +38,7 @@ metadata:
     app: kiali
     version: master
 rules:
-- apiGroups: ["","apps", "autoscaling"]
+- apiGroups: ["", "apps", "autoscaling"]
   attributeRestrictions: null
   resources:
   - configmaps
@@ -107,7 +104,6 @@ rules:
   - get
   - list
   - watch
-
 ---
 # Source: istio/charts/kiali/templates/clusterrolebinding.yaml
 
@@ -117,7 +113,7 @@ metadata:
   name: istio-kiali-admin-role-binding-istio-system
   labels:
     app: kiali
-    chart: kiali-0.3.0.Alpha
+    chart: kiali-v0.4.0
     heritage: Tiller
     release: redhat-0.8.0
 roleRef:
@@ -156,7 +152,7 @@ metadata:
   namespace: istio-system
   labels:
     app: kiali
-    chart: kiali-0.3.0.Alpha
+    chart: kiali-v0.4.0
     release: redhat-0.8.0
     heritage: Tiller
 spec:
@@ -173,7 +169,7 @@ spec:
       serviceAccountName: kiali-service-account
 
       containers:
-      - image: "kiali/kiali:0.3.0.Alpha"
+      - image: "kiali/kiali:v0.4.0"
         name: kiali
         command:
         - "/opt/kiali/kiali"
@@ -186,12 +182,22 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: SERVER_CREDENTIALS_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: kiali
+              key: username
+        - name: SERVER_CREDENTIALS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: kiali
+              key: password
         volumeMounts:
         - name: kiali-configuration
           mountPath: "/kiali-configuration"
         resources:
             {}
-            
+
       volumes:
       - name: kiali-configuration
         configMap:

@@ -1,17 +1,15 @@
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: elasticsearch
+  labels:
+    app: elasticsearch
+---
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
   name: elasticsearch
-  annotations:
-    image.openshift.io/triggers: |
-      [{
-      "from": {
-        "kind": "ImageStreamTag",
-        "name": "elasticsearch:5.5.2"
-        },
-        "fieldPath": "spec.template.spec.containers[?(@.name==\"elasticsearch\")].image"
-      }]
   labels:
     app: elasticsearch
 spec:
@@ -33,7 +31,7 @@ spec:
           value: elasticsearch-cluster
         - name: LOG_LEVEL
           value: info
-        image: ' '
+        image: registry.centos.org/rhsyseng/elasticsearch:5.5.2
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9200
@@ -90,36 +88,3 @@ spec:
     app: elasticsearch
   type: ClusterIP
 ---
-apiVersion: v1
-kind: ImageStream
-metadata:
-  name: elasticsearch
-  labels:
-    app: elasticsearch
-spec:
-  lookupPolicy:
-    local: false
-  tags:
-  - name: latest
-    from:
-      kind: DockerImage
-      name: registry.centos.org/rhsyseng/elasticsearch:latest
-  - name: 6.2.2
-    from:
-      kind: DockerImage
-      name: registry.centos.org/rhsyseng/elasticsearch:6.2.2
-  - name: 6.1.2
-    from:
-      kind: DockerImage
-      name: registry.centos.org/rhsyseng/elasticsearch:6.1.2
-  - name: 5.5.2
-    from:
-      kind: DockerImage
-      name: registry.centos.org/rhsyseng/elasticsearch:5.5.2
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: elasticsearch
-  labels:
-    app: elasticsearch

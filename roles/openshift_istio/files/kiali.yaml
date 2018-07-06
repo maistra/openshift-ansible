@@ -63,8 +63,6 @@ rules:
 - apiGroups: ["config.istio.io"]
   attributeRestrictions: null
   resources:
-  - routerules
-  - destinationpolicies
   - rules
   - circonuses
   - deniers
@@ -170,7 +168,7 @@ spec:
       serviceAccountName: kiali-service-account
 
       containers:
-      - image: "kiali/kiali:v0.4.0"
+      - image: "kiali/kiali:v0.5.0"
         name: kiali
         command:
         - "/opt/kiali/kiali"

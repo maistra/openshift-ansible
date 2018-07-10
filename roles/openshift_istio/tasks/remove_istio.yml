@@ -8,6 +8,28 @@
   command: "{{ openshift_client_binary }} delete mutatingwebhookconfiguration {{ item }}"
   with_items: "{{ openshift_istio_mutatingwebhookconfiguration.stdout_lines|list }}"
 
+- name: Obtain list of Validating Webhook Configurations
+  shell: "{{ openshift_client_binary }} get validatingwebhookconfiguration -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | grep istio"
+  register: openshift_istio_validatingwebhookconfiguration
+  ignore_errors: true
+
+- name: Remove Validating Webhook
+  command: "{{ openshift_client_binary }} delete validatingwebhookconfiguration {{ item }}"
+  with_items: "{{ openshift_istio_validatingwebhookconfiguration.stdout_lines }}"
+
+- name: Remove all Istio components
+  command: "{{ openshift_client_binary }} delete {{ item }} -n {{ openshift_istio_namespace }} --all"
+  with_items: " {{ openshift_istio_component_types }}"
+
+- name: Wait for Istio components to be removed
+  command: "{{ openshift_client_binary }} get {{ item }} -n {{ openshift_istio_namespace }}"
+  register: result
+  until: result.stderr == "No resources found."
+  retries: 15
+  delay: 2
+  ignore_errors: yes
+  with_items: "{{ openshift_istio_component_types }}"
+
 - name: Obtain list of Certificate Signing Requests
   shell: "{{ openshift_client_binary }} get certificatesigningrequest -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | grep istio"
   register: openshift_istio_certificatesigningrequest
@@ -44,18 +66,13 @@
   command: "{{ openshift_client_binary }} delete customresourcedefinition {{ item }}"
   with_items: "{{ openshift_istio_customresourcedefinition.stdout_lines|list }}"
 
-- name: Remove all Istio components
-  command: "{{ openshift_client_binary }} delete {{ item }} -n {{ openshift_istio_namespace }} --all"
-  with_items: " {{ openshift_istio_component_types }}"
+- name: Obtain all Istio secrets
+  command: "{{ openshift_client_binary }} get secret --all-namespaces -o=jsonpath='{{ openshift_istio_secret_query_template }}'"
+  register: openshift_istio_secrets
 
-- name: Wait for Istio components to be removed
-  command: "{{ openshift_client_binary }} get {{ item }} -n {{ openshift_istio_namespace }}"
-  register: result
-  until: result.stderr == "No resources found."
-  retries: 15
-  delay: 2
-  ignore_errors: yes
-  with_items: " {{ openshift_istio_component_types }}"
+- name: Remove all Istio secrets
+  command: "{{ openshift_client_binary }} delete secret -n {{ item.split()[0] }} {{ item.split()[1] }}"
+  loop: "{{ openshift_istio_secrets.stdout_lines }}"
 
 - name: Check istio project exists
   command: "{{ openshift_client_binary }} get namespace {{ openshift_istio_namespace }}"

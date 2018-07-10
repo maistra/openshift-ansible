@@ -21,7 +21,7 @@
   when: not (openshift_istio_install_auth| bool)
 
 - name: Wait for resource CRDs to establish
-  shell: "{{ openshift_client_binary }} get --raw /apis/config.istio.io/v1alpha2/{{ item }}"
+  shell: "{{ openshift_client_binary }} get --raw /apis/{{ item.namespace }}/{{ item.version }}/{{ item.name }}"
   register: result
   until: result.rc == 0
   retries: 10
@@ -29,11 +29,32 @@
   ignore_errors: yes
   with_items: "{{ openshift_istio_resources }}"
 
+- name: Check for galley validating webhook
+  shell: "{{ openshift_client_binary }} get validatingwebhookconfiguration istio-galley"
+  register: openshift_istio_galley_validating_webhook
+  ignore_errors: true
+
+- name: Wait for galley deployment to be established
+  command: "{{ openshift_client_binary }} get deployment -n {{ openshift_istio_namespace }} istio-galley -o jsonpath='{..status.readyReplicas}'"
+  register: result
+  until: result.stdout == "1"
+  retries: 60
+  delay: 5
+  when: openshift_istio_galley_validating_webhook.rc == 0
+
 - name: Retrieve istio-mixer-custom-resources ConfigMap
-  command: "{{ openshift_client_binary }} extract -n {{ openshift_istio_namespace }} configmap/istio-mixer-custom-resources --to=/tmp --keys=custom-resources.yaml"
+  command: "{{ openshift_client_binary }} extract -n {{ openshift_istio_namespace }} configmap/istio-mixer-custom-resources --confirm --to=/tmp --keys=custom-resources.yaml"
 
 - name: Install mixer custom resources
   command: "{{ openshift_client_binary }} create -f /tmp/custom-resources.yaml"
+
+- name: Handle security custom resources
+  block:
+    - name: Retrieve istio-security-custom-resources ConfigMap
+      command: "{{ openshift_client_binary }} extract -n {{ openshift_istio_namespace }} configmap/istio-security-custom-resources --confirm --to=/tmp --keys=custom-resources.yaml"
+    - name: Install security custom resources
+      command: "{{ openshift_client_binary }} create -f /tmp/custom-resources.yaml"
+  when: openshift_istio_install_auth | bool
 
 - name: Set authenticated cluster role to enable access for all authenticated users
   command: "{{ openshift_client_binary }} create -f {{ openshift_istio_authenticated_clusterrole_yaml }}"

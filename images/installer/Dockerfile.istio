@@ -1,4 +1,4 @@
-FROM docker.io/openshift/origin-ansible:v3.9.0
+FROM docker.io/openshift/origin-ansible:v3.10
 
 MAINTAINER OpenShift Team <dev@lists.openshift.redhat.com>
 

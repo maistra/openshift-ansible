@@ -32,6 +32,11 @@ admissionConfig:
         apiVersion: v1
         disable: false
         kind: DefaultAdmissionConfig
+    ValidatingAdmissionWebhook:
+      configuration:
+        apiVersion: v1
+        disable: false
+        kind: DefaultAdmissionConfig
 ```
 
 - within the same directory issue the following commands
@@ -81,24 +86,25 @@ oc get pods -n istio-system -w
 Once the `openshift-ansible-istio-installer-job` has completed run `oc get pods -n istio-system` and verify you have state similar to the following
 
 ```
-NAME                                          READY     STATUS      RESTARTS   AGE
-elasticsearch-0                               1/1       Running     0          39s
-grafana-6bb556d859-pxgbn                      1/1       Running     0          36s
-istio-citadel-69cc84849c-8t7ld                1/1       Running     0          1m
-istio-egressgateway-7f8bbcbc4f-kcxkp          1/1       Running     0          1m
-istio-ingress-7d945799fc-c588h                1/1       Running     0          1m
-istio-ingressgateway-7f6d5ccc65-jvmdz         1/1       Running     0          1m
-istio-pilot-578b974bcc-hmbnd                  1/2       Running     0          1m
-istio-policy-b5bf474cc-dd47h                  2/2       Running     0          1m
-istio-sidecar-injector-57c6b96dc4-z99pj       1/1       Running     0          1m
-istio-statsd-prom-bridge-6dbb7dcc7f-rcf78     1/1       Running     0          1m
-istio-telemetry-9445d68d5-bp9bt               2/2       Running     0          1m
-jaeger-agent-d62rv                            1/1       Running     0          34s
-jaeger-collector-68fd846775-88ddv             1/1       Running     1          34s
-jaeger-query-58f4655965-dnwc6                 1/1       Running     1          34s
-kiali-795b86cfc7-dkmrp                        1/1       Running     0          28s
-openshift-ansible-istio-installer-job-f7hgx   0/1       Completed   0          1m
-prometheus-586d95b8d9-qrdbn                   1/1       Running     0          1m
+NAME                                        READY     STATUS      RESTARTS   AGE
+elasticsearch-0                             1/1       Running     0          1m
+grafana-6bb556d859-hslg4                    1/1       Running     0          1m
+istio-citadel-5f59bd46f8-6f89t              1/1       Running     0          1m
+istio-egressgateway-66c558586b-9rkr4        1/1       Running     0          1m
+istio-galley-5d4b48cfb-tslrh                1/1       Running     0          1m
+istio-ingress-58649fdc6b-v6vdv              1/1       Running     0          1m
+istio-ingressgateway-6bbb647b64-wjnfc       1/1       Running     0          1m
+istio-pilot-bf7d7fd97-9kfhl                 2/2       Running     0          1m
+istio-policy-8677b55fd4-ppsjk               2/2       Running     0          1m
+istio-sidecar-injector-7c4b5fc547-qqsl5     1/1       Running     0          1m
+istio-statsd-prom-bridge-6dbb7dcc7f-h6zg8   1/1       Running     0          1m
+istio-telemetry-8c8f9c5c6-ljs75             2/2       Running     0          1m
+jaeger-agent-69c7f                          1/1       Running     0          1m
+jaeger-collector-68fd846775-m5lkf           1/1       Running     0          1m
+jaeger-query-58f4655965-nkhg4               1/1       Running     0          1m
+kiali-54f98bf9d5-b6wz4                      1/1       Running     0          1m
+openshift-ansible-istio-job-5mlvs           0/1       Completed   0          2m
+prometheus-586d95b8d9-dmwx5                 1/1       Running     0          1m
 ```
 
 If you have also chosen to install the Farbic8 launcher then you should monitor the containers within the devex project until the following state has been reached

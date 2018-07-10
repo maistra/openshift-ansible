@@ -5,3 +5,8 @@ admissionConfig:
         apiVersion: v1
         disable: false
         kind: DefaultAdmissionConfig
+    ValidatingAdmissionWebhook:
+      configuration:
+        apiVersion: v1
+        disable: false
+        kind: DefaultAdmissionConfig

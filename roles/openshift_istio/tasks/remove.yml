@@ -4,3 +4,6 @@
 
 - name: Remove Istio
   include_tasks: remove_istio.yml
+
+- name: Remove Kiali
+  include_tasks: remove_kiali.yml

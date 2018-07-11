@@ -1,0 +1,5 @@
+---
+- name: Remove kiali secret
+  command: "{{ openshift_client_binary }} delete secret {{ item }}"
+  ignore_errors: yes
+  with_items: "{{ openshift_istio_kiali_secret }}"

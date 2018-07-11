@@ -52,6 +52,8 @@ openshift_istio_component_types:
 openshift_istio_grafana_service_account: "grafana"
 openshift_istio_prometheus_service_account: "prometheus"
 openshift_istio_jaeger_service_account: "jaeger"
+openshift_istio_elasticsearch_service_account: "elasticsearch"
+openshift_istio_kiali_service_account: "kiali-service-account"
 
 openshift_istio_additional_scc_service_accounts:
   - "{{ openshift_istio_grafana_service_account }}"
@@ -59,6 +61,13 @@ openshift_istio_additional_scc_service_accounts:
 
 openshift_istio_additional_scc_privileged_service_accounts:
   - "{{ openshift_istio_jaeger_service_account }}"
+
+openshift_istio_additional_service_accounts:
+ - "{{ openshift_istio_grafana_service_account }}"
+ - "{{ openshift_istio_prometheus_service_account }}"
+ - "{{ openshift_istio_jaeger_service_account }}"
+ - "{{ openshift_istio_elasticsearch_service_account }}"
+ - "{{ openshift_istio_kiali_service_account }}"
 
 openshift_istio_api_url: "https://{{ ansible_env.KUBERNETES_SERVICE_HOST + ':' + ansible_env.KUBERNETES_SERVICE_PORT }}"
 

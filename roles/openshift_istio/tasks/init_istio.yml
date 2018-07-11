@@ -85,3 +85,7 @@
   set_fact:
     openshift_client_binary: "/usr/bin/oc --token={{ openshift_client_token.stdout }}"
   when: openshift_istio_oc_token
+
+- name: Initialise all service accounts fact
+  set_fact:
+    openshift_istio_all_service_accounts: "{{ openshift_istio_service_accounts }} + {{ openshift_istio_additional_service_accounts }}"

@@ -30,6 +30,11 @@
   ignore_errors: yes
   with_items: "{{ openshift_istio_component_types }}"
 
+- name: Remove all istio service accounts
+  command: "{{ openshift_client_binary }} delete sa {{ item }}"
+  ignore_errors: yes
+  with_items: "{{ openshift_istio_all_service_accounts }}"
+
 - name: Obtain list of Certificate Signing Requests
   shell: "{{ openshift_client_binary }} get certificatesigningrequest -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | grep istio"
   register: openshift_istio_certificatesigningrequest

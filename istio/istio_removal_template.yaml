@@ -20,7 +20,7 @@ parameters:
 - displayName: Istio Image Version
   description: The version of the Istio images
   name: OPENSHIFT_ISTIO_IMAGE_VERSION
-  value: "0.8.0"
+  value: "1.0.0-snapshot.0"
 - displayName: Istio Namespace
   description: The namespace for the Istio components
   name: OPENSHIFT_ISTIO_NAMESPACE

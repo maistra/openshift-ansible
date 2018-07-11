@@ -17,12 +17,12 @@ Before Istio can be installed into an OCP 3.9 installation it is necessary to ma
 
 ### Updating the Master
 
-To enable the automatic injection of the Istio sidecar we first need to modify the master configuration on each master to include support for webhooks and signing of Certificate Siging Requests (CSRs).
+To enable the automatic injection of the Istio sidecar we first need to modify the master configuration on each master to include support for webhooks and signing of Certificate Signing Requests (CSRs).
 
 Make the following changes on each master within your OCP 3.9 installation.
 
 - Change to the directory containing the master configuration file (master-config.yaml)
-- create a file named master-config.patch with the following contents (also in `master-config.patch`)
+- Create a file named master-config.patch with the following contents (also in `master-config.patch`)
 
 ```
 admissionConfig:
@@ -39,7 +39,7 @@ admissionConfig:
         kind: DefaultAdmissionConfig
 ```
 
-- within the same directory issue the following commands
+- Within the same directory issue the following commands:
 
 ```
 cp -p master-config.yaml master-config.yaml.prepatch
@@ -48,15 +48,15 @@ systemctl restart atomic-openshift-master*
 ```
 
 ### Updating the Nodes
-In order to run the Elasticsearch application it is necessary to make a change to the kernel configuration on each node, this change will be handled through the sysctl service.
+In order to run the Elasticsearch application it is necessary to make a change to the kernel configuration on each node, this change will be handled through the `sysctl` service.
 
 Make the following changes on each node within your OCP 3.9 installation
 
-- Create a file named /etc/sysctl.d/99-elasticsearch.conf with the following contents
+- Create a file named `/etc/sysctl.d/99-elasticsearch.conf` with the following contents:
 
 `vm.max_map_count = 262144`
 
-- execte the foolowing command
+- Execte the following command:
 
 ```
 sysctl vm.max_map_count=262144
@@ -64,7 +64,7 @@ sysctl vm.max_map_count=262144
 
 ## Installing Istio
 
-The following steps will install Istio into an existing OCP 3.9 installation, they can be executed from any host with access to the cluster
+The following steps will install Istio into an existing OCP 3.9 installation, they can be executed from any host with access to the cluster.
 
 ```
 oc new-project istio-system
@@ -75,15 +75,15 @@ oc new-app istio_installer_template.yaml --param=OPENSHIFT_ISTIO_MASTER_PUBLIC_U
 ```
 
 ## Verifying Installation
-The above instructions will create a job within the istio-system project to install Istio using ansible playbooks, the progress of the installation can be followed by either watching the pods or the log output from the `openshift-ansible-istio-installer-job` pod.
+The above instructions will create a job within the istio-system project to install Istio using Ansible playbooks, the progress of the installation can be followed by either watching the pods or the log output from the `openshift-ansible-istio-installer-job` pod.
 
-To watch the progress of the pods execute the following command
+To watch the progress of the pods execute the following command:
 
 ```
 oc get pods -n istio-system -w
 ```
 
-Once the `openshift-ansible-istio-installer-job` has completed run `oc get pods -n istio-system` and verify you have state similar to the following
+Once the `openshift-ansible-istio-installer-job` has completed run `oc get pods -n istio-system` and verify you have state similar to the following"
 
 ```
 NAME                                        READY     STATUS      RESTARTS   AGE
@@ -107,7 +107,7 @@ openshift-ansible-istio-job-5mlvs           0/1       Completed   0          2m
 prometheus-586d95b8d9-dmwx5                 1/1       Running     0          1m
 ```
 
-If you have also chosen to install the Farbic8 launcher then you should monitor the containers within the devex project until the following state has been reached
+If you have also chosen to install the Farbic8 launcher then you should monitor the containers within the devex project until the following state has been reached:
 
 ```
 NAME                          READY     STATUS    RESTARTS   AGE

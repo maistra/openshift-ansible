@@ -20,6 +20,10 @@ parameters:
   description: The version of the Jaeger images to use
   name: OPENSHIFT_ISTIO_JAEGER_IMAGE_VERSION
   value: ""
+- displayName: Elasticsearch memory requirement
+  description: The memory requirements for the Elasticsearch deployments.
+  name: OPENSHIFT_ISTIO_ELASTICSEARCH_MEMORY
+  value: 1Gi
 - displayName: OpenShift Deployment Type
   description: The OpenShift deployment type, either origin or openshift-enterprise
   name: OPENSHIFT_DEPLOYMENT_TYPE
@@ -99,6 +103,8 @@ objects:
       openshift_istio_image_prefix=${OPENSHIFT_ISTIO_IMAGE_PREFIX}
       openshift_istio_image_version=${OPENSHIFT_ISTIO_IMAGE_VERSION}
       openshift_istio_namespace=${OPENSHIFT_ISTIO_NAMESPACE}
+      
+      openshift_istio_elasticsearch_memory=${OPENSHIFT_ISTIO_ELASTICSEARCH_MEMORY}
       
       openshift_istio_install=true
       # true if the upstream community should be installed

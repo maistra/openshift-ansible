@@ -5,6 +5,13 @@
 - name: Create elasticsearch configmap
   shell: "{{ openshift_client_binary }} create -n {{ openshift_istio_namespace }} -f {{ openshift_elasticsearch_configmap_yaml }}"
 
+- name: Update Elasticsearch memory request
+  replace:
+    path: "{{ openshift_elasticsearch_yaml }}"
+    regexp: "{{ default_istio_elasticsearch_memory }}"
+    replace: "{{ openshift_istio_elasticsearch_memory }}"
+  when: openshift_istio_elasticsearch_memory is defined and openshift_istio_elasticsearch_memory != ""
+
 - name: Create elasticsearch
   shell: "{{ openshift_client_binary }} create -n {{ openshift_istio_namespace }} -f {{ openshift_elasticsearch_yaml }}"
 

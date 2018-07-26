@@ -38,5 +38,6 @@ openshift_istio_resources:
   - {name: "metrics", namespace: "config.istio.io", version: "v1alpha2"}
   - {name: "destinationrules", namespace: "networking.istio.io", version: "v1alpha3"}
   - {name: "meshpolicies", namespace: "authentication.istio.io", version: "v1alpha1"}
+  - {name: "policies", namespace: "authentication.istio.io", version: "v1alpha1"}
 
 openshift_istio_secret_query_template: '{range .items[?(@.type=="istio.io/key-and-cert")]}{.metadata.namespace} {.metadata.name}{"\n"}{end}'

@@ -3,5 +3,11 @@
   command: "{{ openshift_client_binary }} create -f {{ openshift_grafana_yaml }}"
   ignore_errors: yes
 
+- name: Retrieve istio-grafana-custom-resources ConfigMap
+  command: "{{ openshift_client_binary }} extract -n {{ openshift_istio_namespace }} configmap/istio-grafana-custom-resources --confirm --to=/tmp --keys=custom-resources.yaml"
+
+- name: Install grafana custom resources
+  command: "{{ openshift_client_binary }} create -f /tmp/custom-resources.yaml"
+
 - name: Expose grafana service
   command: "{{ openshift_client_binary }} expose -n {{ openshift_istio_namespace }} svc grafana"

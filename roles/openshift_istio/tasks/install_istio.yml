@@ -59,9 +59,6 @@
 - name: Set authenticated cluster role to enable access for all authenticated users
   command: "{{ openshift_client_binary }} create -f {{ openshift_istio_authenticated_clusterrole_yaml }}"
 
-- name: Expose Istio ingress service
-  command: "{{ openshift_client_binary }} expose -n {{ openshift_istio_namespace }} svc istio-ingress"
-
 - name: Expose Istio ingress gateway service
   command: "{{ openshift_client_binary }} expose -n {{ openshift_istio_namespace }} svc istio-ingressgateway"
 

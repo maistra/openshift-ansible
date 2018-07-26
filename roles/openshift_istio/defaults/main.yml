@@ -1,5 +1,5 @@
 ---
-default_istio_image_tag: "1.0.0-snapshot.0"
+default_istio_image_tag: "1.0.0-snapshot.2"
 default_istio_namespace: "istio-system"
 default_istio_jaeger_image_tag: "1.5"
 default_istio_jaeger_productised_image_tag: "1.4.1"
@@ -36,7 +36,6 @@ openshift_istio_service_accounts:
   - "istio-citadel-service-account"
   - "istio-egressgateway-service-account"
   - "istio-galley-service-account"
-  - "istio-ingress-service-account"
   - "istio-ingressgateway-service-account"
   - "istio-mixer-service-account"
   - "istio-pilot-service-account"

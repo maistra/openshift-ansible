@@ -52,7 +52,6 @@ objects:
     name: openshift-ansible-istio-removal-job
     namespace: ${OPENSHIFT_ISTIO_NAMESPACE}
   spec:
-    activeDeadlineSeconds: 300
     backoffLimit: 6
     completions: 1
     parallelism: 1

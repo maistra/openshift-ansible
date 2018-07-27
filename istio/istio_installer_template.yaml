@@ -49,10 +49,14 @@ parameters:
   description: Install the Fabric8 Launcher for boosters
   name: OPENSHIFT_ISTIO_INSTALL_LAUNCHER
   value: "false"
+- displayName: Kiali Prefix Version
+  description: The prefix of the Kiali images to use
+  name: OPENSHIFT_ISTIO_KIALI_IMAGE_PREFIX
+  value: "kiali/"
 - displayName: Kiali Image Version
   description: The version of the Kiali images to use
   name: OPENSHIFT_ISTIO_KIALI_IMAGE_VERSION
-  value: "0.3.0.Alpha"
+  value: "v0.5.0"
 - displayName: Kiali Username
   description: The username for accessing the Kiali console
   name: OPENSHIFT_ISTIO_KIALI_USERNAME
@@ -121,6 +125,7 @@ objects:
       
       openshift_istio_oc_token=true
       
+      openshift_istio_kiali_image_prefix=${OPENSHIFT_ISTIO_KIALI_IMAGE_PREFIX}
       openshift_istio_kiali_image_version=${OPENSHIFT_ISTIO_KIALI_IMAGE_VERSION}
       openshift_istio_kiali_username=${OPENSHIFT_ISTIO_KIALI_USERNAME}
       openshift_istio_kiali_password=${OPENSHIFT_ISTIO_KIALI_PASSWORD}

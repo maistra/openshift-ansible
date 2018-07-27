@@ -3,6 +3,7 @@ default_istio_image_tag: "1.0.0-snapshot.2"
 default_istio_namespace: "istio-system"
 default_istio_jaeger_image_tag: "1.5"
 default_istio_jaeger_productised_image_tag: "1.4.1"
+default_istio_kiali_image_prefix: "kiali/"
 default_istio_kiali_image_tag: "v0.5.0"
 
 default_istio_elasticsearch_memory: "512Mi"
@@ -14,6 +15,7 @@ openshift_istio_image_dict:
     version: "{{ default_istio_image_tag }}"
     namespace: "{{ default_istio_namespace }}"
     jaeger_version: "{{ default_istio_jaeger_image_tag }}"
+    kiali_prefix: "{{ default_istio_kiali_image_prefix }}"
     kiali_version: "{{ default_istio_kiali_image_tag }}"
   openshift-enterprise:
     prefix: "openshift3-istio-tech-preview/"
@@ -21,6 +23,7 @@ openshift_istio_image_dict:
     version: "{{ default_istio_image_tag }}"
     namespace: "{{ default_istio_namespace }}"
     jaeger_version: "{{ default_istio_jaeger_productised_image_tag }}"
+    kiali_prefix: "{{ default_istio_kiali_image_prefix }}"
     kiali_version: "{{ default_istio_kiali_image_tag }}"
 
 openshift_deployment_type: "origin"

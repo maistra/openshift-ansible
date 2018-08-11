@@ -6,6 +6,8 @@ openshift_istio_yaml: "{{ openshift_istio_files }}/istio.yaml"
 openshift_istio_auth_yaml: "{{ openshift_istio_files }}/istio-auth.yaml"
 openshift_istio_authenticated_clusterrole_yaml: "{{ openshift_istio_files }}/istio-authenticated-clusterrole.yaml"
 
+openshift_validatingwebhookconfiguration_yaml: "{{ openshift_istio_files }}/validatingwebhookconfiguration.yaml"
+
 openshift_grafana_yaml: "{{ openshift_istio_files }}/grafana.yaml"
 openshift_jaeger_production_yaml: "{{ openshift_istio_files }}/jaeger-production-template.yml"
 openshift_jaeger_tracing_yaml: "{{ openshift_istio_files }}/jaeger-tracing-service.yml"

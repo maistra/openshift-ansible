@@ -4,6 +4,7 @@ openshift_istio_files: "roles/openshift_istio/files"
 
 openshift_istio_yaml: "{{ openshift_istio_files }}/istio.yaml"
 openshift_istio_auth_yaml: "{{ openshift_istio_files }}/istio-auth.yaml"
+openshift_istio_crds_yaml: "{{ openshift_istio_files }}/istio-crds.yaml"
 openshift_istio_authenticated_clusterrole_yaml: "{{ openshift_istio_files }}/istio-authenticated-clusterrole.yaml"
 
 openshift_validatingwebhookconfiguration_yaml: "{{ openshift_istio_files }}/validatingwebhookconfiguration.yaml"
@@ -40,6 +41,5 @@ openshift_istio_resources:
   - {name: "metrics", namespace: "config.istio.io", version: "v1alpha2"}
   - {name: "destinationrules", namespace: "networking.istio.io", version: "v1alpha3"}
   - {name: "meshpolicies", namespace: "authentication.istio.io", version: "v1alpha1"}
-  - {name: "policies", namespace: "authentication.istio.io", version: "v1alpha1"}
 
 openshift_istio_secret_query_template: '{range .items[?(@.type=="istio.io/key-and-cert")]}{.metadata.namespace} {.metadata.name}{"\n"}{end}'

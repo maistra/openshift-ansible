@@ -35,7 +35,6 @@ data:
       username: elastic
       password: changeme
     query:
-      static-files: /go/jaeger-ui/
       ui-config: /conf/ui.json
   ui: |-
     {

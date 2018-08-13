@@ -15,7 +15,7 @@ metadata:
   labels:
     app: istio-grafana
     chart: grafana-0.1.0
-    release: redhat-1.0.0-snapshot.2
+    release: maistra-istio-1.0.0
     heritage: Tiller
     istio: grafana
 data:
@@ -75,7 +75,7 @@ metadata:
   labels:
     app: grafana
     chart: grafana-0.1.0
-    release: redhat-1.0.0-snapshot.2
+    release: maistra-istio-1.0.0
     heritage: Tiller
 spec:
   type: ClusterIP
@@ -97,7 +97,7 @@ metadata:
   labels:
     app: grafana
     chart: grafana-0.1.0
-    release: redhat-1.0.0-snapshot.2
+    release: maistra-istio-1.0.0
     heritage: Tiller
 spec:
   replicas: 1
@@ -107,11 +107,12 @@ spec:
         app: grafana
       annotations:
         sidecar.istio.io/inject: "false"
+        scheduler.alpha.kubernetes.io/critical-pod: ""
     spec:
       serviceAccountName: grafana
       containers:
         - name: grafana
-          image: "docker.io/istio/grafana:1.0.0-snapshot.2"
+          image: "docker.io/istio/grafana:1.0.0"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
@@ -179,6 +180,7 @@ spec:
 
 
 ---
-# Source: istio/charts/grafana/templates/ingress.yaml
+# Source: istio/charts/grafana/templates/secret.yaml
 
 ---
+# Source: istio/charts/telemetry-gateway/templates/gateway.yaml

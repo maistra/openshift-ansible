@@ -1,6 +1,6 @@
 ---
 - name: Obtain list of Mutating Webhook Configurations
-  shell: "{{ openshift_client_binary }} get mutatingwebhookconfiguration -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | grep istio"
+  shell: "{{ openshift_client_binary }} get mutatingwebhookconfiguration -l release={{openshift_istio_release_tag}} -o=jsonpath='{..metadata.name}' | tr ' ' '\n'"
   register: openshift_istio_mutatingwebhookconfiguration
   ignore_errors: true
 
@@ -9,7 +9,7 @@
   with_items: "{{ openshift_istio_mutatingwebhookconfiguration.stdout_lines|list }}"
 
 - name: Obtain list of Validating Webhook Configurations
-  shell: "{{ openshift_client_binary }} get validatingwebhookconfiguration -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | grep istio"
+  shell: "{{ openshift_client_binary }} get validatingwebhookconfiguration -l release={{openshift_istio_release_tag}} -o=jsonpath='{..metadata.name}' | tr ' ' '\n'"
   register: openshift_istio_validatingwebhookconfiguration
   ignore_errors: true
 
@@ -44,26 +44,44 @@
   command: "{{ openshift_client_binary }} delete certificatesigningrequest {{ item }}"
   with_items: "{{ openshift_istio_certificatesigningrequest.stdout_lines|list }}"
 
-- name: Obtain list of Cluster Role Bindings
-  shell: "{{ openshift_client_binary }} get clusterrolebinding -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | egrep 'istio|prometheus|kiali'"
+- name: Obtain list of Istio Cluster Role Bindings
+  shell: "{{ openshift_client_binary }} get clusterrolebinding -l release={{openshift_istio_release_tag}} -o=jsonpath='{..metadata.name}' | tr ' ' '\n'"
   register: openshift_istio_clusterrolebinding
+  ignore_errors: true
+
+- name: Obtain list of kiali Cluster Role Bindings
+  shell: "{{ openshift_client_binary }} get clusterrolebinding -l release={{openshift_istio_kiali_release_tag}} -o=jsonpath='{..metadata.name}' | tr ' ' '\n'"
+  register: openshift_istio_kiali_clusterrolebinding
   ignore_errors: true
 
 - name: Remove Cluster Role Bindings
   command: "{{ openshift_client_binary }} delete clusterrolebinding {{ item }}"
-  with_items: "{{ openshift_istio_clusterrolebinding.stdout_lines|list }}"
+  with_items: "{{ openshift_istio_clusterrolebinding.stdout_lines + openshift_istio_kiali_clusterrolebinding.stdout_lines |list }}"
 
-- name: Obtain list of Cluster Roles
-  shell: "{{ openshift_client_binary }} get clusterrole -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | egrep 'istio|prometheus|kiali'"
+- name: Remove Prometheus Cluster Role Binding
+  command: "{{ openshift_client_binary }} delete clusterrolebinding prometheus-istio-system"
+  ignore_errors: true
+
+- name: Obtain list of Istio Cluster Roles
+  shell: "{{ openshift_client_binary }} get clusterrole -l release={{openshift_istio_release_tag}} -o=jsonpath='{..metadata.name}' | tr ' ' '\n'"
   register: openshift_istio_clusterrole
+  ignore_errors: true
+
+- name: Obtain list of Istio Cluster Roles
+  shell: "{{ openshift_client_binary }} get clusterrole -l release={{openshift_istio_kiali_release_tag}} -o=jsonpath='{..metadata.name}' | tr ' ' '\n'"
+  register: openshift_istio_kiali_clusterrole
   ignore_errors: true
 
 - name: Remove Cluster Roles
   command: "{{ openshift_client_binary }} delete clusterrole {{ item }}"
-  with_items: "{{ openshift_istio_clusterrole.stdout_lines|list }}"
+  with_items: "{{ openshift_istio_clusterrole.stdout_lines + openshift_istio_kiali_clusterrole.stdout_lines |list }}"
+
+- name: Remove Prometheus Cluster Role
+  command: "{{ openshift_client_binary }} delete clusterrole prometheus-istio-system"
+  ignore_errors: true
 
 - name: Obtain list of Custom Resource Definitions
-  shell: "{{ openshift_client_binary }} get customresourcedefinition -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | grep istio"
+  shell: "{{ openshift_client_binary }} get customresourcedefinition -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | grep -F '.istio.io'"
   register: openshift_istio_customresourcedefinition
   ignore_errors: true
 

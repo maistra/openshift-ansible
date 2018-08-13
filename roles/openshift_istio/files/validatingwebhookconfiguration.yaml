@@ -3,6 +3,9 @@ kind: ValidatingWebhookConfiguration
 metadata:
   name: istio-galley
   namespace: istio-system
+  labels:
+    app: istio-galley
+    release: maistra-istio-1.0.0
   ownerReferences:
   - apiVersion: extensions/v1beta1
     blockOwnerDeletion: true

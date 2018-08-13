@@ -1,6 +1,6 @@
 - name: Initialise prefix
   set_fact:
-    openshift_istio_image_prefix: "{{ openshift_istio_image_dict[openshift_deployment_type]['prefix'] }}"
+    openshift_istio_image_prefix: "{{ openshift_istio_image_dict[openshift_deployment_type]['istio_prefix'] }}"
   when: openshift_istio_image_prefix is not defined
 
 - name: Initialise suffix
@@ -10,13 +10,18 @@
 
 - name: Initialise version
   set_fact:
-    openshift_istio_image_version: "{{ openshift_istio_image_dict[openshift_deployment_type]['version'] }}"
+    openshift_istio_image_version: "{{ openshift_istio_image_dict[openshift_deployment_type]['istio_version'] }}"
   when: openshift_istio_image_version is not defined
 
 - name: Initialise Jaeger version
   set_fact:
     openshift_istio_jaeger_image_version: "{{ openshift_istio_image_dict[openshift_deployment_type]['jaeger_version'] }}"
   when: openshift_istio_jaeger_image_version is not defined or openshift_istio_jaeger_image_version == ""
+
+- name: Initialise Jaeger prefix
+  set_fact:
+    openshift_istio_jaeger_image_prefix: "{{ openshift_istio_image_dict[openshift_deployment_type]['jaeger_prefix'] }}"
+  when: openshift_istio_jaeger_image_prefix is not defined
 
 - name: Initialise namespace
   set_fact:
@@ -54,9 +59,9 @@
       "docker.io/istio/proxy:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}proxy{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
       "docker.io/istio/proxyv2:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}proxyv2{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
       "docker.io/istio/galley:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}galley{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
-      "jaegertracing/jaeger-collector:{{default_istio_jaeger_image_tag}}": "jaegertracing/jaeger-collector:{{openshift_istio_jaeger_image_version}}"
-      "jaegertracing/jaeger-query:{{default_istio_jaeger_image_tag}}": "jaegertracing/jaeger-query:{{openshift_istio_jaeger_image_version}}"
-      "jaegertracing/jaeger-agent:{{default_istio_jaeger_image_tag}}": "jaegertracing/jaeger-agent:{{openshift_istio_jaeger_image_version}}"
+      "jaegertracing/jaeger-collector:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_jaeger_image_prefix}}jaeger-collector:{{openshift_istio_jaeger_image_version}}"
+      "jaegertracing/jaeger-query:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_jaeger_image_prefix}}jaeger-query:{{openshift_istio_jaeger_image_version}}"
+      "jaegertracing/jaeger-agent:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_jaeger_image_prefix}}jaeger-agent:{{openshift_istio_jaeger_image_version}}"
       "kiali/kiali:{{default_istio_kiali_image_tag}}": "{{openshift_istio_kiali_image_prefix}}kiali:{{openshift_istio_kiali_image_version}}"
   when: not openshift_istio_install_enterprise
 
@@ -71,16 +76,11 @@
       "docker.io/istio/proxy:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}proxy{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
       "docker.io/istio/proxyv2:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}proxyv2{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
       "docker.io/istio/galley:{{default_istio_image_tag}}": "{{openshift_istio_image_prefix}}galley{{openshift_istio_image_suffix}}:{{openshift_istio_image_version}}"
-      "jaegertracing/jaeger-collector:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_image_prefix}}jaeger-collector{{openshift_istio_image_suffix}}:{{openshift_istio_jaeger_image_version}}"
-      "jaegertracing/jaeger-query:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_image_prefix}}jaeger-query{{openshift_istio_image_suffix}}:{{openshift_istio_jaeger_image_version}}"
-      "jaegertracing/jaeger-agent:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_image_prefix}}jaeger-agent{{openshift_istio_image_suffix}}:{{openshift_istio_jaeger_image_version}}"
+      "jaegertracing/jaeger-collector:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_jaeger_image_prefix}}jaeger-collector:{{openshift_istio_jaeger_image_version}}"
+      "jaegertracing/jaeger-query:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_jaeger_image_prefix}}jaeger-query:{{openshift_istio_jaeger_image_version}}"
+      "jaegertracing/jaeger-agent:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_jaeger_image_prefix}}jaeger-agent:{{openshift_istio_jaeger_image_version}}"
       "kiali/kiali:{{default_istio_kiali_image_tag}}": "{{openshift_istio_kiali_image_prefix}}kiali:{{openshift_istio_kiali_image_version}}"
   when: openshift_istio_install_enterprise
-
-- name: Initialise oc binary using master configuration
-  set_fact:
-    openshift_client_binary: "/usr/bin/oc --config=/etc/origin/master/admin.kubeconfig"
-  when: not openshift_istio_oc_token
 
 - name:
   command: cat /run/secrets/kubernetes.io/serviceaccount/token
@@ -89,8 +89,23 @@
 - name: Initialise oc binary using token
   set_fact:
     openshift_client_binary: "/usr/bin/oc --token={{ openshift_client_token.stdout }}"
-  when: openshift_istio_oc_token
 
 - name: Initialise all service accounts fact
   set_fact:
     openshift_istio_all_service_accounts: "{{ openshift_istio_service_accounts }} + {{ openshift_istio_additional_service_accounts }}"
+
+- name: Initialise Istio Release
+  shell: "grep -wm 1 release {{ openshift_istio_yaml }} | awk '{print $2}'"
+  register: openshift_istio_release
+
+- name: Initialise Istio Release Tag
+  set_fact:
+    openshift_istio_release_tag: "{{ openshift_istio_release.stdout }}"
+
+- name: Initialise Istio Kiali Release
+  shell: "grep -wm 1 release {{ openshift_kiali_yaml }} | awk '{print $2}'"
+  register: openshift_istio_kiali_release
+
+- name: Initialise Istio Kiali Release Tag
+  set_fact:
+    openshift_istio_kiali_release_tag: "{{ openshift_istio_kiali_release.stdout }}"

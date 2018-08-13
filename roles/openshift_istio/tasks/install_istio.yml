@@ -10,15 +10,8 @@
 - name: Label Istio namespace so it is ignored by injection
   command: "{{ openshift_client_binary }} label --overwrite=true namespace {{ openshift_istio_namespace }} istio.openshift.com/ignore-namespace=ignore"
 
-- name: Create Istio components with auth
-  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_auth_yaml }}"
-  ignore_errors: yes
-  when: openshift_istio_install_auth | bool
-
-- name: Create Istio components without auth
-  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_yaml }}"
-  ignore_errors: yes
-  when: not (openshift_istio_install_auth| bool)
+- name: Create Istio CRDs
+  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_crds_yaml }}"
 
 - name: Wait for resource CRDs to establish
   shell: "{{ openshift_client_binary }} get --raw /apis/{{ item.namespace }}/{{ item.version }}/{{ item.name }}"
@@ -28,6 +21,16 @@
   delay: 2
   ignore_errors: yes
   with_items: "{{ openshift_istio_resources }}"
+
+- name: Create Istio components with auth
+  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_auth_yaml }}"
+  ignore_errors: yes
+  when: openshift_istio_install_auth | bool
+
+- name: Create Istio components without auth
+  command: "{{ openshift_client_binary }} create -f {{ openshift_istio_yaml }}"
+  ignore_errors: yes
+  when: not (openshift_istio_install_auth| bool)
 
 - name: Wait for galley deployment to be established
   command: "{{ openshift_client_binary }} get deployment -n {{ openshift_istio_namespace }} istio-galley -o jsonpath='{..status.readyReplicas}'"
@@ -56,12 +59,6 @@
   retries: 10
   delay: 2
   ignore_errors: true
-
-- name: Retrieve istio-mixer-custom-resources ConfigMap
-  command: "{{ openshift_client_binary }} extract -n {{ openshift_istio_namespace }} configmap/istio-mixer-custom-resources --confirm --to=/tmp --keys=custom-resources.yaml"
-
-- name: Install mixer custom resources
-  command: "{{ openshift_client_binary }} create -f /tmp/custom-resources.yaml"
 
 - name: Handle security custom resources
   block:

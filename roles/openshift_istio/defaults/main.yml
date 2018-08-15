@@ -20,7 +20,7 @@ openshift_istio_image_dict:
     jaeger_version: "{{ default_istio_jaeger_image_tag }}"
     kiali_prefix: "{{ default_istio_kiali_image_prefix }}"
     kiali_version: "{{ default_istio_kiali_image_tag }}"
-  openshift-enterprise:
+  openshift:
     istio_prefix: "openshift-istio-tech-preview/"
     istio_version: "{{ default_istio_image_tag }}"
     suffix: ""

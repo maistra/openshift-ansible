@@ -6,6 +6,27 @@ metadata:
   labels:
     app: elasticsearch
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: elasticsearch-conf
+  labels:
+    app: elasticsearch
+data:
+  elasticsearch.yml: |
+    cluster:
+      name: elasticsearch
+    node:
+      name: ${HOSTNAME}
+    network:
+      host: 0.0.0.0
+    discovery:
+      zen.ping.unicast.hosts: elasticsearch-cluster
+      zen.minimum_master_nodes: 1
+    path:
+      data: /elasticsearch/persistent/elasticsearch/data
+      logs: /elasticsearch/logs
+---
 apiVersion: apps/v1beta1
 kind: StatefulSet
 metadata:
@@ -27,8 +48,6 @@ spec:
       containers:
       - name: elasticsearch
         env:
-        - name: SERVICE
-          value: elasticsearch-cluster
         - name: LOG_LEVEL
           value: info
         image: registry.centos.org/rhsyseng/elasticsearch:5.5.2
@@ -48,12 +67,18 @@ spec:
         volumeMounts:
         - mountPath: /elasticsearch/persistent
           name: elasticsearch-persistent
+        - mountPath: /etc/elasticsearch/elasticsearch.yml
+          subPath: elasticsearch.yml
+          name: elasticsearch-conf
       securityContext: {}
       serviceAccount: elasticsearch
       serviceAccountName: elasticsearch
       volumes:
-      - emptyDir: {}
-        name: elasticsearch-persistent
+      - name: elasticsearch-persistent
+        emptyDir: {}
+      - name: elasticsearch-conf
+        configMap:
+          name: elasticsearch-conf
 ---
 apiVersion: v1
 kind: Service

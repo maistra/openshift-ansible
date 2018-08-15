@@ -40,7 +40,7 @@
 
 - name: Initialise Installation Type
   set_fact:
-    openshift_istio_install_enterprise: "{{ openshift_deployment_type == 'openshift-enterprise' }}"
+    openshift_istio_install_enterprise: "{{ openshift_deployment_type == 'openshift' }}"
 
 - name: Determine whether kiali should be installed
   set_fact:

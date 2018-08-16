@@ -71,9 +71,18 @@ The Maistra installation process introduces a Kubernetes operator to manage the 
 
 The following steps will install the Maistra operator into an existing OCP 3.10 installation, these can be executed from any host with access to the cluster.  Please ensure you are logged in as a cluster admin before executing the following
 
+For community images run
+
 ```
 oc new-project istio-operator
-oc new-app -f istio_operator_template.yaml --param=OPENSHIFT_ISTIO_MASTER_PUBLIC_URL=<master public url>
+oc new-app -f istio_community_operator_template.yaml --param=OPENSHIFT_ISTIO_MASTER_PUBLIC_URL=<master public url>
+```
+
+For product images run
+
+```
+oc new-project istio-operator
+oc new-app -f istio_product_operator_template.yaml --param=OPENSHIFT_ISTIO_MASTER_PUBLIC_URL=<master public url>
 ```
 
 ## Verifying Installation

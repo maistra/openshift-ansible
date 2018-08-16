@@ -95,7 +95,7 @@
 
 - name: Remove all Istio secrets
   command: "{{ openshift_client_binary }} delete secret -n {{ item.split()[0] }} {{ item.split()[1] }}"
-  loop: "{{ openshift_istio_secrets.stdout_lines }}"
+  with_items: "{{ openshift_istio_secrets.stdout_lines|list }}"
 
 - name: Check istio project exists
   command: "{{ openshift_client_binary }} get namespace {{ openshift_istio_namespace }}"

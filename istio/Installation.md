@@ -97,7 +97,7 @@ oc get pods -n istio-operator
 Access the logs from the pod with the following command, replacing `<pod name>` with the name of the pod discovered above
 
 ```
-oc logs -n istio-operator <pod name>
+oc logs -n istio-operator $(oc get pods -n istio-operator --output=jsonpath={.items..metadata.name})
 ```
 
 and look for output similar to the following

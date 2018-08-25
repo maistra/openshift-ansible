@@ -130,6 +130,11 @@ spec:
     prefix: distributed-tracing-tech-preview/
     version: 1.6.0
     elasticsearch_memory: 1Gi
+  kiali:
+    username: username
+    password: password
+    prefix: kiali/
+    version: v0.6
   launcher:
     openshift:
       user: user
@@ -166,22 +171,23 @@ Once the `openshift-ansible-istio-installer-job` has completed run `oc get pods 
 
 ```
 NAME                                          READY     STATUS      RESTARTS   AGE
-elasticsearch-0                               1/1       Running     0          41s
-grafana-6d5c5477-b6twg                        1/1       Running     0          43s
-istio-citadel-b9b8d7589-wzh57                 1/1       Running     0          1m
-istio-egressgateway-7f987dc785-hfmnh          1/1       Running     0          1m
-istio-galley-745db694bb-ngpnd                 1/1       Running     0          1m
-istio-ingressgateway-5bd8ffd968-qw8l5         1/1       Running     0          1m
-istio-pilot-cf76476d4-2fzjg                   1/2       Running     0          1m
-istio-policy-7cd858cc78-n7lll                 2/2       Running     0          1m
-istio-sidecar-injector-86c5d87f-qm64q         1/1       Running     0          1m
-istio-statsd-prom-bridge-7f44bb5ddb-cv72w     1/1       Running     0          1m
-istio-telemetry-f757b89c5-jlfrz               2/2       Running     0          1m
-jaeger-agent-5cvh5                            1/1       Running     0          35s
-jaeger-collector-d8b97d664-jt9fs              1/1       Running     0          35s
-jaeger-query-7745b957bb-5nxgz                 1/1       Running     0          35s
-openshift-ansible-istio-installer-job-j9xb8   0/1       Completed   0          1m
-prometheus-84bd4b9796-z282c                   1/1       Running     0          1m
+elasticsearch-0                               1/1       Running     0          14s
+grafana-6d5c5477-fxd44                        1/1       Running     0          17s
+istio-citadel-b9b8d7589-dg8vx                 1/1       Running     0          54s
+istio-egressgateway-7f987dc785-zkpv2          1/1       Running     0          56s
+istio-galley-745db694bb-lq9lr                 1/1       Running     0          56s
+istio-ingressgateway-5bd8ffd968-vpmpc         1/1       Running     0          55s
+istio-pilot-cf76476d4-mk5bq                   1/2       Running     0          55s
+istio-policy-7cd858cc78-7tlnl                 2/2       Running     0          55s
+istio-sidecar-injector-86c5d87f-bcgqv         1/1       Running     0          55s
+istio-statsd-prom-bridge-7f44bb5ddb-lhtv9     1/1       Running     0          55s
+istio-telemetry-f757b89c5-vmfql               2/2       Running     0          55s
+jaeger-agent-5tj9r                            1/1       Running     0          9s
+jaeger-collector-d8b97d664-4fn72              1/1       Running     0          9s
+jaeger-query-7745b957bb-rf5xm                 1/1       Running     1          9s
+kiali-77f79fc88b-hbhfv                        1/1       Running     0          3s
+openshift-ansible-istio-installer-job-vhgwr   0/1       Completed   0          1m
+prometheus-84bd4b9796-8dq65                   1/1       Running     0          55s
 ```
 
 If you have also chosen to install the Farbic8 launcher you should monitor the containers within the devex project until the following state has been reached:

@@ -12,6 +12,7 @@ This document describes the steps for installing the Istio Tech Preview release 
 - [Deploying the Istio Control Plane](#deploying-the-istio-control-plane)
 - [Verifying the Istio Control Plane](#verifying-the-istio-control-plane)
 - [Removing Istio](#removing-istio)
+- [Removing the Istio Operator](#removing-the-istio-operator)
 
 ## Preparing the OCP 3.10 Installation
 
@@ -199,4 +200,20 @@ The following step will remove Istio from an existing installation, it can be ex
 
 ```
 oc delete -n istio-operator Installation istio-installation
+```
+
+## Removing the Istio Operator
+
+The following steps will remove the Maistra operator from an existing OCP 3.10 installation, these can be executed from any host with access to the cluster.  Please ensure you are logged in as a cluster admin before executing the following
+
+For community images run
+
+```
+oc process -f istio_community_operator_template.yaml | oc delete -f -
+```
+
+For product images run
+
+```
+oc process -f istio_product_operator_template.yaml | oc delete -f -
 ```

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: istio-removal-job
+  name: istio-operator-job
 parameters:
 - displayName: Master Public URL
   description: The public URL for master

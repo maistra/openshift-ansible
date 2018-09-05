@@ -1,0 +1,119 @@
+DIR=$(dirname $0)
+
+ISTIO_VERSION=1.0.0
+RELEASES_DIR=${DIR}/../../istio-releases
+
+PLATFORM=linux
+ISTIO_FILE=istio-${ISTIO_VERSION}-${PLATFORM}.tar.gz
+RELEASE_DIR=${RELEASES_DIR}/istio-${ISTIO_VERSION}
+
+HELM_DIR=${RELEASE_DIR}/install/kubernetes/helm/
+REDHAT_HELM_DIR=${DIR}
+
+ROLE_FILES_DIR="${DIR}/../roles/openshift_istio/files/"
+
+function retrieveIstioRelease() {
+  if [ ! -d "${RELEASES_DIR}" ] ; then
+    mkdir -p "${RELEASES_DIR}"
+  fi
+
+  if [ ! -f "${RELEASES_DIR}/${ISTIO_FILE}" ] ; then
+    (
+        cd "${RELEASES_DIR}"
+        curl -LO https://github.com/istio/istio/releases/download/${ISTIO_VERSION}/${ISTIO_FILE}
+        tar -xvzf "${ISTIO_FILE}"
+    )
+  fi
+}
+
+# The following modifications are made to the generated helm template for the Istio yaml files
+# - remove the create customer resources job, we handle this in the installer to deal with potential races
+# - remove the cleanup secrets job, we handle this in the installer
+# - remove the kubernetes gateways
+# - remove the CRDs, we will create a separate yaml file to install these objects
+# - update the namespaceSelector to ignore namespaces with the label istio.openshift.com/ignore-namespace
+# - add a maistra-version label to all objects which have a release label
+function generateIstioTemplate() {
+  VALUES=""
+  while [ $# -gt 0 ] ; do
+    VALUES="${VALUES} -f ${REDHAT_HELM_DIR}/$1"
+    shift
+  done
+
+  helm template -n istio-${ISTIO_VERSION} --namespace=istio-system ${VALUES} ${HELM_DIR}/istio | sed -e '/^# Source.*create-custom-resources-job.yaml/,/^# Source:/ {
+    /^# Source/b
+    d
+  }' | sed -e '/^# Source:.*cleanup-secrets.yaml/,/^# Source:.*serviceaccount.yaml/ {
+    /^# Source/b
+    d
+  }' | sed -e '/^# Source:.*pilot\/templates\/gateway.yaml/,/^# Source:/ {
+    /^# Source/b
+    d
+  }' | sed -e '/^# Source:.*istio\/templates\/crds.yaml/,/^# Source:/ {
+    /^# Source/b
+    d
+  }' | sed -e '/namespaceSelector/,/istio-injection/s/matchLabels/matchExpressions/' \
+           -e 's/istio-injection: enabled/- {key: istio.openshift.com\/ignore-namespace, operator: DoesNotExist}/' \
+           -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: 0.1.0\
+\1release:\2/'
+}
+
+# The following modifications are made to the generated helm template to extract the CRDs
+# - remove all content up to the crds.yaml source
+# - remove all content after the crds.yaml source
+function generateCRDsTemplate() {
+  VALUES=""
+  while [ $# -gt 0 ] ; do
+    VALUES="${VALUES} -f ${REDHAT_HELM_DIR}/$1"
+    shift
+  done
+
+  helm template -n istio-${ISTIO_VERSION} --namespace=istio-system ${VALUES} ${HELM_DIR}/istio | sed -e '1,/^# Source:.*istio\/templates\/crds.yaml/ {
+    /^# Source:.*istio\/templates\/crds.yaml/b
+    d
+  }' -e '/^# Source:/,$ d'
+}
+
+# The following modifications are made to the generated helm template for the Grafana yaml file
+# - add a service account for grafana
+# - remove the extraneous security sources
+# - remove the extraneous create custom resources job
+# - remove extraneous source lines
+# - add the service account to the deployment
+# - add a maistra-version label to all objects which have a release label
+function generateGrafanaTemplate() {
+  VALUES=""
+  while [ $# -gt 0 ] ; do
+    VALUES="${VALUES} -f ${REDHAT_HELM_DIR}/$1"
+    shift
+  done
+
+  (
+    echo 'apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: grafana
+  namespace: istio-system
+  labels:
+    app: grafana' ;
+    helm template -n istio-${ISTIO_VERSION} --namespace=istio-system ${VALUES} ${HELM_DIR}/istio
+  ) | sed -e '/^# Source: istio\/charts\/security\//,/^# Source: istio\/charts\/[^s][^e][^c][^u][^r][^i][^t][^y]/ {
+      /^# Source/b
+      d
+    }' | sed -e '/^# Source:.*create-custom-resources-job.yaml/,/^# Source:/ {
+      /^# Source/b
+      d
+    }' | sed -e '/^# Source: istio\/charts\/security\//d' \
+             -e '/^# Source: istio\/templates\//d' \
+             -e 's/^\(.*\)containers:\(.*\)$/\1serviceAccountName: grafana\
+\1containers:\2/' \
+             -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: 0.1.0\
+\1release:\2/'
+}
+
+retrieveIstioRelease
+
+generateIstioTemplate values-redhat.yaml values-redhat-auth.yaml > ${ROLE_FILES_DIR}/istio-auth.yaml
+generateIstioTemplate values-redhat.yaml > ${ROLE_FILES_DIR}/istio.yaml
+generateCRDsTemplate values-redhat.yaml values-redhat-auth.yaml > ${ROLE_FILES_DIR}/istio-crds.yaml
+generateGrafanaTemplate values-redhat-grafana.yaml > ${ROLE_FILES_DIR}/grafana.yaml

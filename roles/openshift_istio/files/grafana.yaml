@@ -15,7 +15,8 @@ metadata:
   labels:
     app: istio-grafana
     chart: grafana-0.1.0
-    release: maistra-istio-1.0.0
+    maistra-version: 0.1.0
+    release: istio-1.0.0
     heritage: Tiller
     istio: grafana
 data:
@@ -75,7 +76,8 @@ metadata:
   labels:
     app: grafana
     chart: grafana-0.1.0
-    release: maistra-istio-1.0.0
+    maistra-version: 0.1.0
+    release: istio-1.0.0
     heritage: Tiller
 spec:
   type: ClusterIP
@@ -97,7 +99,8 @@ metadata:
   labels:
     app: grafana
     chart: grafana-0.1.0
-    release: maistra-istio-1.0.0
+    maistra-version: 0.1.0
+    release: istio-1.0.0
     heritage: Tiller
 spec:
   replicas: 1

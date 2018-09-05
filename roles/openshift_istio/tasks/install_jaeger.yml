@@ -23,23 +23,14 @@
   delay: 2
   ignore_errors: yes
 
-- name: Exclude zipkin service from mTLS
-  replace:
-    path: "{{ openshift_jaeger_production_yaml }}"
-    regexp: '(\s+kind:\s+Service\s*\n\s+metadata:\s*\n)(\s+)(name:\s+zipkin\s*\n)'
-    replace: '\1\2\3\2annotations:\n\2  auth.istio.io/9411: NONE\n'
-
-- name: Exclude jaeger-collector service from mTLS
-  replace:
-    path: "{{ openshift_jaeger_production_yaml }}"
-    regexp: '(\s+kind:\s+Service\s*\n\s+metadata:\s*\n)(\s+)(name:\s+jaeger-collector\s*\n)'
-    replace: '\1\2\3\2annotations:\n\2  auth.istio.io/14267: NONE\n\2  auth.istio.io/14268: NONE\n\2  auth.istio.io/9411: NONE\n'
-
 - name: Create jaeger components
   shell: "{{ openshift_client_binary }} create -n {{ openshift_istio_namespace }} -f {{ openshift_jaeger_production_yaml }}"
 
 - name: Create jaeger tracing service
   shell: "{{ openshift_client_binary }} create -n {{ openshift_istio_namespace }} -f {{ openshift_jaeger_tracing_yaml }}"
+
+- name: Exclude zipkin and jaeger-collector services from mTLS
+  shell: "{{ openshift_client_binary }} create -n {{ openshift_istio_namespace }} -f {{ openshift_jaeger_disable_mtls_yaml }}"
 
 - name: Check jaeger-query route exists
   command: "{{ openshift_client_binary }} get route jaeger-query -n {{ openshift_istio_namespace }}"

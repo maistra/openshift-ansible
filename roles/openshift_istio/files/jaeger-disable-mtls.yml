@@ -1,0 +1,39 @@
+apiVersion: authentication.istio.io/v1alpha1
+kind: Policy
+metadata:
+  name: disable-mtls-jaeger-collector
+  namespace: istio-system
+spec:
+  targets:
+  - name: jaeger-collector
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: disable-mtls-jaeger-collector
+  namespace: istio-system
+spec:
+  host: jaeger-collector
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+---
+apiVersion: authentication.istio.io/v1alpha1
+kind: Policy
+metadata:
+  name: disable-mtls-zipkin
+  namespace: istio-system
+spec:
+  targets:
+  - name: zipkin
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: disable-mtls-zipkin
+  namespace: istio-system
+spec:
+  host: zipkin
+  trafficPolicy:
+    tls:
+      mode: DISABLE

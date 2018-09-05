@@ -12,6 +12,7 @@ openshift_validatingwebhookconfiguration_yaml: "{{ openshift_istio_files }}/vali
 openshift_grafana_yaml: "{{ openshift_istio_files }}/grafana.yaml"
 openshift_jaeger_production_yaml: "{{ openshift_istio_files }}/jaeger-production-template.yml"
 openshift_jaeger_tracing_yaml: "{{ openshift_istio_files }}/jaeger-tracing-service.yml"
+openshift_jaeger_disable_mtls_yaml: "{{ openshift_istio_files }}/jaeger-disable-mtls.yml"
 openshift_elasticsearch_yaml: "{{ openshift_istio_files }}/elasticsearch.yml"
 openshift_elasticsearch_configmap_yaml: "{{ openshift_istio_files }}/elasticsearch_configmap.yml"
 

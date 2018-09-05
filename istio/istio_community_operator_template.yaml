@@ -116,7 +116,7 @@ objects:
       spec:
         containers:
           - name: istio-operator
-            image: ${OPENSHIFT_ISTIO_PREFIX}istio-operator:${OPENSHIFT_ISTIO_VERSION}
+            image: ${OPENSHIFT_ISTIO_PREFIX}istio-operator-centos7:${OPENSHIFT_ISTIO_VERSION}
             ports:
             - containerPort: 60000
               name: metrics

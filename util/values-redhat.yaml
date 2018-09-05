@@ -1,0 +1,40 @@
+global:
+  tag: 1.0.0
+  proxy:
+    autoInject: disabled
+
+security:
+  enabled: true
+  cleanUpOldCA: false
+
+ingress:
+  autoscaleMin: 0
+  autoscaleMax: 0
+ingressgateway:
+  autoscaleMin: 0
+  autoscaleMax: 0
+egressgateway:
+  autoscaleMin: 0
+  autoscaleMax: 0
+
+gateways:
+  istio-egressgateway:
+    autoscaleMin: 0
+    autoscaleMax: 0
+  istio-ingressgateway:
+    autoscaleMin: 0
+    autoscaleMax: 0
+
+mixer:
+  autoscaleMin: 0
+  autoscaleMax: 0
+
+  istio-policy:
+    autoscaleEnabled: false
+
+  istio-telemetry:
+    autoscaleEnabled: false
+
+pilot:
+  autoscaleMin: 0
+  autoscaleMax: 0

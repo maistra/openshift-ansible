@@ -128,7 +128,7 @@ objects:
             - "--istioPrefix=${OPENSHIFT_ISTIO_PREFIX}"
             - "--istioVersion=${OPENSHIFT_ISTIO_VERSION}"
             - "--deploymentType=${OPENSHIFT_DEPLOYMENT_TYPE}"
-            imagePullPolicy: Always
+            imagePullPolicy: IfNotPresent
             env:
               - name: WATCH_NAMESPACE
                 valueFrom:

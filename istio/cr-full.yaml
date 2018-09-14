@@ -8,7 +8,7 @@ spec:
     authentication: true
     community: false
     prefix: openshift-istio-tech-preview/
-    version: 0.1.0
+    version: 0.2.0
   jaeger:
     prefix: distributed-tracing-tech-preview/
     version: 1.6.0

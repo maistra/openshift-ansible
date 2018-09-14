@@ -1,6 +1,8 @@
 DIR=$(dirname $0)
 
-ISTIO_VERSION=1.0.0
+ISTIO_VERSION=1.0.2
+MAISTRA_VERSION=0.2.0
+
 RELEASES_DIR=${DIR}/../../istio-releases
 
 PLATFORM=linux
@@ -31,6 +33,7 @@ function retrieveIstioRelease() {
 # - remove the cleanup secrets job, we handle this in the installer
 # - remove the kubernetes gateways
 # - remove the CRDs, we will create a separate yaml file to install these objects
+# - change privileged value on istio-proxy injection configmap to false
 # - update the namespaceSelector to ignore namespaces with the label istio.openshift.com/ignore-namespace
 # - add a maistra-version label to all objects which have a release label
 function generateIstioTemplate() {
@@ -52,9 +55,11 @@ function generateIstioTemplate() {
   }' | sed -e '/^# Source:.*istio\/templates\/crds.yaml/,/^# Source:/ {
     /^# Source/b
     d
+  }' | sed -e '1,/privileged/! {
+    /privileged/ s/true/false/
   }' | sed -e '/namespaceSelector/,/istio-injection/s/matchLabels/matchExpressions/' \
            -e 's/istio-injection: enabled/- {key: istio.openshift.com\/ignore-namespace, operator: DoesNotExist}/' \
-           -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: 0.1.0\
+           -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: '${MAISTRA_VERSION}'\
 \1release:\2/'
 }
 
@@ -107,7 +112,7 @@ metadata:
              -e '/^# Source: istio\/templates\//d' \
              -e 's/^\(.*\)containers:\(.*\)$/\1serviceAccountName: grafana\
 \1containers:\2/' \
-             -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: 0.1.0\
+             -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: '${MAISTRA_VERSION}'\
 \1release:\2/'
 }
 

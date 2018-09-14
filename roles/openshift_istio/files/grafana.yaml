@@ -14,9 +14,9 @@ metadata:
   namespace: istio-system
   labels:
     app: istio-grafana
-    chart: grafana-0.1.0
-    maistra-version: 0.1.0
-    release: istio-1.0.0
+    chart: grafana-1.0.1
+    maistra-version: 0.2.0
+    release: istio-1.0.2
     heritage: Tiller
     istio: grafana
 data:
@@ -75,9 +75,9 @@ metadata:
   annotations:
   labels:
     app: grafana
-    chart: grafana-0.1.0
-    maistra-version: 0.1.0
-    release: istio-1.0.0
+    chart: grafana-1.0.1
+    maistra-version: 0.2.0
+    release: istio-1.0.2
     heritage: Tiller
 spec:
   type: ClusterIP
@@ -98,9 +98,9 @@ metadata:
   namespace: istio-system
   labels:
     app: grafana
-    chart: grafana-0.1.0
-    maistra-version: 0.1.0
-    release: istio-1.0.0
+    chart: grafana-1.0.1
+    maistra-version: 0.2.0
+    release: istio-1.0.2
     heritage: Tiller
 spec:
   replicas: 1
@@ -180,6 +180,10 @@ spec:
 
 ---
 # Source: istio/charts/grafana/templates/grafana-ports-mtls.yaml
+
+
+---
+# Source: istio/charts/grafana/templates/pvc.yaml
 
 
 ---

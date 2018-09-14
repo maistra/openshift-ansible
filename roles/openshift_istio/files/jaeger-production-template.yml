@@ -31,6 +31,9 @@ items:
         labels:
           app: jaeger
           jaeger-infra: collector-pod
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "14268"
       spec:
         serviceAccountName: jaeger
         containers:
@@ -118,6 +121,9 @@ items:
         labels:
           app: jaeger
           jaeger-infra: query-pod
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "16686"
       spec:
         serviceAccountName: jaeger
         containers:
@@ -180,6 +186,9 @@ items:
         labels:
           app: jaeger
           jaeger-infra: agent-instance
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "5778"
       spec:
         serviceAccountName: jaeger
         containers:
@@ -198,6 +207,8 @@ items:
             protocol: UDP
           - containerPort: 6832
             protocol: UDP
+          - containerPort: 5778
+            protocol: TCP
         hostNetwork: true
         dnsPolicy: ClusterFirstWithHostNet
         volumes:

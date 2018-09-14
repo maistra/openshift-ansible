@@ -4,8 +4,8 @@ metadata:
   name: istio-authenticated
   labels:
     app: istio-authenticated
-    maistra-version: 0.1.0
-    release: istio-1.0.0
+    maistra-version: 0.2.0
+    release: istio-1.0.2
 rules:
 - apiGroups: ["config.istio.io"]
   resources: ["*"]
@@ -26,8 +26,8 @@ metadata:
   name: istio-authenticated
   labels:
     app: istio-authenticated
-    maistra-version: 0.1.0
-    release: istio-1.0.0
+    maistra-version: 0.2.0
+    release: istio-1.0.2
 roleRef:
   kind: ClusterRole
   apiGroup: rbac.authorization.k8s.io

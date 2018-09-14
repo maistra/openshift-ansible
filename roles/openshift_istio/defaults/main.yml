@@ -1,6 +1,7 @@
 ---
 default_istio_image_tag: "1.0.0"
 default_istio_namespace: "istio-system"
+default_istio_maistra_tag: "0.2.0"
 default_istio_jaeger_image_prefix: "jaegertracing/"
 default_istio_jaeger_image_tag: "1.6"
 default_istio_elasticsearch_image_prefix: "registry.centos.org/rhsyseng/"
@@ -16,7 +17,7 @@ default_istio_elasticsearch_memory: "512Mi"
 openshift_istio_image_dict:
   origin:
     istio_prefix: "maistra/"
-    istio_version: "{{ default_istio_image_tag }}"
+    istio_version: "{{ default_istio_maistra_tag }}"
     suffix: "-centos7"
     namespace: "{{ default_istio_namespace }}"
     jaeger_prefix: "{{ default_istio_jaeger_image_prefix }}"
@@ -26,7 +27,7 @@ openshift_istio_image_dict:
     kiali_version: "{{ default_istio_kiali_image_tag }}"
   openshift:
     istio_prefix: "openshift-istio-tech-preview/"
-    istio_version: "{{ default_istio_image_tag }}"
+    istio_version: "{{ default_istio_maistra_tag }}"
     suffix: ""
     namespace: "{{ default_istio_namespace }}"
     jaeger_prefix: "{{ default_istio_jaeger_productised_image_prefix }}"

@@ -58,9 +58,9 @@ spec:
           protocol: TCP
         resources:
           limits:
-            memory: 512Mi
+            memory: 1Gi
           requests:
-            memory: 512Mi
+            memory: 1Gi
         volumeMounts:
         - mountPath: /elasticsearch/persistent
           name: elasticsearch-persistent

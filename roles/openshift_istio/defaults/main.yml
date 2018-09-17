@@ -12,7 +12,7 @@ default_istio_elasticsearch_productised_image_tag: "5.6.10"
 default_istio_kiali_image_prefix: "kiali/"
 default_istio_kiali_image_tag: "v0.5.0"
 
-default_istio_elasticsearch_memory: "512Mi"
+default_istio_elasticsearch_memory: "1Gi"
 
 openshift_istio_image_dict:
   origin:

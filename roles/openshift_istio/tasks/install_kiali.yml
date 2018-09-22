@@ -11,5 +11,5 @@
   ignore_errors: yes
 
 - name: Expose kiali service
-  command: "{{ openshift_client_binary }} expose -n {{ openshift_istio_namespace }} svc kiali"
+  command: "{{ openshift_client_binary }} create route edge kiali --service=kiali -n {{ openshift_istio_namespace }}"
   when: kiali_route != 0

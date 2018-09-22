@@ -1,4 +1,5 @@
 ---
+# Source: istio/charts/kiali/templates/secrets.yaml
 # Source: istio/charts/kiali/templates/configmap.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -14,8 +15,8 @@ data:
       static_content_root_directory: /opt/kiali/console
 
 ---
+# Source: istio/templates/sidecar-injector-configmap.yaml
 # Source: istio/charts/kiali/templates/serviceaccount.yaml
-
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -23,13 +24,12 @@ metadata:
   namespace: istio-system
   labels:
     app: kiali
-    chart: kiali-v0.4.0
+    chart: kiali-1.0.1
     heritage: Tiller
-    release: redhat-0.8.0
+    release: istio-1.0.2
 
 ---
 # Source: istio/charts/kiali/templates/clusterrole.yaml
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -38,8 +38,7 @@ metadata:
     app: kiali
     version: master
 rules:
-- apiGroups: ["", "apps", "autoscaling"]
-  attributeRestrictions: null
+- apiGroups: ["","apps", "autoscaling"]
   resources:
   - configmaps
   - namespaces
@@ -54,14 +53,7 @@ rules:
   - get
   - list
   - watch
-- apiGroups: ["route.openshift.io"]
-  attributeRestrictions: null
-  resources:
-  - routes
-  verbs:
-  - get
 - apiGroups: ["config.istio.io"]
-  attributeRestrictions: null
   resources:
   - rules
   - circonuses
@@ -88,12 +80,13 @@ rules:
   - quotas
   - reportnothings
   - servicecontrolreports
+  - quotaspecs
+  - quotaspecbindings
   verbs:
   - get
   - list
   - watch
 - apiGroups: ["networking.istio.io"]
-  attributeRestrictions: null
   resources:
   - virtualservices
   - destinationrules
@@ -103,18 +96,18 @@ rules:
   - get
   - list
   - watch
+
 ---
 # Source: istio/charts/kiali/templates/clusterrolebinding.yaml
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: istio-kiali-admin-role-binding-istio-system
   labels:
     app: kiali
-    chart: kiali-v0.4.0
+    chart: kiali-1.0.1
     heritage: Tiller
-    release: redhat-0.8.0
+    release: istio-1.0.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -151,8 +144,8 @@ metadata:
   namespace: istio-system
   labels:
     app: kiali
-    chart: kiali-v0.4.0
-    release: redhat-0.8.0
+    chart: kiali-1.0.1
+    release: istio-1.0.2
     heritage: Tiller
 spec:
   replicas: 1
@@ -164,9 +157,11 @@ spec:
       name: kiali
       labels:
         app: kiali
+      annotations:
+        sidecar.istio.io/inject: "false"
+        scheduler.alpha.kubernetes.io/critical-pod: ""
     spec:
       serviceAccountName: kiali-service-account
-
       containers:
       - image: "kiali/kiali:v0.7.2"
         name: kiali
@@ -190,13 +185,22 @@ spec:
           valueFrom:
             secretKeyRef:
               name: kiali
-              key: password
+              key: passphrase
+        - name: PROMETHEUS_SERVICE_URL
+          value: http://prometheus:9090
+        - name: GRAFANA_DASHBOARD
+          value: istio-service-dashboard
+        - name: GRAFANA_VAR_SERVICE_SOURCE
+          value: var-service
+        - name: GRAFANA_VAR_SERVICE_DEST
+          value: var-service
         volumeMounts:
         - name: kiali-configuration
           mountPath: "/kiali-configuration"
         resources:
-            {}
-
+          requests:
+            cpu: 10m
+          
       volumes:
       - name: kiali-configuration
         configMap:
@@ -204,3 +208,27 @@ spec:
 
 ---
 # Source: istio/charts/kiali/templates/ingress.yaml
+
+---
+# Source: istio/charts/telemetry-gateway/templates/gateway.yaml
+
+
+---
+# Source: istio/templates/configmap.yaml
+
+
+---
+# Source: istio/templates/crds.yaml
+# 
+# these CRDs only make sense when pilot is enabled
+#
+
+# these CRDs only make sense when security is enabled
+#
+
+#
+# 
+---
+# Source: istio/templates/install-custom-resources.sh.tpl
+
+

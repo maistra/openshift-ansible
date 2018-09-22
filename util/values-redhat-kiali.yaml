@@ -1,0 +1,31 @@
+global:
+  proxy:
+    policy: disabled
+
+grafana:
+  enabled: false
+
+ingress:
+  enabled: false
+gateways:
+  enabled: false
+sidecarInjectorWebhook:
+  enabled: false
+galley:
+  enabled: false
+mixer:
+  enabled: false
+pilot:
+  enabled: false
+prometheus:
+  enabled: false
+zipkin:
+  enabled: false
+servicegraph:
+  enabled: false
+tracing:
+  enabled: false
+kiali:
+  enabled: true
+  hub: kiali
+  tag: v0.7.2

@@ -83,6 +83,7 @@ function generateCRDsTemplate() {
 # - add a service account for grafana
 # - remove the extraneous security sources
 # - remove the extraneous create custom resources job
+# - remove the extraneous sidecar injector
 # - remove extraneous source lines
 # - add the service account to the deployment
 # - add a maistra-version label to all objects which have a release label
@@ -102,18 +103,46 @@ metadata:
   labels:
     app: grafana' ;
     helm template -n istio-${ISTIO_VERSION} --namespace=istio-system ${VALUES} ${HELM_DIR}/istio
-  ) | sed -e '/^# Source: istio\/charts\/security\//,/^# Source: istio\/charts\/[^s][^e][^c][^u][^r][^i][^t][^y]/ {
+  ) | sed -e 's/^# Source: istio\/charts\/security\/.*$/MAISTRA/' \
+    | sed -e '/^MAISTRA$/,/^# Source:/ {
+      /^# Source/ b
+      d
+    }' | sed -e '/^# Source:.*sidecar-injector-configmap.yaml/,/^# Source:/ {
       /^# Source/b
       d
     }' | sed -e '/^# Source:.*create-custom-resources-job.yaml/,/^# Source:/ {
       /^# Source/b
       d
-    }' | sed -e '/^# Source: istio\/charts\/security\//d' \
-             -e '/^# Source: istio\/templates\//d' \
+    }' | sed -e '/^# Source: istio\/templates\//d' \
              -e 's/^\(.*\)containers:\(.*\)$/\1serviceAccountName: grafana\
 \1containers:\2/' \
              -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: '${MAISTRA_VERSION}'\
 \1release:\2/'
+}
+
+# The following modifications are made to the generated helm template for the Kiali yaml file
+# - remove the extraneous security sources
+# - remove the extraneous sidecar injector
+# - remove the kiali username/password secret
+function generateKialiTemplate() {
+  VALUES=""
+  while [ $# -gt 0 ] ; do
+    VALUES="${VALUES} -f ${REDHAT_HELM_DIR}/$1"
+    shift
+  done
+
+  helm template -n istio-${ISTIO_VERSION} --namespace=istio-system ${VALUES} ${HELM_DIR}/istio \
+    | sed -e 's/^# Source: istio\/charts\/security\/.*$/MAISTRA/' \
+    | sed -e '/^MAISTRA$/,/^# Source:/ {
+      /^# Source/b
+      d
+    }' | sed -e '/^# Source:.*sidecar-injector-configmap.yaml/,/^# Source:/ {
+      /^# Source/b
+      d
+    }' | sed -e '/^# Source: istio\/charts\/kiali\/templates\/secrets.yaml/,/^# Source:/ {
+      /^# Source/b
+      d
+    }'
 }
 
 retrieveIstioRelease
@@ -122,3 +151,4 @@ generateIstioTemplate values-redhat.yaml values-redhat-auth.yaml > ${ROLE_FILES_
 generateIstioTemplate values-redhat.yaml > ${ROLE_FILES_DIR}/istio.yaml
 generateCRDsTemplate values-redhat.yaml values-redhat-auth.yaml > ${ROLE_FILES_DIR}/istio-crds.yaml
 generateGrafanaTemplate values-redhat-grafana.yaml > ${ROLE_FILES_DIR}/grafana.yaml
+generateKialiTemplate values-redhat-kiali.yaml > ${ROLE_FILES_DIR}/kiali.yaml

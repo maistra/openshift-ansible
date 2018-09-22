@@ -115,7 +115,7 @@ spec:
       serviceAccountName: grafana
       containers:
         - name: grafana
-          image: "docker.io/istio/grafana:1.0.0"
+          image: "docker.io/istio/grafana:1.0.2"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
@@ -191,3 +191,21 @@ spec:
 
 ---
 # Source: istio/charts/telemetry-gateway/templates/gateway.yaml
+
+
+---
+
+
+---
+# 
+# these CRDs only make sense when pilot is enabled
+#
+
+# these CRDs only make sense when security is enabled
+#
+
+#
+# 
+---
+
+

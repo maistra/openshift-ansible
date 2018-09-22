@@ -1,5 +1,4 @@
 global:
-  tag: 1.0.0
   proxy:
     policy: disabled
 

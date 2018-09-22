@@ -1,6 +1,6 @@
 ---
 - name: Create kiali secret
-  command: "{{ openshift_client_binary }} create secret generic {{ openshift_istio_kiali_secret }} -n {{ openshift_istio_namespace }}  --from-literal=username={{ openshift_istio_kiali_username }} --from-literal=password={{ openshift_istio_kiali_password }}"
+  command: "{{ openshift_client_binary }} create secret generic {{ openshift_istio_kiali_secret }} -n {{ openshift_istio_namespace }}  --from-literal=username={{ openshift_istio_kiali_username }} --from-literal=passphrase={{ openshift_istio_kiali_password }}"
 
 - name: Add Kiali components
   command: "{{ openshift_client_binary }} create -f {{ openshift_kiali_yaml }} -n {{ openshift_istio_namespace }}"

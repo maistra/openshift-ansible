@@ -600,7 +600,7 @@ data:
     template: |-
       initContainers:
       - name: istio-init
-        image: "docker.io/istio/proxy_init:1.0.0"
+        image: "docker.io/istio/proxy_init:1.0.2"
         args:
         - "-p"
         - [[ .MeshConfig.ProxyListenPort ]]
@@ -645,7 +645,7 @@ data:
         image: [[ if (isset .ObjectMeta.Annotations "sidecar.istio.io/proxyImage") -]]
         "[[ index .ObjectMeta.Annotations "sidecar.istio.io/proxyImage" ]]"
         [[ else -]]
-        docker.io/istio/proxyv2:1.0.0
+        docker.io/istio/proxyv2:1.0.2
         [[ end -]]
         args:
         - proxy
@@ -1534,7 +1534,7 @@ spec:
       serviceAccountName: istio-galley-service-account
       containers:
         - name: validator
-          image: "docker.io/istio/galley:1.0.0"
+          image: "docker.io/istio/galley:1.0.2"
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 443
@@ -1649,7 +1649,7 @@ spec:
       serviceAccountName: istio-egressgateway-service-account
       containers:
         - name: istio-proxy
-          image: "docker.io/istio/proxyv2:1.0.0"
+          image: "docker.io/istio/proxyv2:1.0.2"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -1786,7 +1786,7 @@ spec:
       serviceAccountName: istio-ingressgateway-service-account
       containers:
         - name: istio-proxy
-          image: "docker.io/istio/proxyv2:1.0.0"
+          image: "docker.io/istio/proxyv2:1.0.2"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -1972,7 +1972,7 @@ spec:
                 - s390x
       containers:
       - name: mixer
-        image: "docker.io/istio/mixer:1.0.0"
+        image: "docker.io/istio/mixer:1.0.2"
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9093
@@ -1997,7 +1997,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
       - name: istio-proxy
-        image: "docker.io/istio/proxyv2:1.0.0"
+        image: "docker.io/istio/proxyv2:1.0.2"
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9091
@@ -2070,7 +2070,7 @@ spec:
         emptyDir: {}
       containers:
       - name: mixer
-        image: "docker.io/istio/mixer:1.0.0"
+        image: "docker.io/istio/mixer:1.0.2"
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9093
@@ -2095,7 +2095,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
       - name: istio-proxy
-        image: "docker.io/istio/proxyv2:1.0.0"
+        image: "docker.io/istio/proxyv2:1.0.2"
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9091
@@ -2168,7 +2168,7 @@ spec:
       serviceAccountName: istio-pilot-service-account
       containers:
         - name: discovery
-          image: "docker.io/istio/pilot:1.0.0"
+          image: "docker.io/istio/pilot:1.0.2"
           imagePullPolicy: IfNotPresent
           args:
           - "discovery"
@@ -2213,7 +2213,7 @@ spec:
             mountPath: /etc/certs
             readOnly: true
         - name: istio-proxy
-          image: "docker.io/istio/proxyv2:1.0.0"
+          image: "docker.io/istio/proxyv2:1.0.2"
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 15003
@@ -2413,7 +2413,7 @@ spec:
       serviceAccountName: istio-citadel-service-account
       containers:
         - name: citadel
-          image: "docker.io/istio/citadel:1.0.0"
+          image: "docker.io/istio/citadel:1.0.2"
           imagePullPolicy: IfNotPresent
           args:
             - --append-dns-names=true
@@ -2487,7 +2487,7 @@ spec:
       serviceAccountName: istio-sidecar-injector-service-account
       containers:
         - name: sidecar-injector-webhook
-          image: "docker.io/istio/sidecar_injector:1.0.0"
+          image: "docker.io/istio/sidecar_injector:1.0.2"
           imagePullPolicy: IfNotPresent
           args:
             - --caCertFile=/etc/istio/certs/root-cert.pem

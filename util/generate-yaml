@@ -145,10 +145,58 @@ function generateKialiTemplate() {
     }'
 }
 
+# The following modifications are made to the upstream kiali configuration for deployment on OpenShift
+# - Add jaeger and grafana URLs to the configmap as well as the identity certs
+# - Add the route.openshift.io api group to the cluster role
+# - Add the openshift annotation to the service
+# - Remove the prometheus, grafana environment from the deployment
+# - Add the kiali-cert volume mount
+# - Add the kiali-cert volume
+function transformKialiOpenShift() {
+  sed -e '/static_content_root_directory/ a\
+\    external_services:\
+\      jaeger:\
+\        url: JAEGER_URL\
+\      grafana:\
+\        url: GRAFANA_URL\
+\    identity:\
+\      cert_file: /kiali-cert/tls.crt\
+\      private_key_file: /kiali-cert/tls.key' \
+  | sed -e '/apiGroups:.*config.istio.io/ i\
+\- apiGroups: ["route.openshift.io"]\
+\  resources:\
+\  - routes\
+\  verbs:\
+\  - get' \
+  | sed -e '/kind.*Service$/,/metadata/ {
+    /metadata/ a\
+\  annotations:\
+\    service.alpha.openshift.io/serving-cert-secret-name: kiali-cert-secret
+  }' | sed -e '/PROMETHEUS_SERVICE_URL/,/volumeMounts/ {
+    /volumeMounts/b
+    d
+  }' | sed -e '/kind.*Deployment$/,/^# Source:/ {
+    /volumeMounts:/ {
+      N
+      N
+      a\
+\        - name: kiali-cert\
+\          mountPath: "/kiali-cert"
+    }
+    /configMap:/ {
+      N
+      a\
+\      - name: kiali-cert\
+\        secret:\
+\          secretName: kiali-cert-secret
+    }
+  }'
+}
+
 retrieveIstioRelease
 
 generateIstioTemplate values-redhat.yaml values-redhat-auth.yaml > ${ROLE_FILES_DIR}/istio-auth.yaml
 generateIstioTemplate values-redhat.yaml > ${ROLE_FILES_DIR}/istio.yaml
 generateCRDsTemplate values-redhat.yaml values-redhat-auth.yaml > ${ROLE_FILES_DIR}/istio-crds.yaml
 generateGrafanaTemplate values-redhat-grafana.yaml > ${ROLE_FILES_DIR}/grafana.yaml
-generateKialiTemplate values-redhat-kiali.yaml > ${ROLE_FILES_DIR}/kiali.yaml
+generateKialiTemplate values-redhat-kiali.yaml | transformKialiOpenShift > ${ROLE_FILES_DIR}/kiali.yaml

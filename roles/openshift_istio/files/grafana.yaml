@@ -15,7 +15,7 @@ metadata:
   labels:
     app: istio-grafana
     chart: grafana-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
     istio: grafana
@@ -76,7 +76,7 @@ metadata:
   labels:
     app: grafana
     chart: grafana-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
 spec:
@@ -99,7 +99,7 @@ metadata:
   labels:
     app: grafana
     chart: grafana-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
 spec:

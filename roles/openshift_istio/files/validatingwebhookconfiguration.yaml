@@ -5,7 +5,7 @@ metadata:
   namespace: istio-system
   labels:
     app: istio-galley
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
   ownerReferences:
   - apiVersion: extensions/v1beta1

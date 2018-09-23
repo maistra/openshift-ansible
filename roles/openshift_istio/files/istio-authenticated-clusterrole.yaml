@@ -4,7 +4,7 @@ metadata:
   name: istio-authenticated
   labels:
     app: istio-authenticated
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 rules:
 - apiGroups: ["config.istio.io"]
@@ -26,7 +26,7 @@ metadata:
   name: istio-authenticated
   labels:
     app: istio-authenticated
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 roleRef:
   kind: ClusterRole

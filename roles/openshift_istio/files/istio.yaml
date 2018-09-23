@@ -8,7 +8,7 @@ metadata:
   labels:
     app: istio-galley
     chart: galley-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
     istio: mixer
@@ -22,7 +22,7 @@ data:
       labels:
         app: istio-galley
         chart: galley-1.0.1
-        maistra-version: 0.2.0
+        maistra-version: MAISTRA_VERSION
         release: istio-1.0.2
         heritage: Tiller
     webhooks:
@@ -136,7 +136,7 @@ metadata:
   labels:
     app: istio-statsd-prom-bridge
     chart: mixer-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
     istio: mixer
@@ -153,7 +153,7 @@ metadata:
   labels:
     app: prometheus
     chart: prometheus-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
 data:
@@ -395,7 +395,7 @@ metadata:
   labels:
     app: istio-security
     chart: security-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
     istio: security
@@ -445,7 +445,7 @@ metadata:
   labels:
     app: istio
     chart: istio-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
 data:
@@ -536,7 +536,7 @@ metadata:
   labels:
     app: istio
     chart: istio-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
     istio: sidecar-injector
@@ -701,7 +701,7 @@ metadata:
     app: istio-galley
     chart: galley-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 
 ---
@@ -716,7 +716,7 @@ metadata:
     app: egressgateway
     chart: gateways-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 ---
 apiVersion: v1
@@ -728,7 +728,7 @@ metadata:
     app: ingressgateway
     chart: gateways-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 ---
 
@@ -743,7 +743,7 @@ metadata:
     app: mixer
     chart: mixer-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 
 ---
@@ -757,7 +757,7 @@ metadata:
     app: istio-pilot
     chart: pilot-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 
 ---
@@ -780,7 +780,7 @@ metadata:
     app: security
     chart: security-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 
 ---
@@ -794,7 +794,7 @@ metadata:
     app: istio-sidecar-injector
     chart: sidecarInjectorWebhook-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 
 ---
@@ -808,7 +808,7 @@ metadata:
     app: istio-galley
     chart: galley-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 rules:
 - apiGroups: ["admissionregistration.k8s.io"]
@@ -836,7 +836,7 @@ metadata:
     app: gateways
     chart: gateways-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
   name: istio-egressgateway-istio-system
 rules:
@@ -851,7 +851,7 @@ metadata:
     app: gateways
     chart: gateways-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
   name: istio-ingressgateway-istio-system
 rules:
@@ -870,7 +870,7 @@ metadata:
     app: mixer
     chart: mixer-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 rules:
 - apiGroups: ["config.istio.io"] # istio CRD watcher
@@ -902,7 +902,7 @@ metadata:
     app: istio-pilot
     chart: pilot-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 rules:
 - apiGroups: ["config.istio.io"]
@@ -965,7 +965,7 @@ metadata:
     app: security
     chart: security-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 rules:
 - apiGroups: [""]
@@ -988,7 +988,7 @@ metadata:
     app: istio-sidecar-injector
     chart: sidecarInjectorWebhook-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 rules:
 - apiGroups: ["*"]
@@ -1008,7 +1008,7 @@ metadata:
     app: istio-galley
     chart: galley-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -1059,7 +1059,7 @@ metadata:
     app: mixer
     chart: mixer-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -1080,7 +1080,7 @@ metadata:
     app: istio-pilot
     chart: pilot-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -1116,7 +1116,7 @@ metadata:
     app: security
     chart: security-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -1137,7 +1137,7 @@ metadata:
     app: istio-sidecar-injector
     chart: sidecarInjectorWebhook-1.0.1
     heritage: Tiller
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -1177,7 +1177,7 @@ metadata:
   annotations:
   labels:
     chart: gateways-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
     app: istio-egressgateway
@@ -1203,7 +1203,7 @@ metadata:
   annotations:
   labels:
     chart: gateways-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
     app: istio-ingressgateway
@@ -1259,7 +1259,7 @@ metadata:
   namespace: istio-system
   labels:
     chart: mixer-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     istio: mixer
 spec:
@@ -1281,7 +1281,7 @@ metadata:
   namespace: istio-system
   labels:
     chart: mixer-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     istio: mixer
 spec:
@@ -1310,7 +1310,7 @@ metadata:
   namespace: istio-system
   labels:
     chart: mixer-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     istio: statsd-prom-bridge
 spec:
@@ -1332,7 +1332,7 @@ metadata:
   namespace: istio-system
   labels:
     chart: mixer-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     istio: mixer
 spec:
@@ -1376,7 +1376,7 @@ metadata:
   labels:
     app: istio-pilot
     chart: pilot-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
 spec:
@@ -1458,7 +1458,7 @@ metadata:
   labels:
     app: galley
     chart: galley-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
     istio: galley
@@ -1575,7 +1575,7 @@ metadata:
   namespace: istio-system
   labels:
     chart: gateways-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
     app: istio-egressgateway
@@ -1712,7 +1712,7 @@ metadata:
   namespace: istio-system
   labels:
     chart: gateways-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
     app: istio-ingressgateway
@@ -1859,7 +1859,7 @@ metadata:
   namespace: istio-system
   labels:
     chart: mixer-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     istio: mixer
 spec:
@@ -1990,7 +1990,7 @@ metadata:
   namespace: istio-system
   labels:
     chart: mixer-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     istio: mixer
 spec:
@@ -2093,7 +2093,7 @@ metadata:
   labels:
     app: istio-pilot
     chart: pilot-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
     istio: pilot
@@ -2250,7 +2250,7 @@ metadata:
   labels:
     app: prometheus
     chart: prometheus-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
 spec:
@@ -2341,7 +2341,7 @@ metadata:
   labels:
     app: security
     chart: security-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
     istio: citadel
@@ -2415,7 +2415,7 @@ metadata:
   labels:
     app: sidecarInjectorWebhook
     chart: sidecarInjectorWebhook-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
     istio: sidecar-injector
@@ -2532,7 +2532,7 @@ metadata:
   labels:
     app: istio-sidecar-injector
     chart: sidecarInjectorWebhook-1.0.1
-    maistra-version: 0.2.0
+    maistra-version: MAISTRA_VERSION
     release: istio-1.0.2
     heritage: Tiller
 webhooks:

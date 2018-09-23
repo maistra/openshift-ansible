@@ -1,8 +1,6 @@
 DIR=$(dirname $0)
 
 ISTIO_VERSION=1.0.2
-MAISTRA_VERSION=0.2.0
-
 RELEASES_DIR=${DIR}/../../istio-releases
 
 PLATFORM=linux
@@ -59,7 +57,7 @@ function generateIstioTemplate() {
     /privileged/ s/true/false/
   }' | sed -e '/namespaceSelector/,/istio-injection/s/matchLabels/matchExpressions/' \
            -e 's/istio-injection: enabled/- {key: istio.openshift.com\/ignore-namespace, operator: DoesNotExist}/' \
-           -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: '${MAISTRA_VERSION}'\
+           -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: 'MAISTRA_VERSION'\
 \1release:\2/'
 }
 
@@ -116,7 +114,7 @@ metadata:
     }' | sed -e '/^# Source: istio\/templates\//d' \
              -e 's/^\(.*\)containers:\(.*\)$/\1serviceAccountName: grafana\
 \1containers:\2/' \
-             -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: '${MAISTRA_VERSION}'\
+             -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: 'MAISTRA_VERSION'\
 \1release:\2/'
 }
 

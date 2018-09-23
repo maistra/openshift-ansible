@@ -2,6 +2,26 @@
 - name: Create kiali secret
   command: "{{ openshift_client_binary }} create secret generic {{ openshift_istio_kiali_secret }} -n {{ openshift_istio_namespace }}  --from-literal=username={{ openshift_istio_kiali_username }} --from-literal=passphrase={{ openshift_istio_kiali_password }}"
 
+- name: Get Grafana host
+  command: "{{ openshift_client_binary }} get route grafana -o 'jsonpath={.spec.host}'"
+  register: grafana_url
+
+- name: Update Grafana URL
+  replace:
+    path: "{{ openshift_kiali_yaml }}"
+    regexp: "GRAFANA_URL"
+    replace: "http://{{ grafana_url.stdout }}"
+
+- name: Get Jaeger host
+  command: "{{ openshift_client_binary }} get route jaeger-query -o 'jsonpath={.spec.host}'"
+  register: jaeger_url
+
+- name: Update Jaeger URL
+  replace:
+    path: "{{ openshift_kiali_yaml }}"
+    regexp: "JAEGER_URL"
+    replace: "https://{{ jaeger_url.stdout }}"
+
 - name: Add Kiali components
   command: "{{ openshift_client_binary }} create -f {{ openshift_kiali_yaml }} -n {{ openshift_istio_namespace }}"
 
@@ -11,5 +31,5 @@
   ignore_errors: yes
 
 - name: Expose kiali service
-  command: "{{ openshift_client_binary }} create route edge kiali --service=kiali -n {{ openshift_istio_namespace }}"
+  command: "{{ openshift_client_binary }} create route reencrypt kiali --service=kiali -n {{ openshift_istio_namespace }}"
   when: kiali_route != 0

@@ -13,6 +13,14 @@ data:
     server:
       port: 20001
       static_content_root_directory: /opt/kiali/console
+    external_services:
+      jaeger:
+        url: JAEGER_URL
+      grafana:
+        url: GRAFANA_URL
+    identity:
+      cert_file: /kiali-cert/tls.crt
+      private_key_file: /kiali-cert/tls.key
 
 ---
 # Source: istio/templates/sidecar-injector-configmap.yaml
@@ -53,6 +61,11 @@ rules:
   - get
   - list
   - watch
+- apiGroups: ["route.openshift.io"]
+  resources:
+  - routes
+  verbs:
+  - get
 - apiGroups: ["config.istio.io"]
   resources:
   - rules
@@ -122,6 +135,8 @@ subjects:
 apiVersion: v1
 kind: Service
 metadata:
+  annotations:
+    service.alpha.openshift.io/serving-cert-secret-name: kiali-cert-secret
   name: kiali
   namespace: istio-system
   labels:
@@ -186,17 +201,11 @@ spec:
             secretKeyRef:
               name: kiali
               key: passphrase
-        - name: PROMETHEUS_SERVICE_URL
-          value: http://prometheus:9090
-        - name: GRAFANA_DASHBOARD
-          value: istio-service-dashboard
-        - name: GRAFANA_VAR_SERVICE_SOURCE
-          value: var-service
-        - name: GRAFANA_VAR_SERVICE_DEST
-          value: var-service
         volumeMounts:
         - name: kiali-configuration
           mountPath: "/kiali-configuration"
+        - name: kiali-cert
+          mountPath: "/kiali-cert"
         resources:
           requests:
             cpu: 10m
@@ -205,6 +214,9 @@ spec:
       - name: kiali-configuration
         configMap:
           name: kiali
+      - name: kiali-cert
+        secret:
+          secretName: kiali-cert-secret
 
 ---
 # Source: istio/charts/kiali/templates/ingress.yaml

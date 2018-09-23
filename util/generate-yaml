@@ -124,6 +124,7 @@ metadata:
 # - remove the extraneous security sources
 # - remove the extraneous sidecar injector
 # - remove the kiali username/password secret
+# - add release label to kiali clusterrole
 function generateKialiTemplate() {
   VALUES=""
   while [ $# -gt 0 ] ; do
@@ -142,6 +143,9 @@ function generateKialiTemplate() {
     }' | sed -e '/^# Source: istio\/charts\/kiali\/templates\/secrets.yaml/,/^# Source:/ {
       /^# Source/b
       d
+    }' | sed -e '/^# Source: istio\/charts\/kiali\/templates\/clusterrole.yaml/,/^# Source:/ {
+      /labels:/ a\
+\    release: istio-'${ISTIO_VERSION}'
     }'
 }
 

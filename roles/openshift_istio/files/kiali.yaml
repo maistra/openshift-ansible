@@ -43,6 +43,7 @@ kind: ClusterRole
 metadata:
   name: kiali
   labels:
+    release: istio-1.0.2
     app: kiali
     version: master
 rules:

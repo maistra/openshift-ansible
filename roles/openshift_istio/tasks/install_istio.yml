@@ -11,7 +11,7 @@
   replace:
     path: "{{ item }}"
     regexp: "MAISTRA_VERSION"
-    replace: "{{ default_istio_maistra_tag }}"
+    replace: "{{ openshift_istio_image_dict[openshift_deployment_type]['istio_version'] }}"
   with_items: "{{ openshift_istio_maistra_version_files }}"
 
 - name: Label Istio namespace so it is ignored by injection

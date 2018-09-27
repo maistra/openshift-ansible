@@ -34,6 +34,7 @@ function retrieveIstioRelease() {
 # - change privileged value on istio-proxy injection configmap to false
 # - update the namespaceSelector to ignore namespaces with the label istio.openshift.com/ignore-namespace
 # - add a maistra-version label to all objects which have a release label
+# - remove GODEBUG from the pilot environment
 function generateIstioTemplate() {
   VALUES=""
   while [ $# -gt 0 ] ; do
@@ -53,6 +54,11 @@ function generateIstioTemplate() {
   }' | sed -e '/^# Source:.*istio\/templates\/crds.yaml/,/^# Source:/ {
     /^# Source/b
     d
+  }' | sed -e '/^# Source:.*istio\/charts\/pilot\/templates\/deployment.yaml/,/^# Source:/ {
+    /GODEBUG/ {
+      N
+      d
+    }
   }' | sed -e '1,/privileged/! {
     /privileged/ s/true/false/
   }' | sed -e '/namespaceSelector/,/istio-injection/s/matchLabels/matchExpressions/' \

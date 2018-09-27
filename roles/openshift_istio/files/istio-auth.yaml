@@ -2195,8 +2195,6 @@ spec:
                 fieldPath: metadata.namespace
           - name: PILOT_CACHE_SQUASH
             value: "5"
-          - name: GODEBUG
-            value: "gctrace=2"
           - name: PILOT_PUSH_THROTTLE_COUNT
             value: "100"
           - name: PILOT_TRACE_SAMPLING

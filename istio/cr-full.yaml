@@ -26,6 +26,6 @@ spec:
       username: username
       token: token
     catalog:
-      filter: filter
-      branch: branch
-      repo: repo
+      filter: booster.mission.metadata.istio
+      branch: v62
+      repo: https://github.com/fabric8-launcher/launcher-booster-catalog.git

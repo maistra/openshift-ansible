@@ -4,15 +4,18 @@ MAINTAINER OpenShift Team <dev@lists.openshift.redhat.com>
 
 USER root
 
-LABEL name="openshiftistio/origin-ansible" \
-      summary="OpenShift's installation and configuration tool for Istio" \
-      description="A containerized openshift-ansible image to let you run playbooks to install, upgrade, maintain and check an OpenShift cluster" \
-      url="https://github.com/openshiftistio/openshift-ansible" \
-      io.k8s.display-name="openshift-ansible" \
-      io.k8s.description="A containerized openshift-ansible image to let you run playbooks to install, upgrade, maintain and check an OpenShift cluster" \
-      io.openshift.expose-services="" \
-      io.openshift.tags="openshift,install,upgrade,ansible" \
-      atomic.run="once"
+LABEL com.redhat.component="maistra-ansible-container"
+LABEL name="maistra/openshift-ansible"
+LABEL summary="Red Hat Istio Ansible Installer OpenShift container image"
+LABEL description="Red Hat Istio Ansible Installer OpenShift container image"
+LABEL io.k8s.display-name="Red Hat Istio Ansible Installer"
+LABEL io.k8s.description="Red Hat Istio Ansible Installer OpenShift container image"
+LABEL io.openshift.expose-services=""
+LABEL io.openshift.tags="istio"
+LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
+LABEL atomic.run="once"
+LABEL version="0.3.0"
+ENV ISTIO_VERSION=1.0.2
 
 RUN INSTALL_PKGS="iproute" \
  && yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS \

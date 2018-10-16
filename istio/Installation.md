@@ -90,15 +90,10 @@ oc new-app -f istio_product_operator_template.yaml --param=OPENSHIFT_ISTIO_MASTE
 
 The above instructions will create a new deployment within the istio-operator project, executing the operator responsible for managing the state of the Istio control plane through the custom resource.
 
-To verify the operator is installed correctly, locate the pod using the following command
+To verify the operator is installed correctly, access the logs from the operator pod using the following command
 
 ```
-oc get pods -n istio-operator
-```
-Access the logs from the pod with the following command, replacing `<pod name>` with the name of the pod discovered above
-
-```
-oc logs -n istio-operator <pod name>
+oc logs -n istio-operator $(oc -n istio-operator get pods -l name=istio-operator --output=jsonpath={.items..metadata.name})
 ```
 
 and look for output similar to the following

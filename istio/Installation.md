@@ -47,7 +47,7 @@ admissionConfig:
 ```
 cp -p master-config.yaml master-config.yaml.prepatch
 oc ex config patch master-config.yaml.prepatch -p "$(cat master-config.patch)" > master-config.yaml
-systemctl restart atomic-openshift-master*
+/usr/local/bin/master-restart api && /usr/local/bin/master-restart controllers
 ```
 
 ### Updating the Nodes

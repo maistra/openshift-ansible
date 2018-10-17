@@ -1,10 +1,10 @@
-# Installing Istio into an existing OCP 3.10 Installation
+# Installing Istio into an existing OCP 3.11 Installation
 
-This document describes the steps for installing the Istio Tech Preview release into an existing installation of OCP 3.10.
+This document describes the steps for installing the Istio Tech Preview release into an existing installation of OCP 3.11.
 
 **Table of Contents**
 
-- [Preparing the OCP 3.10 Installation](#preparing-the-ocp-310-installation)
+- [Preparing the OCP 3.11 Installation](#preparing-the-ocp-311-installation)
    - [Updating the Master](#updating-the-master)
    - [Updating the Nodes](#updating-the-nodes)
 - [Installing the Istio Operator](#installing-the-istio-operator)
@@ -14,15 +14,15 @@ This document describes the steps for installing the Istio Tech Preview release 
 - [Removing Istio](#removing-istio)
 - [Removing the Istio Operator](#removing-the-istio-operator)
 
-## Preparing the OCP 3.10 Installation
+## Preparing the OCP 3.11 Installation
 
-Before Istio can be installed into an OCP 3.10 installation it is necessary to make a number of changes to the master configuration and each of the schedulable nodes.  These changes will enable features required within Istio and also ensure Elasticsearch will function correctly.
+Before Istio can be installed into an OCP 3.11 installation it is necessary to make a number of changes to the master configuration and each of the schedulable nodes.  These changes will enable features required within Istio and also ensure Elasticsearch will function correctly.
 
 ### Updating the Master
 
 To enable the automatic injection of the Istio sidecar we first need to modify the master configuration on each master to include support for webhooks and signing of Certificate Signing Requests (CSRs).
 
-Make the following changes on each master within your OCP 3.10 installation.
+Make the following changes on each master within your OCP 3.11 installation.
 
 - Change to the directory containing the master configuration file (master-config.yaml)
 - Create a file named master-config.patch with the following contents (also in `master-config.patch`)
@@ -32,14 +32,14 @@ admissionConfig:
   pluginConfig:
     MutatingAdmissionWebhook:
       configuration:
-        apiVersion: v1
-        disable: false
-        kind: DefaultAdmissionConfig
+        apiVersion: apiserver.config.k8s.io/v1alpha1
+        kubeConfigFile: /dev/null
+        kind: WebhookAdmission
     ValidatingAdmissionWebhook:
       configuration:
-        apiVersion: v1
-        disable: false
-        kind: DefaultAdmissionConfig
+        apiVersion: apiserver.config.k8s.io/v1alpha1
+        kubeConfigFile: /dev/null
+        kind: WebhookAdmission
 ```
 
 - Within the same directory issue the following commands:
@@ -54,7 +54,7 @@ systemctl restart atomic-openshift-master*
 
 In order to run the Elasticsearch application it is necessary to make a change to the kernel configuration on each node, this change will be handled through the `sysctl` service.
 
-Make the following changes on each node within your OCP 3.10 installation
+Make the following changes on each node within your OCP 3.11 installation
 
 - Create a file named `/etc/sysctl.d/99-elasticsearch.conf` with the following contents:
 
@@ -70,7 +70,7 @@ sysctl vm.max_map_count=262144
 
 The Maistra installation process introduces a Kubernetes operator to manage the installation of the Istio control plane within the istio-system namespace.  This operator defines and monitors a custom resource related to the deployment, update and deletion of the Istio control plane.
 
-The following steps will install the Maistra operator into an existing OCP 3.10 installation, these can be executed from any host with access to the cluster.  Please ensure you are logged in as a cluster admin before executing the following
+The following steps will install the Maistra operator into an existing OCP 3.11 installation, these can be executed from any host with access to the cluster.  Please ensure you are logged in as a cluster admin before executing the following
 
 For community images run
 
@@ -126,10 +126,10 @@ spec:
     authentication: true
     community: false
     prefix: openshift-istio-tech-preview/
-    version: 0.2.0
+    version: 0.3.0
   jaeger:
     prefix: distributed-tracing-tech-preview/
-    version: 1.6.0
+    version: 1.7.0
     elasticsearch_memory: 1Gi
   kiali:
     username: username
@@ -210,7 +210,7 @@ oc delete -n istio-operator Installation istio-installation
 
 ## Removing the Istio Operator
 
-The following steps will remove the Maistra operator from an existing OCP 3.10 installation, these can be executed from any host with access to the cluster.  Please ensure you are logged in as a cluster admin before executing the following
+The following steps will remove the Maistra operator from an existing OCP 3.11 installation, these can be executed from any host with access to the cluster.  Please ensure you are logged in as a cluster admin before executing the following
 
 For community images run
 

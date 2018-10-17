@@ -1,0 +1,12 @@
+- name: Remove all Istio components with label {{ label }}
+  command: "{{ openshift_client_binary }} delete {{ item }} -n {{ openshift_istio_namespace }} -l {{ label }}"
+  with_items: " {{ openshift_istio_maistra_component_types }}"
+
+- name: Wait for Istio components with label {{ label }} to be removed
+  command: "{{ openshift_client_binary }} get {{ item }} -n {{ openshift_istio_namespace }} -l {{ label }}"
+  register: result
+  until: result.stderr == "No resources found."
+  retries: 15
+  delay: 2
+  ignore_errors: yes
+  with_items: "{{ openshift_istio_maistra_component_types }}"

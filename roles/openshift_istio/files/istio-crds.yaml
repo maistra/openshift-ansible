@@ -9,6 +9,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: istio-pilot
 spec:
   group: networking.istio.io
@@ -30,6 +31,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: istio-pilot
 spec:
   group: networking.istio.io
@@ -51,6 +53,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: istio-pilot
 spec:
   group: networking.istio.io
@@ -73,6 +76,7 @@ metadata:
     "helm.sh/hook": crd-install
     "helm.sh/hook-weight": "-5"
   labels:
+    maistra-version: MAISTRA_VERSION
     app: istio-pilot
 spec:
   group: networking.istio.io
@@ -93,6 +97,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: istio-pilot
 spec:
   group: networking.istio.io
@@ -116,6 +121,8 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   name: policies.authentication.istio.io
+  labels:
+    maistra-version: MAISTRA_VERSION
 spec:
   group: authentication.istio.io
   names:
@@ -134,6 +141,8 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   name: meshpolicies.authentication.istio.io
+  labels:
+    maistra-version: MAISTRA_VERSION
 spec:
   group: authentication.istio.io
   names:
@@ -156,6 +165,8 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   name: httpapispecbindings.config.istio.io
+  labels:
+    maistra-version: MAISTRA_VERSION
 spec:
   group: config.istio.io
   names:
@@ -174,6 +185,8 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   name: httpapispecs.config.istio.io
+  labels:
+    maistra-version: MAISTRA_VERSION
 spec:
   group: config.istio.io
   names:
@@ -192,6 +205,8 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   name: quotaspecbindings.config.istio.io
+  labels:
+    maistra-version: MAISTRA_VERSION
 spec:
   group: config.istio.io
   names:
@@ -210,6 +225,8 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   name: quotaspecs.config.istio.io
+  labels:
+    maistra-version: MAISTRA_VERSION
 spec:
   group: config.istio.io
   names:
@@ -231,6 +248,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: istio.io.mixer
     istio: core
@@ -254,6 +272,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: istio.io.mixer
     istio: core
@@ -277,6 +296,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: bypass
     istio: mixer-adapter
@@ -300,6 +320,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: circonus
     istio: mixer-adapter
@@ -323,6 +344,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: denier
     istio: mixer-adapter
@@ -346,6 +368,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: fluentd
     istio: mixer-adapter
@@ -369,6 +392,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: kubernetesenv
     istio: mixer-adapter
@@ -392,6 +416,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: listchecker
     istio: mixer-adapter
@@ -415,6 +440,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: memquota
     istio: mixer-adapter
@@ -438,6 +464,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: noop
     istio: mixer-adapter
@@ -461,6 +488,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: opa
     istio: mixer-adapter
@@ -484,6 +512,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: prometheus
     istio: mixer-adapter
@@ -507,6 +536,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: rbac
     istio: mixer-adapter
@@ -530,6 +560,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     package: redisquota
     istio: mixer-adapter
 spec:
@@ -549,6 +580,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: servicecontrol
     istio: mixer-adapter
@@ -573,6 +605,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: signalfx
     istio: mixer-adapter
@@ -596,6 +629,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: solarwinds
     istio: mixer-adapter
@@ -619,6 +653,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: stackdriver
     istio: mixer-adapter
@@ -642,6 +677,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: statsd
     istio: mixer-adapter
@@ -665,6 +701,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: stdio
     istio: mixer-adapter
@@ -688,6 +725,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: apikey
     istio: mixer-instance
@@ -711,6 +749,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: authorization
     istio: mixer-instance
@@ -734,6 +773,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: checknothing
     istio: mixer-instance
@@ -757,6 +797,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: adapter.template.kubernetes
     istio: mixer-instance
@@ -780,6 +821,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: listentry
     istio: mixer-instance
@@ -803,6 +845,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: logentry
     istio: mixer-instance
@@ -826,6 +869,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: edge
     istio: mixer-instance
@@ -849,6 +893,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: metric
     istio: mixer-instance
@@ -872,6 +917,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: quota
     istio: mixer-instance
@@ -895,6 +941,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: reportnothing
     istio: mixer-instance
@@ -918,6 +965,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: servicecontrolreport
     istio: mixer-instance
@@ -941,6 +989,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: tracespan
     istio: mixer-instance
@@ -964,6 +1013,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: istio.io.mixer
     istio: rbac
@@ -987,6 +1037,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: istio.io.mixer
     istio: rbac
@@ -1010,6 +1061,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: istio.io.mixer
     istio: rbac
@@ -1032,6 +1084,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: adapter
     istio: mixer-adapter
@@ -1054,6 +1107,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: instance
     istio: mixer-instance
@@ -1076,6 +1130,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: template
     istio: mixer-template
@@ -1098,6 +1153,7 @@ metadata:
   annotations:
     "helm.sh/hook": crd-install
   labels:
+    maistra-version: MAISTRA_VERSION
     app: mixer
     package: handler
     istio: mixer-handler

@@ -29,6 +29,7 @@ openshift_istio_maistra_version_files:
   - "{{ openshift_grafana_yaml }}"
   - "{{ openshift_istio_yaml }}"
   - "{{ openshift_istio_auth_yaml }}"
+  - "{{ openshift_istio_crds_yaml }}"
   - "{{ openshift_istio_authenticated_clusterrole_yaml }}"
   - "{{ openshift_validatingwebhookconfiguration_yaml }}"
 

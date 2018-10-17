@@ -1,6 +1,6 @@
 ---
 - name: Obtain list of Mutating Webhook Configurations
-  shell: "{{ openshift_client_binary }} get mutatingwebhookconfiguration -l release={{openshift_istio_release_tag}} -o=jsonpath='{..metadata.name}' | tr ' ' '\n'"
+  shell: "{{ openshift_client_binary }} get mutatingwebhookconfiguration -l maistra-version={{openshift_istio_installed_maistra_version}} -o=jsonpath='{..metadata.name}' | tr ' ' '\n'"
   register: openshift_istio_mutatingwebhookconfiguration
   ignore_errors: true
 
@@ -9,7 +9,7 @@
   with_items: "{{ openshift_istio_mutatingwebhookconfiguration.stdout_lines|list }}"
 
 - name: Obtain list of Validating Webhook Configurations
-  shell: "{{ openshift_client_binary }} get validatingwebhookconfiguration -l release={{openshift_istio_release_tag}} -o=jsonpath='{..metadata.name}' | tr ' ' '\n'"
+  shell: "{{ openshift_client_binary }} get validatingwebhookconfiguration -l maistra-version={{openshift_istio_installed_maistra_version}} -o=jsonpath='{..metadata.name}' | tr ' ' '\n'"
   register: openshift_istio_validatingwebhookconfiguration
   ignore_errors: true
 
@@ -30,6 +30,12 @@
   ignore_errors: yes
   with_items: "{{ openshift_istio_component_types }}"
 
+- name: Remove components with specific labels
+  include_tasks: remove_labelled_components.yml
+  with_items: "{{ openshift_istio_maistra_component_labels }}"
+  loop_control:
+    loop_var: label
+
 - name: Remove all istio service accounts
   command: "{{ openshift_client_binary }} delete sa {{ item }}"
   ignore_errors: yes
@@ -44,40 +50,13 @@
   command: "{{ openshift_client_binary }} delete certificatesigningrequest {{ item }}"
   with_items: "{{ openshift_istio_certificatesigningrequest.stdout_lines|list }}"
 
-- name: Obtain list of Istio Cluster Role Bindings
-  shell: "{{ openshift_client_binary }} get clusterrolebinding -l release={{openshift_istio_release_tag}} -o=jsonpath='{..metadata.name}' | tr ' ' '\n'"
-  register: openshift_istio_clusterrolebinding
-  ignore_errors: true
-
-- name: Remove Cluster Role Bindings
-  command: "{{ openshift_client_binary }} delete clusterrolebinding {{ item }}"
-  with_items: "{{ openshift_istio_clusterrolebinding.stdout_lines |list }}"
-
 - name: Remove Prometheus Cluster Role Binding
   command: "{{ openshift_client_binary }} delete clusterrolebinding prometheus-istio-system"
   ignore_errors: true
 
-- name: Obtain list of Istio Cluster Roles
-  shell: "{{ openshift_client_binary }} get clusterrole -l release={{openshift_istio_release_tag}} -o=jsonpath='{..metadata.name}' | tr ' ' '\n'"
-  register: openshift_istio_clusterrole
-  ignore_errors: true
-
-- name: Remove Cluster Roles
-  command: "{{ openshift_client_binary }} delete clusterrole {{ item }}"
-  with_items: "{{ openshift_istio_clusterrole.stdout_lines |list }}"
-
 - name: Remove Prometheus Cluster Role
   command: "{{ openshift_client_binary }} delete clusterrole prometheus-istio-system"
   ignore_errors: true
-
-- name: Obtain list of Custom Resource Definitions
-  shell: "{{ openshift_client_binary }} get customresourcedefinition -o=jsonpath='{..metadata.name}' | tr ' ' '\n' | grep -F '.istio.io'"
-  register: openshift_istio_customresourcedefinition
-  ignore_errors: true
-
-- name: Remove Custom Resource Definitions
-  command: "{{ openshift_client_binary }} delete customresourcedefinition {{ item }}"
-  with_items: "{{ openshift_istio_customresourcedefinition.stdout_lines|list }}"
 
 - name: Obtain all Istio secrets
   command: "{{ openshift_client_binary }} get secret --all-namespaces -o=jsonpath='{{ openshift_istio_secret_query_template }}'"

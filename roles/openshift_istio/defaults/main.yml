@@ -19,6 +19,11 @@ default_istio_kiali_productised_image_tag: "0.8.1"
 
 default_istio_elasticsearch_memory: "1Gi"
 
+default_istio_maistra_component_labels:
+  - "app=elasticsearch"
+  - "app=jaeger"
+  - "app=kiali"
+
 openshift_istio_image_dict:
   origin:
     istio_prefix: "{{ default_istio_maistra_image_prefix }}"
@@ -63,8 +68,13 @@ openshift_istio_component_types:
   - "deployment"
   - "daemonset"
   - "statefulset"
-  - "configmap"
   - "imagestream"
+
+openshift_istio_maistra_component_types:
+  - "configmap"
+  - "clusterrole"
+  - "clusterrolebinding"
+  - "customresourcedefinition"
 
 openshift_istio_grafana_service_account: "grafana"
 openshift_istio_prometheus_service_account: "prometheus"

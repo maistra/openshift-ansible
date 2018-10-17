@@ -63,7 +63,7 @@ function generateIstioTemplate() {
     /privileged/ s/true/false/
   }' | sed -e '/namespaceSelector/,/istio-injection/s/matchLabels/matchExpressions/' \
            -e 's/istio-injection: enabled/- {key: istio.openshift.com\/ignore-namespace, operator: DoesNotExist}/' \
-           -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: 'MAISTRA_VERSION'\
+           -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: MAISTRA_VERSION\
 \1release:\2/'
 }
 
@@ -80,7 +80,30 @@ function generateCRDsTemplate() {
   helm template -n istio-${ISTIO_VERSION} --namespace=istio-system ${VALUES} ${HELM_DIR}/istio | sed -e '1,/^# Source:.*istio\/templates\/crds.yaml/ {
     /^# Source:.*istio\/templates\/crds.yaml/b
     d
-  }' -e '/^# Source:/,$ d'
+  }' -e '/^# Source:/,$ d' \
+     -e 's/^\(.*\)labels:$/\1labels:\
+\1  maistra-version: MAISTRA_VERSION'/ \
+     -e 's/^\(.*\)\(name: policies.authentication.istio.io\)$/\1\2\
+\1labels:\
+\1  maistra-version: MAISTRA_VERSION/' \
+     -e 's/^\(.*\)\(name: meshpolicies.authentication.istio.io\)$/\1\2\
+\1labels:\
+\1  maistra-version: MAISTRA_VERSION/' \
+     -e 's/^\(.*\)\(name: httpapispecbindings.config.istio.io\)$/\1\2\
+\1labels:\
+\1  maistra-version: MAISTRA_VERSION/' \
+     -e 's/^\(.*\)\(name: httpapispecs.config.istio.io\)$/\1\2\
+\1labels:\
+\1  maistra-version: MAISTRA_VERSION/' \
+     -e 's/^\(.*\)\(name: quotaspecbindings.config.istio.io\)$/\1\2\
+\1labels:\
+\1  maistra-version: MAISTRA_VERSION/' \
+     -e 's/^\(.*\)\(name: quotaspecs.config.istio.io\)$/\1\2\
+\1labels:\
+\1  maistra-version: MAISTRA_VERSION/' \
+     -e 's/^\(.*\)\(name: XXX\)$/\1\2\
+\1labels:\
+\1  maistra-version: MAISTRA_VERSION/'
 }
 
 # The following modifications are made to the generated helm template for the Grafana yaml file
@@ -120,7 +143,7 @@ metadata:
     }' | sed -e '/^# Source: istio\/templates\//d' \
              -e 's/^\(.*\)containers:\(.*\)$/\1serviceAccountName: grafana\
 \1containers:\2/' \
-             -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: 'MAISTRA_VERSION'\
+             -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: MAISTRA_VERSION\
 \1release:\2/'
 }
 

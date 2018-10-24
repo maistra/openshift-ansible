@@ -7,4 +7,4 @@ spec:
     username: username
     password: password
     prefix: kiali/
-    version: v0.7.1
+    version: v0.8.1

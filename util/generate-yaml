@@ -1,6 +1,6 @@
 DIR=$(dirname $0)
 
-ISTIO_VERSION=1.0.2
+ISTIO_VERSION=1.0.3
 RELEASES_DIR=${DIR}/../../istio-releases
 
 PLATFORM=linux
@@ -63,6 +63,7 @@ function generateIstioTemplate() {
     /privileged/ s/true/false/
   }' | sed -e '/namespaceSelector/,/istio-injection/s/matchLabels/matchExpressions/' \
            -e 's/istio-injection: enabled/- {key: istio.openshift.com\/ignore-namespace, operator: DoesNotExist}/' \
+           -e '/GODEBUG/,/gctrace/d' \
            -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: MAISTRA_VERSION\
 \1release:\2/'
 }
@@ -184,12 +185,18 @@ function generateKialiTemplate() {
 # - Add the kiali-cert volume mount
 # - Add the kiali-cert volume
 function transformKialiOpenShift() {
-  sed -e '/static_content_root_directory/ a\
-\    external_services:\
-\      jaeger:\
-\        url: JAEGER_URL\
-\      grafana:\
-\        url: GRAFANA_URL\
+  sed -e 's/v0\.7\.2/v0\.8\.1/' \
+  | sed -e '/^# Source: istio\/charts\/kiali\/templates\/configmap.yaml/,/^# Source:/ {
+      /port: 20001/ a\
+\      static_content_root_directory: /opt/kiali/console
+      /jaeger:/,/url:/ {
+        /url:/ s/$/JAEGER_URL/
+      }
+      /grafana:/,/url:/ {
+        /url:/ s/$/GRAFANA_URL/
+      }
+  }' \
+  | sed -e '/GRAFANA_URL/ a\
 \    identity:\
 \      cert_file: /kiali-cert/tls.crt\
 \      private_key_file: /kiali-cert/tls.key' \

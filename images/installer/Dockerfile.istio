@@ -14,7 +14,7 @@ LABEL io.openshift.expose-services=""
 LABEL io.openshift.tags="istio"
 LABEL maintainer="Istio Feedback <istio-feedback@redhat.com>"
 LABEL atomic.run="once"
-LABEL version="0.3.0"
+LABEL version="0.4.0"
 
 RUN INSTALL_PKGS="iproute" \
  && yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS \

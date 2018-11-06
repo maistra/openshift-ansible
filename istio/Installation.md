@@ -1,6 +1,6 @@
 # Installing Istio into an existing OCP 3.11 Installation
 
-This document describes the steps for installing the Istio Tech Preview release into an existing installation of OCP 3.11.
+This document describes the steps for installing the Istio Tech Preview release into an existing installation of OCP 3.11 which was installed using the OpenShift ansible installer.  If you wish to use `oc cluster up` then please check https://github.com/Maistra/origin/releases for a version of `oc` which incorporates the Istio operator.
 
 **Table of Contents**
 

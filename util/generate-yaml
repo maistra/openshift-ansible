@@ -228,6 +228,14 @@ function transformKialiOpenShift() {
 \        secret:\
 \          secretName: kiali-cert-secret
     }
+  }' | sed -e '/^# Source: istio\/charts\/kiali\/templates\/clusterrole.yaml/,/^# Source:/ {
+    /apiGroups:.*autoscaling/ s/]/, "batch"]/
+    /horizontalpodautoscalers/ a\
+\  - replicasets\
+\  - statefulsets\
+\  - replicationcontrollers\
+\  - jobs\
+\  - cronjobs
   }'
 }
 

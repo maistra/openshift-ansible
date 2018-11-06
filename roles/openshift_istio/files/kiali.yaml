@@ -179,7 +179,7 @@ spec:
     spec:
       serviceAccountName: kiali-service-account
       containers:
-      - image: "kiali/kiali:v0.8.1"
+      - image: "kiali/kiali:v0.9.1"
         name: kiali
         command:
         - "/opt/kiali/kiali"

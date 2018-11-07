@@ -200,12 +200,27 @@ function transformKialiOpenShift() {
 \    identity:\
 \      cert_file: /kiali-cert/tls.crt\
 \      private_key_file: /kiali-cert/tls.key' \
-  | sed -e '/apiGroups:.*config.istio.io/ i\
+  | sed -e '/apiGroups:.*config.istio.io/,/---/ {
+      /- watch/ a\
+\  - delete
+  }' | sed -e '/apiGroups:.*config.istio.io/ i\
+\- apiGroups: ["project.openshift.io"]\
+\  resources:\
+\  - projects\
+\  verbs:\
+\  - get\
 \- apiGroups: ["route.openshift.io"]\
 \  resources:\
 \  - routes\
 \  verbs:\
-\  - get' \
+\  - get\
+\- apiGroups: ["apps.openshift.io"]\
+\  resources:\
+\  - deploymentconfigs\
+\  verbs:\
+\  - get\
+\  - list\
+\  - watch' \
   | sed -e '/kind.*Service$/,/metadata/ {
     /metadata/ a\
 \  annotations:\

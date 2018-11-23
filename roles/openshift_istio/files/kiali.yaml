@@ -32,9 +32,9 @@ metadata:
   namespace: istio-system
   labels:
     app: kiali
-    chart: kiali-1.0.3
+    chart: kiali-1.0.4
     heritage: Tiller
-    release: istio-1.0.3
+    release: istio-1.0.4
 
 ---
 # Source: istio/charts/kiali/templates/clusterrole.yaml
@@ -43,11 +43,11 @@ kind: ClusterRole
 metadata:
   name: kiali
   labels:
-    release: istio-1.0.3
+    release: istio-1.0.4
     app: kiali
     version: master
 rules:
-- apiGroups: ["","apps", "autoscaling", "batch"]
+- apiGroups: ["", "apps", "autoscaling", "batch"]
   resources:
   - configmaps
   - namespaces
@@ -138,9 +138,9 @@ metadata:
   name: istio-kiali-admin-role-binding-istio-system
   labels:
     app: kiali
-    chart: kiali-1.0.3
+    chart: kiali-1.0.4
     heritage: Tiller
-    release: istio-1.0.3
+    release: istio-1.0.4
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -179,8 +179,8 @@ metadata:
   namespace: istio-system
   labels:
     app: kiali
-    chart: kiali-1.0.3
-    release: istio-1.0.3
+    chart: kiali-1.0.4
+    release: istio-1.0.4
     heritage: Tiller
 spec:
   replicas: 1
@@ -260,6 +260,7 @@ spec:
 
 #
 # 
+
 ---
 # Source: istio/templates/install-custom-resources.sh.tpl
 

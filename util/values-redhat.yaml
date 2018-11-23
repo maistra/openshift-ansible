@@ -38,3 +38,4 @@ mixer:
 pilot:
   autoscaleMin: 0
   autoscaleMax: 0
+  traceSampling: 100.0

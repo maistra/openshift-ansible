@@ -2,3 +2,4 @@ apiVersion: "istio.openshift.com/v1alpha1"
 kind: "Installation"
 metadata:
   name: "istio-installation"
+  namespace: istio-operator

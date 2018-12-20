@@ -1,7 +1,8 @@
 ---
 - name: Update images in the configuration files if not running community
   include_tasks: modify_image_names.yml
-    image_names="{{ openshift_istio_image_names }}"
+  vars:
+    image_names: "{{ openshift_istio_image_names }}"
   with_items: "{{ openshift_istio_yaml_configuration_files }} + {{ openshift_istio_jaeger_yaml_configuration_files }} + {{ openshift_istio_kiali_yaml_configuration_files }}"
   loop_control:
     loop_var: configuration
@@ -21,7 +22,7 @@
   command: "{{ openshift_client_binary }} create -f {{ openshift_istio_crds_yaml }}"
 
 - name: Wait for resource CRDs to establish
-  shell: "{{ openshift_client_binary }} get --raw /apis/{{ item.namespace }}/{{ item.version }}/{{ item.name }}"
+  shell: "{{ openshift_client_binary }} get --raw /apis/{{ item.group }}/{{ item.version }}/{{ item.name }}"
   register: result
   until: result.rc == 0
   retries: 10

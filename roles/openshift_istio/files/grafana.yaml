@@ -14,9 +14,9 @@ metadata:
   namespace: istio-system
   labels:
     app: istio-grafana
-    chart: grafana-1.0.4
+    chart: grafana-1.0.5
     maistra-version: MAISTRA_VERSION
-    release: istio-1.0.4
+    release: istio-1.0.5
     heritage: Tiller
     istio: grafana
 data:
@@ -74,9 +74,9 @@ metadata:
   namespace: istio-system
   labels:
     app: istio-grafana
-    chart: grafana-1.0.4
+    chart: grafana-1.0.5
     maistra-version: MAISTRA_VERSION
-    release: istio-1.0.4
+    release: istio-1.0.5
     heritage: Tiller
     istio: grafana
 
@@ -9825,9 +9825,9 @@ metadata:
   namespace: istio-system
   labels:
     app: istio-grafana
-    chart: grafana-1.0.4
+    chart: grafana-1.0.5
     maistra-version: MAISTRA_VERSION
-    release: istio-1.0.4
+    release: istio-1.0.5
     heritage: Tiller
     istio: grafana
 data:
@@ -9856,7 +9856,14 @@ data:
       type: file
     
 ---
+# Source: istio/charts/security/templates/configmap.yaml
+# Source: istio/templates/sidecar-injector-configmap.yaml
 # Source: istio/charts/grafana/templates/create-custom-resources-job.yaml
+# Source: istio/charts/security/templates/cleanup-secrets.yaml
+# Source: istio/charts/security/templates/create-custom-resources-job.yaml
+# Source: istio/charts/security/templates/serviceaccount.yaml
+# Source: istio/charts/security/templates/clusterrole.yaml
+# Source: istio/charts/security/templates/clusterrolebinding.yaml
 # Source: istio/charts/grafana/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -9866,9 +9873,9 @@ metadata:
   annotations:
   labels:
     app: istio-grafana
-    chart: grafana-1.0.4
+    chart: grafana-1.0.5
     maistra-version: MAISTRA_VERSION
-    release: istio-1.0.4
+    release: istio-1.0.5
     heritage: Tiller
 spec:
   type: ClusterIP
@@ -9881,6 +9888,7 @@ spec:
     app: grafana
 
 ---
+# Source: istio/charts/security/templates/service.yaml
 # Source: istio/charts/grafana/templates/deployment.yaml
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -9889,9 +9897,9 @@ metadata:
   namespace: istio-system
   labels:
     app: istio-grafana
-    chart: grafana-1.0.4
+    chart: grafana-1.0.5
     maistra-version: MAISTRA_VERSION
-    release: istio-1.0.4
+    release: istio-1.0.5
     heritage: Tiller
 spec:
   replicas: 1
@@ -9903,6 +9911,9 @@ spec:
         sidecar.istio.io/inject: "false"
         scheduler.alpha.kubernetes.io/critical-pod: ""
     spec:
+      securityContext:
+        runAsUser: 472
+        fsGroup: 472
       serviceAccountName: grafana
       containers:
         - name: grafana
@@ -9984,6 +9995,7 @@ spec:
           name:  istio-grafana-configuration-dashboards
 
 ---
+# Source: istio/charts/security/templates/deployment.yaml
 # Source: istio/charts/grafana/templates/grafana-ports-mtls.yaml
 
 
@@ -9995,23 +10007,10 @@ spec:
 # Source: istio/charts/grafana/templates/secret.yaml
 
 ---
+# Source: istio/charts/security/templates/enable-mesh-mtls.yaml
+# Source: istio/charts/security/templates/enable-mesh-permissive.yaml
+# Source: istio/charts/security/templates/meshexpansion.yaml
 # Source: istio/charts/telemetry-gateway/templates/gateway.yaml
-
-
----
-
-
----
-# 
-# these CRDs only make sense when pilot is enabled
-#
-
-# these CRDs only make sense when security is enabled
-#
-
-#
-# 
-
----
-
-
+# Source: istio/templates/configmap.yaml
+# Source: istio/templates/crds.yaml
+# Source: istio/templates/install-custom-resources.sh.tpl

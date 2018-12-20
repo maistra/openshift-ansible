@@ -23,6 +23,7 @@ data:
       private_key_file: /kiali-cert/tls.key
 
 ---
+# Source: istio/charts/security/templates/configmap.yaml
 # Source: istio/templates/sidecar-injector-configmap.yaml
 # Source: istio/charts/kiali/templates/serviceaccount.yaml
 apiVersion: v1
@@ -32,18 +33,21 @@ metadata:
   namespace: istio-system
   labels:
     app: kiali
-    chart: kiali-1.0.4
+    chart: kiali-1.0.5
     heritage: Tiller
-    release: istio-1.0.4
+    release: istio-1.0.5
 
 ---
+# Source: istio/charts/security/templates/cleanup-secrets.yaml
+# Source: istio/charts/security/templates/create-custom-resources-job.yaml
+# Source: istio/charts/security/templates/serviceaccount.yaml
 # Source: istio/charts/kiali/templates/clusterrole.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: kiali
   labels:
-    release: istio-1.0.4
+    release: istio-1.0.5
     app: kiali
     version: master
 rules:
@@ -131,6 +135,7 @@ rules:
   - delete
 
 ---
+# Source: istio/charts/security/templates/clusterrole.yaml
 # Source: istio/charts/kiali/templates/clusterrolebinding.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -138,9 +143,9 @@ metadata:
   name: istio-kiali-admin-role-binding-istio-system
   labels:
     app: kiali
-    chart: kiali-1.0.4
+    chart: kiali-1.0.5
     heritage: Tiller
-    release: istio-1.0.4
+    release: istio-1.0.5
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -151,6 +156,7 @@ subjects:
   namespace: istio-system
 
 ---
+# Source: istio/charts/security/templates/clusterrolebinding.yaml
 # Source: istio/charts/kiali/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -171,6 +177,7 @@ spec:
     app: kiali
 
 ---
+# Source: istio/charts/security/templates/service.yaml
 # Source: istio/charts/kiali/templates/deployment.yaml
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -179,8 +186,8 @@ metadata:
   namespace: istio-system
   labels:
     app: kiali
-    chart: kiali-1.0.4
-    release: istio-1.0.4
+    chart: kiali-1.0.5
+    release: istio-1.0.5
     heritage: Tiller
 spec:
   replicas: 1
@@ -239,29 +246,14 @@ spec:
           secretName: kiali-cert-secret
 
 ---
+# Source: istio/charts/security/templates/deployment.yaml
 # Source: istio/charts/kiali/templates/ingress.yaml
 
 ---
+# Source: istio/charts/security/templates/enable-mesh-mtls.yaml
+# Source: istio/charts/security/templates/enable-mesh-permissive.yaml
+# Source: istio/charts/security/templates/meshexpansion.yaml
 # Source: istio/charts/telemetry-gateway/templates/gateway.yaml
-
-
----
 # Source: istio/templates/configmap.yaml
-
-
----
 # Source: istio/templates/crds.yaml
-# 
-# these CRDs only make sense when pilot is enabled
-#
-
-# these CRDs only make sense when security is enabled
-#
-
-#
-# 
-
----
 # Source: istio/templates/install-custom-resources.sh.tpl
-
-

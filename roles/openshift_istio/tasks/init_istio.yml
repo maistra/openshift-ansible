@@ -122,6 +122,12 @@
   register: openshift_istio_installed_maistra_version_output
   ignore_errors: true
 
+- name: Obtain the installed maistra-version from CRDs
+  shell: "{{ openshift_client_binary }} get crd -o=jsonpath='{..metadata.labels.maistra-version}' | tr ' ' '\n' | sort -u"
+  register: openshift_istio_installed_maistra_version_output
+  ignore_errors: true
+  when: openshift_istio_installed_maistra_version_output.stdout == ""
+
 - name: Initialise the installed maistra-version fact
   set_fact:
     openshift_istio_installed_maistra_version: "{{ openshift_istio_installed_maistra_version_output.stdout }}"

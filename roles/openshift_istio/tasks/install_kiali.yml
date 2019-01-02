@@ -22,6 +22,12 @@
     regexp: "JAEGER_URL"
     replace: "https://{{ jaeger_url.stdout }}"
 
+- name: Update Istio namespace
+  replace:
+    path: "{{ openshift_kiali_yaml }}"
+    regexp: "ISTIO_NAMESPACE"
+    replace: "{{ openshift_istio_namespace }}"
+
 - name: Add Kiali components
   command: "{{ openshift_client_binary }} create -f {{ openshift_kiali_yaml }} -n {{ openshift_istio_namespace }}"
 

@@ -10,6 +10,7 @@ metadata:
     app: kiali
 data:
   config.yaml: |
+    istio_namespace: ISTIO_NAMESPACE
     server:
       port: 20001
       static_content_root_directory: /opt/kiali/console

@@ -200,9 +200,12 @@ function generateKialiTemplate() {
 # - Add the kiali-cert volume mount
 # - Add the kiali-cert volume
 # - Add patch verb to config.istio.io and networking.istio.io
+# - Add istio namespace to the configmap
 function transformKialiOpenShift() {
   sed -e 's/v0\.7\.2/v0\.9\.1/' \
   | sed -e '/^# Source: istio\/charts\/kiali\/templates\/configmap.yaml/,/^# Source:/ {
+      /server:/ i\
+\    istio_namespace: ISTIO_NAMESPACE
       /port: 20001/ a\
 \      static_content_root_directory: /opt/kiali/console
       /jaeger:/,/url:/ {

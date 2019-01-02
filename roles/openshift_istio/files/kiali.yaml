@@ -120,6 +120,7 @@ rules:
   verbs:
   - get
   - list
+  - patch
   - watch
   - delete
 - apiGroups: ["networking.istio.io"]
@@ -131,6 +132,7 @@ rules:
   verbs:
   - get
   - list
+  - patch
   - watch
   - delete
 

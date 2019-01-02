@@ -13,9 +13,9 @@ default_istio_jaeger_productised_image_prefix: "distributed-tracing-tech-preview
 default_istio_jaeger_productised_image_tag: "1.8.1"
 default_istio_elasticsearch_productised_image_tag: "5.6.10"
 default_istio_kiali_image_prefix: "kiali/"
-default_istio_kiali_image_tag: "v0.10.1"
+default_istio_kiali_image_tag: "v0.11.0"
 default_istio_kiali_productised_image_prefix: "{{ default_istio_productised_image_prefix }}"
-default_istio_kiali_productised_image_tag: "0.10.1"
+default_istio_kiali_productised_image_tag: "0.11.0"
 
 default_istio_elasticsearch_memory: "1Gi"
 

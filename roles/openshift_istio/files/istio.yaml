@@ -918,6 +918,10 @@ metadata:
     maistra-version: MAISTRA_VERSION
     release: istio-1.0.5
 rules:
+- apiGroups: ["extensions"]
+  resources: ["deployments/finalizers"]
+  resourceNames: ["istio-galley"]
+  verbs: ["update"]
 - apiGroups: ["admissionregistration.k8s.io"]
   resources: ["validatingwebhookconfigurations"]
   verbs: ["*"]

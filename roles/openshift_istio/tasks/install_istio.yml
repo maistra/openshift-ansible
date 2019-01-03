@@ -47,19 +47,6 @@
   retries: 60
   delay: 5
 
-- name: Get galley deployment UID
-  shell: "{{ openshift_client_binary }} get deployment  -n {{ openshift_istio_namespace }} istio-galley -o yaml 2>&1 | grep -w uid | awk '{print $2}'"
-  register: uid_result
-
-- name: modify UID configuration
-  replace:
-    path: "{{ openshift_validatingwebhookconfiguration_yaml }}"
-    regexp: "DEPLOYMENT_UID"
-    replace: "{{ uid_result.stdout }}"
-
-- name: create preconfigured validating webhook
-  command: "{{ openshift_client_binary }} create -f {{ openshift_validatingwebhookconfiguration_yaml }}"
-
 - name: Wait for galley validating webhook to reconfigure
   shell: "{{ openshift_client_binary }} get validatingwebhookconfiguration istio-galley -o yaml | grep -l caBundle"
   register: openshift_istio_galley_validating_webhook

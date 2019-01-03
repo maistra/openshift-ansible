@@ -54,6 +54,7 @@ function retrieveIstioRelease() {
 # - update the namespaceSelector to ignore namespaces with the label istio.openshift.com/ignore-namespace
 # - add a maistra-version label to all objects which have a release label
 # - remove GODEBUG from the pilot environment
+# - add clusterrole to allow galley to update the finalizer for the webhook
 function generateIstioTemplate() {
   VALUES=""
   while [ $# -gt 0 ] ; do
@@ -84,7 +85,14 @@ function generateIstioTemplate() {
            -e 's/istio-injection: enabled/- {key: istio.openshift.com\/ignore-namespace, operator: DoesNotExist}/' \
            -e '/GODEBUG/,/gctrace/d' \
            -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: MAISTRA_VERSION\
-\1release:\2/'
+\1release:\2/' | \
+   sed -e '/^# Source:.*istio\/charts\/galley\/templates\/clusterrole.yaml/,/^# Source:/ {
+    /^rules:/ a\
+\- apiGroups: ["extensions"]\
+\  resources: ["deployments/finalizers"]\
+\  resourceNames: ["istio-galley"]\
+\  verbs: ["update"]
+  }'
 }
 
 # The following modifications are made to the generated helm template to extract the CRDs

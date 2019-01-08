@@ -8,4 +8,4 @@ spec:
     username: username
     password: password
     prefix: kiali/
-    version: v0.10.1
+    version: v0.11.0

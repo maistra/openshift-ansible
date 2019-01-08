@@ -122,7 +122,7 @@ spec:
     authentication: true
     community: false
     prefix: openshift-istio-tech-preview/
-    version: 0.5.0
+    version: 0.6.0
   jaeger:
     prefix: distributed-tracing-tech-preview/
     version: 1.8.1
@@ -131,7 +131,7 @@ spec:
     username: username
     password: password
     prefix: kiali/
-    version: v0.10.1
+    version: v0.11.0
   launcher:
     openshift:
       user: user

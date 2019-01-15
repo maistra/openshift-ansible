@@ -1999,8 +1999,6 @@ spec:
         ports:
         - containerPort: 9091
         - containerPort: 15004
-
-        ports:
         - containerPort: 15090
           protocol: TCP
           name: http-envoy-prom
@@ -2104,8 +2102,6 @@ spec:
         ports:
         - containerPort: 9091
         - containerPort: 15004
-
-        ports:
         - containerPort: 15090
           protocol: TCP
           name: http-envoy-prom

@@ -1390,6 +1390,7 @@ metadata:
 spec:
   ports:
   - port: 443
+    targetPort: webhook
     name: https-validation
   - port: 9093
     name: http-monitoring
@@ -1681,7 +1682,8 @@ spec:
           image: "docker.io/istio/galley:1.1"
           imagePullPolicy: IfNotPresent
           ports:
-          - containerPort: 443
+          - name: webhook
+            containerPort: 8443
           - containerPort: 9093
           - containerPort: 9901
           command:
@@ -1695,6 +1697,7 @@ spec:
           - --validation-webhook-config-file
           - /etc/config/validatingwebhookconfiguration.yaml
           - --monitoringPort=9093
+          - --port=8443
           volumeMounts:
           - name: certs
             mountPath: /etc/certs

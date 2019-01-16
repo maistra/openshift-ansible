@@ -1638,6 +1638,7 @@ metadata:
 spec:
   ports:
   - port: 443
+    targetPort: webhook
   selector:
     istio: sidecar-injector
 
@@ -2815,6 +2816,10 @@ spec:
             - --meshConfig=/etc/istio/config/mesh
             - --healthCheckInterval=2s
             - --healthCheckFile=/tmp/health
+            - --port=8443
+          ports:
+          - name: webhook
+            containerPort: 8443
           volumeMounts:
           - name: config-volume
             mountPath: /etc/istio/config

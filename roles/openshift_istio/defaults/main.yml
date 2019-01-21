@@ -1,9 +1,9 @@
 ---
-default_istio_image_tag: "1.0.5"
+default_istio_image_tag: "1.1"
 default_istio_namespace: "istio-system"
-default_istio_maistra_image_tag: "0.6.0"
+default_istio_maistra_image_tag: "0.7.0"
 default_istio_maistra_image_prefix: "maistra/"
-default_istio_productised_image_tag: "0.6.0"
+default_istio_productised_image_tag: "0.7.0"
 default_istio_productised_image_prefix: "openshift-istio-tech-preview/"
 default_istio_jaeger_image_prefix: "jaegertracing/"
 default_istio_jaeger_image_tag: "1.8"

@@ -1,7 +1,7 @@
-DIR=$(dirname $0)
+DIR=$(cd $(dirname $0) ; pwd -P)
 
-ISTIO_VERSION=1.0.5
-#ISTIO_BRANCH=release-1.1
+#ISTIO_VERSION=1.0.5
+ISTIO_BRANCH=release-1.1
 
 RELEASES_DIR=${DIR}/../../istio-releases
 
@@ -20,6 +20,8 @@ else
   ISTIO_NAME=istio-${ISTIO_BRANCH}
 fi
 
+ISTIO_NAME=${ISTIO_NAME//./-}
+
 HELM_DIR=${RELEASE_DIR}/install/kubernetes/helm/
 REDHAT_HELM_DIR=${DIR}
 
@@ -35,12 +37,10 @@ function retrieveIstioRelease() {
         cd "${RELEASES_DIR}"
         curl -LO "${ISTIO_URL}"
         ${EXTRACT_CMD}
-        if [ -z "${ISTIO_VERSION}" ] ; then
-          (
-            cd "${RELEASE_DIR}/install/kubernetes/helm"
-            helm dep update istio
-          )
-        fi
+        (
+          cd "${RELEASE_DIR}/install/kubernetes/helm/istio"
+          helm dep update
+        )
     )
   fi
 }
@@ -49,7 +49,6 @@ function retrieveIstioRelease() {
 # - remove the create customer resources job, we handle this in the installer to deal with potential races
 # - remove the cleanup secrets job, we handle this in the installer
 # - remove the kubernetes gateways
-# - remove the CRDs, we will create a separate yaml file to install these objects
 # - change privileged value on istio-proxy injection configmap to false
 # - update the namespaceSelector to ignore namespaces with the label istio.openshift.com/ignore-namespace
 # - add a maistra-version label to all objects which have a release label
@@ -71,9 +70,6 @@ function generateIstioTemplate() {
   }' | sed -e '/^# Source:.*pilot\/templates\/gateway.yaml/,/^# Source:/ {
     /^# Source/b
     d
-  }' | sed -e '/^# Source:.*istio\/templates\/crds.yaml/,/^# Source:/ {
-    /^# Source/b
-    d
   }' | sed -e '/^# Source:.*istio\/charts\/pilot\/templates\/deployment.yaml/,/^# Source:/ {
     /GODEBUG/ {
       N
@@ -92,12 +88,12 @@ function generateIstioTemplate() {
 \  resources: ["deployments/finalizers"]\
 \  resourceNames: ["istio-galley"]\
 \  verbs: ["update"]
-  }'
+  }' | sed -e 's+gcr.io/istio-release+docker.io/istio+g' -e 's+master-latest-daily+1.1+'
 }
 
 # The following modifications are made to the generated helm template to extract the CRDs
-# - remove all content up to the crds.yaml source
-# - remove all content after the crds.yaml source
+# - remove all content except for the crd configmaps
+# - add maistra-version labels
 function generateCRDsTemplate() {
   VALUES=""
   while [ $# -gt 0 ] ; do
@@ -105,33 +101,11 @@ function generateCRDsTemplate() {
     shift
   done
 
-  helm template -n ${ISTIO_NAME} --namespace=istio-system ${VALUES} ${HELM_DIR}/istio | sed -e '1,/^# Source:.*istio\/templates\/crds.yaml/ {
-    /^# Source:.*istio\/templates\/crds.yaml/b
-    d
-  }' -e '/^# Source:/,$ d' \
+  helm template -n ${ISTIO_NAME} --namespace=istio-system ${VALUES} ${HELM_DIR}/istio-init | sed -e 's/^# Source:\(.*istio-init\/templates\/configmap-crd-1\)/# SOURCE:\1/' \
+ -e '/^# Source:/,/^---/d' \
      -e 's/^\(.*\)labels:$/\1labels:\
 \1  maistra-version: MAISTRA_VERSION'/ \
-     -e 's/^\(.*\)\(name: policies.authentication.istio.io\)$/\1\2\
-\1labels:\
-\1  maistra-version: MAISTRA_VERSION/' \
-     -e 's/^\(.*\)\(name: meshpolicies.authentication.istio.io\)$/\1\2\
-\1labels:\
-\1  maistra-version: MAISTRA_VERSION/' \
-     -e 's/^\(.*\)\(name: httpapispecbindings.config.istio.io\)$/\1\2\
-\1labels:\
-\1  maistra-version: MAISTRA_VERSION/' \
-     -e 's/^\(.*\)\(name: httpapispecs.config.istio.io\)$/\1\2\
-\1labels:\
-\1  maistra-version: MAISTRA_VERSION/' \
-     -e 's/^\(.*\)\(name: quotaspecbindings.config.istio.io\)$/\1\2\
-\1labels:\
-\1  maistra-version: MAISTRA_VERSION/' \
-     -e 's/^\(.*\)\(name: quotaspecs.config.istio.io\)$/\1\2\
-\1labels:\
-\1  maistra-version: MAISTRA_VERSION/' \
-     -e 's/^\(.*\)\(name: XXX\)$/\1\2\
-\1labels:\
-\1  maistra-version: MAISTRA_VERSION/'
+ -e 's/^# SOURCE:/# Source:/'
 }
 
 # The following modifications are made to the generated helm template for the Grafana yaml file
@@ -196,7 +170,7 @@ function generateKialiTemplate() {
       d
     }' | sed -e '/^# Source: istio\/charts\/kiali\/templates\/clusterrole.yaml/,/^# Source:/ {
       /labels:/ a\
-\    release: istio-'${ISTIO_VERSION}'
+\    release: '${ISTIO_NAME}'
     }'
 }
 
@@ -207,7 +181,6 @@ function generateKialiTemplate() {
 # - Remove the prometheus, grafana environment from the deployment
 # - Add the kiali-cert volume mount
 # - Add the kiali-cert volume
-# - Add patch verb to config.istio.io and networking.istio.io
 # - Add istio namespace to the configmap
 function transformKialiOpenShift() {
   sed -e 's/v0\.7\.2/v0\.9\.1/' \

@@ -29,10 +29,10 @@ mixer:
   autoscaleMin: 0
   autoscaleMax: 0
 
-  istio-policy:
+  policy:
     autoscaleEnabled: false
 
-  istio-telemetry:
+  telemetry:
     autoscaleEnabled: false
 
 pilot:

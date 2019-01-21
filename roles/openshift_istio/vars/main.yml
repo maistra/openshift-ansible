@@ -40,13 +40,9 @@ openshift_istio_kiali_yaml_configuration_files:
 openshift_istio_resources:
   - {name: "rules", namespace: "config.istio.io", version: "v1alpha2"}
   - {name: "attributemanifests", namespace: "config.istio.io", version: "v1alpha2"}
-  - {name: "kubernetesenvs", namespace: "config.istio.io", version: "v1alpha2"}
-  - {name: "prometheuses", namespace: "config.istio.io", version: "v1alpha2"}
-  - {name: "stdios", namespace: "config.istio.io", version: "v1alpha2"}
   - {name: "kuberneteses", namespace: "config.istio.io", version: "v1alpha2"}
   - {name: "logentries", namespace: "config.istio.io", version: "v1alpha2"}
   - {name: "metrics", namespace: "config.istio.io", version: "v1alpha2"}
   - {name: "destinationrules", namespace: "networking.istio.io", version: "v1alpha3"}
-  - {name: "meshpolicies", namespace: "authentication.istio.io", version: "v1alpha1"}
 
 openshift_istio_secret_query_template: '{range .items[?(@.type=="istio.io/key-and-cert")]}{.metadata.namespace} {.metadata.name}{"\n"}{end}'

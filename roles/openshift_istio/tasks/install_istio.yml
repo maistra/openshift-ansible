@@ -18,8 +18,19 @@
 - name: Label Istio namespace so it is ignored by injection
   command: "{{ openshift_client_binary }} label --overwrite=true namespace {{ openshift_istio_namespace }} istio.openshift.com/ignore-namespace=ignore"
 
-- name: Create Istio CRDs
+- name: Create Istio CRD ConfigMaps
   command: "{{ openshift_client_binary }} create -f {{ openshift_istio_crds_yaml }}"
+
+- name: Install custom resource definitions
+  block:
+    - name: Retrieve istio-crd-10 custom resource definitions
+      command: "{{ openshift_client_binary }} extract -n {{ openshift_istio_namespace }} configmap/istio-crd-10 --confirm --to=/tmp --keys=crd-10.yaml"
+    - name: Install istio-crd-10 custom resource definitions
+      command: "{{ openshift_client_binary }} create -f /tmp/crd-10.yaml"
+    - name: Retrieve istio-crd-11 custom resource definitions
+      command: "{{ openshift_client_binary }} extract -n {{ openshift_istio_namespace }} configmap/istio-crd-11 --confirm --to=/tmp --keys=crd-11.yaml"
+    - name: Install istio-crd-11 custom resource definitions
+      command: "{{ openshift_client_binary }} create -f /tmp/crd-11.yaml"
 
 - name: Wait for resource CRDs to establish
   shell: "{{ openshift_client_binary }} get --raw /apis/{{ item.group }}/{{ item.version }}/{{ item.name }}"

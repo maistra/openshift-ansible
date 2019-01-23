@@ -37,7 +37,7 @@ items:
       spec:
         serviceAccountName: jaeger
         containers:
-        - image: jaegertracing/jaeger-collector:1.8
+        - image: jaegertracing/jaeger-collector:1.9
           name: jaeger-collector
           command:
             - "/go/bin/collector-linux"
@@ -127,7 +127,7 @@ items:
       spec:
         serviceAccountName: jaeger
         containers:
-        - image: jaegertracing/jaeger-query:1.8
+        - image: jaegertracing/jaeger-query:1.9
           name: jaeger-query
           command:
             - "/go/bin/query-linux"
@@ -193,7 +193,7 @@ items:
         serviceAccountName: jaeger
         containers:
         - name: agent-instance
-          image: jaegertracing/jaeger-agent:1.8
+          image: jaegertracing/jaeger-agent:1.9
           command:
           - "/go/bin/agent-linux"
           - "--config-file=/conf/agent.yaml"

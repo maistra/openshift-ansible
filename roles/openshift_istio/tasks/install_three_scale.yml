@@ -1,0 +1,28 @@
+---
+- name: Initialise 3scale parameters
+  set_fact:
+    three_scale_parameters:
+      "PARAM_THREESCALE_LISTEN_ADDR": "{{three_scale_adapter_listenAddr}}"
+      "PARAM_THREESCALE_LOG_LEVEL": "{{three_scale_adapter_logLevel}}"
+      "PARAM_THREESCALE_LOG_JSON": "{{three_scale_adapter_logJSON}}"
+      "PARAM_THREESCALE_REPORT_METRICS": "{{three_scale_adapter_reportMetrics}}"
+      "PARAM_THREESCALE_METRICS_PORT": "{{three_scale_adapter_metricsPort}}"
+      "PARAM_THREESCALE_CACHE_TTL_SECONDS": "{{three_scale_adapter_cacheTTLSeconds}}"
+      "PARAM_THREESCALE_CACHE_REFRESH_SECONDS": "{{three_scale_adapter_cacheRefreshSeconds}}"
+      "PARAM_THREESCALE_CACHE_ENTRIES_MAX": "{{three_scale_adapter_cacheEntriesMax}}"
+      "PARAM_THREESCALE_CACHE_REFRESH_RETRIES": "{{three_scale_adapter_cacheRefreshRetries}}"
+      "PARAM_THREESCALE_ALLOW_INSECURE_CONN": "{{three_scale_adapter_allowInsecureConn}}"
+      "PARAM_THREESCALE_CLIENT_TIMEOUT_SECONDS": "{{three_scale_adapter_clientTimeoutSeconds}}"
+      "PARAM_THREESCALE_SERVICE_ID": "{{three_scale_server_serviceId}}"
+      "PARAM_THREESCALE_SYSTEM_URL": "{{three_scale_server_systemURL}}"
+      "PARAM_THREESCALE_ACCESS_TOKEN": "{{three_scale_server_accessToken}}"
+
+- name: Modify 3scale parameters in configuration file {{ openshift_three_scale_yaml }}
+  replace:
+    path: "{{ openshift_three_scale_yaml }}"
+    regexp: "{{ item.key }}"
+    replace: "{{ item.value }}"
+  with_dict: "{{ three_scale_parameters }}"
+
+- name: Add 3scale components
+  command: "{{ openshift_client_binary }} create -f {{ openshift_three_scale_yaml }} -n {{ openshift_istio_namespace }}"

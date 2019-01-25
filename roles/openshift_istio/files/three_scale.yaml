@@ -1,0 +1,108 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: three-scale-service-account
+    namespace: istio-system
+    labels:
+      app: 3scale-istio-adapter
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    labels:
+      app: 3scale-istio-adapter
+    name: 3scale-istio-adapter
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: 3scale-istio-adapter
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+    template:
+      metadata:
+        labels:
+          app: 3scale-istio-adapter
+      spec:
+        serviceAccountName: three-scale-service-account
+        containers:
+        - image: quay.io/3scale/3scale-istio-adapter:v0.2.0
+          imagePullPolicy: Always
+          name: 3scale-istio-adapter
+          ports:
+          - containerPort: PARAM_THREESCALE_LISTEN_ADDR
+            protocol: TCP
+            name: adapter
+          - containerPort: PARAM_THREESCALE_METRICS_PORT
+            protocol: TCP
+            name: prometheus
+          livenessProbe:
+            tcpSocket:
+              port: PARAM_THREESCALE_LISTEN_ADDR
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          env:
+          - name: "THREESCALE_LISTEN_ADDR"
+            value: "PARAM_THREESCALE_LISTEN_ADDR"
+          - name: "THREESCALE_LOG_LEVEL"
+            value: "PARAM_THREESCALE_LOG_LEVEL"
+          - name: "THREESCALE_LOG_JSON"
+            value: "PARAM_THREESCALE_LOG_JSON"
+          - name: "THREESCALE_REPORT_METRICS"
+            value: "PARAM_THREESCALE_REPORT_METRICS"
+          - name: "THREESCALE_METRICS_PORT"
+            value: "PARAM_THREESCALE_METRICS_PORT"
+          - name: "THREESCALE_CACHE_TTL_SECONDS"
+            value: "PARAM_THREESCALE_CACHE_TTL_SECONDS"
+          - name: "THREESCALE_CACHE_REFRESH_SECONDS"
+            value: "PARAM_THREESCALE_CACHE_REFRESH_SECONDS"
+          - name: "THREESCALE_CACHE_ENTRIES_MAX"
+            value: "PARAM_THREESCALE_CACHE_ENTRIES_MAX"
+          - name: "THREESCALE_CACHE_REFRESH_RETRIES"
+            value: "PARAM_THREESCALE_CACHE_REFRESH_RETRIES"
+          - name: "THREESCALE_ALLOW_INSECURE_CONN"
+            value: "PARAM_THREESCALE_ALLOW_INSECURE_CONN"
+          - name: "THREESCALE_CLIENT_TIMEOUT_SECONDS"
+            value: "PARAM_THREESCALE_CLIENT_TIMEOUT_SECONDS"
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: three-scale-istio-adapter
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/scheme: http
+      prometheus.io/path: /metrics
+      prometheus.io/port: "PARAM_THREESCALE_METRICS_PORT"
+  spec:
+    ports:
+      - port: PARAM_THREESCALE_LISTEN_ADDR
+        targetPort: PARAM_THREESCALE_LISTEN_ADDR
+        name: adapter
+      - port: PARAM_THREESCALE_METRICS_PORT
+        targetPort: PARAM_THREESCALE_METRICS_PORT
+        name: prometheus
+    selector:
+      app: 3scale-istio-adapter
+- apiVersion: "config.istio.io/v1alpha2"
+  kind: handler
+  metadata:
+    name: three-scale
+  spec:
+    adapter: three-scale
+    params:
+      service_id: "PARAM_THREESCALE_SERVICE_ID"
+      system_url: "PARAM_THREESCALE_SYSTEM_URL"
+      access_token: "PARAM_THREESCALE_ACCESS_TOKEN"
+    connection:
+      address: "three-scale-istio-adapter:PARAM_THREESCALE_LISTEN_ADDR"

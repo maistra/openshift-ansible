@@ -43,6 +43,16 @@
     openshift_istio_kiali_image_version: "{{ openshift_istio_image_dict[openshift_deployment_type]['kiali_version'] }}"
   when: openshift_istio_kiali_image_version is not defined
 
+- name: Initialise 3scale prefix
+  set_fact:
+    openshift_istio_three_scale_image_prefix: "{{ openshift_istio_image_dict[openshift_deployment_type]['three_scale_prefix'] }}"
+  when: openshift_istio_three_scale_image_prefix is not defined
+
+- name: Initialise 3scale version
+  set_fact:
+    openshift_istio_three_scale_image_version: "{{ openshift_istio_image_dict[openshift_deployment_type]['three_scale_version'] }}"
+  when: openshift_istio_three_scale_image_version is not defined
+
 - name: Initialise Installation Type
   set_fact:
     openshift_istio_install_enterprise: "{{ openshift_deployment_type == 'openshift' }}"
@@ -51,6 +61,11 @@
   set_fact:
     openshift_istio_install_kiali: false
   when: (openshift_istio_kiali_username is not defined or openshift_istio_kiali_username == "") or (openshift_istio_kiali_password is not defined or openshift_istio_kiali_password == "")
+
+- name: Determine whether 3scale should be installed
+  set_fact:
+    openshift_istio_install_three_scale: false
+  when: (three_scale_server_serviceId is not defined or three_scale_server_serviceId == "") or (three_scale_server_systemURL is not defined or three_scale_server_systemURL == "") or (three_scale_server_accessToken is not defined or three_scale_server_accessToken == "")
 
 # Split name initialisation up into CentOS/RHEL until we have CentOS jaeger images
 - name: Initialise Istio Image names when running CentOS images
@@ -69,6 +84,7 @@
       "jaegertracing/jaeger-agent:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_jaeger_image_prefix}}jaeger-agent:{{openshift_istio_jaeger_image_version}}"
       "registry.centos.org/rhsyseng/elasticsearch:{{default_istio_elasticsearch_image_tag}}": "{{default_istio_elasticsearch_image_prefix}}elasticsearch:{{openshift_istio_elasticsearch_image_version}}"
       "kiali/kiali:{{default_istio_kiali_image_tag}}": "{{openshift_istio_kiali_image_prefix}}kiali:{{openshift_istio_kiali_image_version}}"
+      "quay.io/3scale/3scale-istio-adapter:{{default_istio_three_scale_image_tag}}": "{{openshift_istio_three_scale_image_prefix}}3scale-istio-adapter:{{openshift_istio_three_scale_image_version}}"
   when: not openshift_istio_install_enterprise
 
 - name: Initialise Istio Image names when running RHEL images
@@ -87,6 +103,7 @@
       "jaegertracing/jaeger-agent:{{default_istio_jaeger_image_tag}}": "{{openshift_istio_jaeger_image_prefix}}jaeger-agent:{{openshift_istio_jaeger_image_version}}"
       "registry.centos.org/rhsyseng/elasticsearch:{{default_istio_elasticsearch_image_tag}}": "{{openshift_istio_jaeger_image_prefix}}jaeger-elasticsearch:{{openshift_istio_elasticsearch_image_version}}"
       "kiali/kiali:{{default_istio_kiali_image_tag}}": "{{openshift_istio_kiali_image_prefix}}kiali:{{openshift_istio_kiali_image_version}}"
+      "quay.io/3scale/3scale-istio-adapter:{{default_istio_three_scale_image_tag}}": "{{openshift_istio_three_scale_image_prefix}}3scale-istio-adapter:{{openshift_istio_three_scale_image_version}}"
   when: openshift_istio_install_enterprise
 
 - name:

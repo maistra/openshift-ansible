@@ -30,3 +30,22 @@ spec:
       filter: booster.mission.metadata.istio
       branch: v71
       repo: https://github.com/fabric8-launcher/launcher-booster-catalog.git
+  threeScale:
+    prefix: openshift-istio-tech-preview/
+    version: 0.2.0
+    adapter:
+      listenAddr: 3333
+      logLevel: info
+      logJSON: true
+      reportMetrics: true
+      metricsPort: 8080
+      cacheTTLSeconds: 300
+      cacheRefreshSeconds: 180
+      cacheEntriesMax: 1000
+      cacheRefreshRetries: 1
+      allowInsecureConn: false
+      clientTimeoutSeconds: 10
+    server:
+      serviceId: serviceId
+      systemURL: systemURL
+      accessToken: accessToken

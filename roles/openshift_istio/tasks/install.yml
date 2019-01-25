@@ -33,6 +33,10 @@
   include_tasks: install_kiali.yml
   when: openshift_istio_install_kiali | bool
 
+- name: Install 3scale
+  include_tasks: install_three_scale.yml
+  when: openshift_istio_install_three_scale | bool
+
 - name: Install Launcher
   include_tasks: install_launcher.yml
   when: openshift_istio_install_launcher | bool

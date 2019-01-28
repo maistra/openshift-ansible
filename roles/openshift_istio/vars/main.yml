@@ -18,6 +18,8 @@ openshift_kiali_yaml: "{{ openshift_istio_files }}/kiali.yaml"
 openshift_istio_kiali_secret: "kiali"
 
 openshift_three_scale_yaml: "{{ openshift_istio_files }}/three_scale.yaml"
+openshift_threescale_adapter_yaml: "{{ openshift_istio_files }}/threescale-adapter.yaml"
+openshift_threescale_authorization_template_yaml: "{{ openshift_istio_files }}/threescale-authorization-template.yaml"
 
 launcher_template_yaml: "{{ openshift_istio_files }}/launcher-template.yaml"
 

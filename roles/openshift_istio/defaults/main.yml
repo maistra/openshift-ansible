@@ -16,10 +16,10 @@ default_istio_kiali_image_prefix: "kiali/"
 default_istio_kiali_image_tag: "v0.13.0"
 default_istio_kiali_productised_image_prefix: "{{ default_istio_productised_image_prefix }}"
 default_istio_kiali_productised_image_tag: "0.13.0"
-default_istio_three_scale_image_prefix: "quay.io/3scale/"
-default_istio_three_scale_image_tag: "v0.2.0"
-default_istio_three_scale_productised_image_prefix: "{{ default_istio_productised_image_prefix }}"
-default_istio_three_scale_productised_image_tag: "0.2.0"
+default_istio_threescale_image_prefix: "quay.io/3scale/"
+default_istio_threescale_image_tag: "v0.2.0"
+default_istio_threescale_productised_image_prefix: "{{ default_istio_productised_image_prefix }}"
+default_istio_threescale_productised_image_tag: "0.2.0"
 
 default_istio_elasticsearch_memory: "1Gi"
 
@@ -40,8 +40,8 @@ openshift_istio_image_dict:
     elasticsearch_version: "{{ default_istio_elasticsearch_image_tag }}"
     kiali_prefix: "{{ default_istio_kiali_image_prefix }}"
     kiali_version: "{{ default_istio_kiali_image_tag }}"
-    three_scale_prefix: "{{ default_istio_three_scale_image_prefix }}"
-    three_scale_version: "{{ default_istio_three_scale_image_tag }}"
+    threescale_prefix: "{{ default_istio_threescale_image_prefix }}"
+    threescale_version: "{{ default_istio_threescale_image_tag }}"
   openshift:
     istio_prefix: "{{ default_istio_productised_image_prefix }}"
     istio_version: "{{ default_istio_productised_image_tag }}"
@@ -52,8 +52,8 @@ openshift_istio_image_dict:
     elasticsearch_version: "{{ default_istio_elasticsearch_productised_image_tag }}"
     kiali_prefix: "{{ default_istio_kiali_productised_image_prefix }}"
     kiali_version: "{{ default_istio_kiali_productised_image_tag }}"
-    three_scale_prefix: "{{ default_istio_three_scale_productised_image_prefix }}"
-    three_scale_version: "{{ default_istio_three_scale_productised_image_tag }}"
+    threescale_prefix: "{{ default_istio_threescale_productised_image_prefix }}"
+    threescale_version: "{{ default_istio_threescale_productised_image_tag }}"
 
 openshift_deployment_type: "origin"
 
@@ -90,7 +90,7 @@ openshift_istio_prometheus_service_account: "prometheus"
 openshift_istio_jaeger_service_account: "jaeger"
 openshift_istio_elasticsearch_service_account: "elasticsearch"
 openshift_istio_kiali_service_account: "kiali-service-account"
-openshift_istio_three_scale_service_account: "three-scale-service-account"
+openshift_istio_threescale_service_account: "threescale-service-account"
 
 openshift_istio_additional_scc_service_accounts:
   - "{{ openshift_istio_grafana_service_account }}"
@@ -105,7 +105,7 @@ openshift_istio_additional_service_accounts:
  - "{{ openshift_istio_jaeger_service_account }}"
  - "{{ openshift_istio_elasticsearch_service_account }}"
  - "{{ openshift_istio_kiali_service_account }}"
- - "{{ openshift_istio_three_scale_service_account }}"
+ - "{{ openshift_istio_threescale_service_account }}"
 
 openshift_istio_api_url: "https://{{ ansible_env.KUBERNETES_SERVICE_HOST + ':' + ansible_env.KUBERNETES_SERVICE_PORT }}"
 
@@ -129,15 +129,15 @@ openshift_istio_install_kiali: true
 openshift_istio_kiali_username: ""
 openshift_istio_kiali_password: ""
 
-openshift_istio_install_three_scale: false
-three_scale_adapter_listenAddr: 3333
-three_scale_adapter_logLevel: info
-three_scale_adapter_logJSON: true
-three_scale_adapter_reportMetrics: true
-three_scale_adapter_metricsPort: 8080
-three_scale_adapter_cacheTTLSeconds: 300
-three_scale_adapter_cacheRefreshSeconds: 180
-three_scale_adapter_cacheEntriesMax: 1000
-three_scale_adapter_cacheRefreshRetries: 1
-three_scale_adapter_allowInsecureConn: false
-three_scale_adapter_clientTimeoutSeconds: 10
+openshift_istio_install_threescale: false
+threescale_adapter_listenAddr: 3333
+threescale_adapter_logLevel: info
+threescale_adapter_logJSON: true
+threescale_adapter_reportMetrics: true
+threescale_adapter_metricsPort: 8080
+threescale_adapter_cacheTTLSeconds: 300
+threescale_adapter_cacheRefreshSeconds: 180
+threescale_adapter_cacheEntriesMax: 1000
+threescale_adapter_cacheRefreshRetries: 1
+threescale_adapter_allowInsecureConn: false
+threescale_adapter_clientTimeoutSeconds: 10

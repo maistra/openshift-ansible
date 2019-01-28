@@ -4,7 +4,7 @@ items:
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
-    name: three-scale-service-account
+    name: threescale-service-account
     namespace: istio-system
     labels:
       app: 3scale-istio-adapter
@@ -29,7 +29,7 @@ items:
         labels:
           app: 3scale-istio-adapter
       spec:
-        serviceAccountName: three-scale-service-account
+        serviceAccountName: threescale-service-account
         containers:
         - image: quay.io/3scale/3scale-istio-adapter:v0.2.0
           imagePullPolicy: Always
@@ -73,7 +73,7 @@ items:
 - apiVersion: v1
   kind: Service
   metadata:
-    name: three-scale-istio-adapter
+    name: threescale-istio-adapter
     annotations:
       prometheus.io/scrape: "true"
       prometheus.io/scheme: http

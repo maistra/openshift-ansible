@@ -17,7 +17,7 @@ openshift_elasticsearch_configmap_yaml: "{{ openshift_istio_files }}/elasticsear
 openshift_kiali_yaml: "{{ openshift_istio_files }}/kiali.yaml"
 openshift_istio_kiali_secret: "kiali"
 
-openshift_three_scale_yaml: "{{ openshift_istio_files }}/three_scale.yaml"
+openshift_threescale_yaml: "{{ openshift_istio_files }}/threescale.yaml"
 openshift_threescale_adapter_yaml: "{{ openshift_istio_files }}/threescale-adapter.yaml"
 openshift_threescale_authorization_template_yaml: "{{ openshift_istio_files }}/threescale-authorization-template.yaml"
 
@@ -41,8 +41,8 @@ openshift_istio_jaeger_yaml_configuration_files:
 openshift_istio_kiali_yaml_configuration_files:
   - "{{ openshift_kiali_yaml }}"
 
-openshift_istio_three_scale_yaml_configuration_files:
-  - "{{ openshift_three_scale_yaml }}"
+openshift_istio_threescale_yaml_configuration_files:
+  - "{{ openshift_threescale_yaml }}"
 
 openshift_istio_resources:
   - {name: "rules", namespace: "config.istio.io", version: "v1alpha2"}

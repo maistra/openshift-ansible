@@ -41,11 +41,6 @@ items:
           - containerPort: PARAM_THREESCALE_METRICS_PORT
             protocol: TCP
             name: prometheus
-          livenessProbe:
-            tcpSocket:
-              port: PARAM_THREESCALE_LISTEN_ADDR
-            initialDelaySeconds: 10
-            periodSeconds: 5
           env:
           - name: "THREESCALE_LISTEN_ADDR"
             value: "PARAM_THREESCALE_LISTEN_ADDR"

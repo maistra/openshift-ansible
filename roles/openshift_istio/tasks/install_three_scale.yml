@@ -13,9 +13,6 @@
       "PARAM_THREESCALE_CACHE_REFRESH_RETRIES": "{{three_scale_adapter_cacheRefreshRetries}}"
       "PARAM_THREESCALE_ALLOW_INSECURE_CONN": "{{three_scale_adapter_allowInsecureConn}}"
       "PARAM_THREESCALE_CLIENT_TIMEOUT_SECONDS": "{{three_scale_adapter_clientTimeoutSeconds}}"
-      "PARAM_THREESCALE_SERVICE_ID": "{{three_scale_server_serviceId}}"
-      "PARAM_THREESCALE_SYSTEM_URL": "{{three_scale_server_systemURL}}"
-      "PARAM_THREESCALE_ACCESS_TOKEN": "{{three_scale_server_accessToken}}"
 
 - name: Modify 3scale parameters in configuration file {{ openshift_three_scale_yaml }}
   replace:

@@ -31,6 +31,7 @@ spec:
       branch: v71
       repo: https://github.com/fabric8-launcher/launcher-booster-catalog.git
   threeScale:
+    enabled: false
     prefix: openshift-istio-tech-preview/
     version: 0.2.0
     adapter:
@@ -45,7 +46,3 @@ spec:
       cacheRefreshRetries: 1
       allowInsecureConn: false
       clientTimeoutSeconds: 10
-    server:
-      serviceId: serviceId
-      systemURL: systemURL
-      accessToken: accessToken

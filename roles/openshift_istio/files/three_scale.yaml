@@ -94,15 +94,3 @@ items:
         name: prometheus
     selector:
       app: 3scale-istio-adapter
-- apiVersion: "config.istio.io/v1alpha2"
-  kind: handler
-  metadata:
-    name: three-scale
-  spec:
-    adapter: three-scale
-    params:
-      service_id: "PARAM_THREESCALE_SERVICE_ID"
-      system_url: "PARAM_THREESCALE_SYSTEM_URL"
-      access_token: "PARAM_THREESCALE_ACCESS_TOKEN"
-    connection:
-      address: "three-scale-istio-adapter:PARAM_THREESCALE_LISTEN_ADDR"

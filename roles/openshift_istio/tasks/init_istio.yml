@@ -62,11 +62,6 @@
     openshift_istio_install_kiali: false
   when: (openshift_istio_kiali_username is not defined or openshift_istio_kiali_username == "") or (openshift_istio_kiali_password is not defined or openshift_istio_kiali_password == "")
 
-- name: Determine whether 3scale should be installed
-  set_fact:
-    openshift_istio_install_three_scale: false
-  when: (three_scale_server_serviceId is not defined or three_scale_server_serviceId == "") or (three_scale_server_systemURL is not defined or three_scale_server_systemURL == "") or (three_scale_server_accessToken is not defined or three_scale_server_accessToken == "")
-
 # Split name initialisation up into CentOS/RHEL until we have CentOS jaeger images
 - name: Initialise Istio Image names when running CentOS images
   set_fact:

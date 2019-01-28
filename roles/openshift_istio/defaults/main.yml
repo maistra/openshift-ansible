@@ -129,7 +129,7 @@ openshift_istio_install_kiali: true
 openshift_istio_kiali_username: ""
 openshift_istio_kiali_password: ""
 
-openshift_istio_install_three_scale: true
+openshift_istio_install_three_scale: false
 three_scale_adapter_listenAddr: 3333
 three_scale_adapter_logLevel: info
 three_scale_adapter_logJSON: true
@@ -141,7 +141,3 @@ three_scale_adapter_cacheEntriesMax: 1000
 three_scale_adapter_cacheRefreshRetries: 1
 three_scale_adapter_allowInsecureConn: false
 three_scale_adapter_clientTimeoutSeconds: 10
-
-three_scale_server_serviceId: ""
-three_scale_server_systemURL: ""
-three_scale_server_accessToken: ""

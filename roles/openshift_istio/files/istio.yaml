@@ -3158,6 +3158,8 @@ spec:
       valueType: STRING
     request.headers:
       valueType: STRING_MAP
+    request.query_params:
+      valueType: STRING_MAP
     request.id:
       valueType: STRING
     request.host:
@@ -3165,6 +3167,8 @@ spec:
     request.method:
       valueType: STRING
     request.path:
+      valueType: STRING
+    request.url_path:
       valueType: STRING
     request.reason:
       valueType: STRING

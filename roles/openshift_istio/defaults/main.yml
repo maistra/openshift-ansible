@@ -126,6 +126,7 @@ launcher_frontend_image_tag: 4571dfc
 launcher_controller_image_tag: 2.3.7
 
 openshift_istio_install_kiali: true
+openshift_istio_install_jaeger: true
 openshift_istio_kiali_username: ""
 openshift_istio_kiali_password: ""
 

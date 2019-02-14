@@ -28,6 +28,7 @@
 
 - name: Install Jaeger
   include_tasks: install_jaeger.yml
+  when: openshift_istio_install_jaeger | bool
 
 - name: Install Kiali
   include_tasks: install_kiali.yml

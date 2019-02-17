@@ -186,8 +186,7 @@ function generateKialiTemplate() {
 # - Add the kiali-cert volume
 # - Add istio namespace to the configmap
 function transformKialiOpenShift() {
-  sed -e 's/v0\.7\.2/v0\.9\.1/' \
-  | sed -e '/^# Source: istio\/charts\/kiali\/templates\/configmap.yaml/,/^# Source:/ {
+  sed -e '/^# Source: istio\/charts\/kiali\/templates\/configmap.yaml/,/^# Source:/ {
       /server:/ i\
 \    istio_namespace: ISTIO_NAMESPACE
       /port: 20001/ a\
@@ -203,10 +202,7 @@ function transformKialiOpenShift() {
 \    identity:\
 \      cert_file: /kiali-cert/tls.crt\
 \      private_key_file: /kiali-cert/tls.key' \
-  | sed -e '/apiGroups:.*config.istio.io/,/---/ {
-      /- watch/ a\
-\  - delete
-  }' | sed -e '/apiGroups:.*config.istio.io/ i\
+  | sed -e '/apiGroups:.*config.istio.io/ i\
 \- apiGroups: ["project.openshift.io"]\
 \  resources:\
 \  - projects\
@@ -246,9 +242,29 @@ function transformKialiOpenShift() {
 \        secret:\
 \          secretName: kiali-cert-secret
     }
-  }' | sed -e '/apiGroups:.*config.istio.io/,/---/ {
-      /- watch/ i\
-\  - patch
+  }' | sed -e '/apiGroups:.*networking.istio.io/,/^-/ {
+      /- watch/ a\
+\- apiGroups: ["authentication.istio.io"]\
+\  resources:\
+\  - policies\
+\  verbs:\
+\  - create\
+\  - delete\
+\  - get\
+\  - list\
+\  - patch\
+\  - watch\
+\- apiGroups: ["monitoring.kiali.io"]\
+\  resources:\
+\  - monitoringdashboards\
+\  verbs:\
+\  - get
+  }' | sed -e '/apiGroups:.*config.istio.io/,/^-/ {
+      /verbs:/ a\
+\  - create
+  }' | sed -e '/apiGroups:.*networking.istio.io/,/^-/ {
+      /verbs:/ a\
+\  - create
   }'
 }
 

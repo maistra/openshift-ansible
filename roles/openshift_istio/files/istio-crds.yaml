@@ -5,6 +5,8 @@ kind: ConfigMap
 metadata:
   namespace: istio-system
   name: istio-crd-10
+  labels:
+    maistra-version: MAISTRA_VERSION
 data:
   crd-10.yaml: |-
     apiVersion: apiextensions.k8s.io/v1beta1
@@ -1169,6 +1171,8 @@ kind: ConfigMap
 metadata:
   namespace: istio-system
   name: istio-crd-11
+  labels:
+    maistra-version: MAISTRA_VERSION
 data:
   crd-11.yaml: |-
     kind: CustomResourceDefinition

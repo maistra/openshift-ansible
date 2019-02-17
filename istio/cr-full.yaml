@@ -33,7 +33,7 @@ spec:
   threeScale:
     enabled: false
     prefix: openshift-istio-tech-preview/
-    version: 0.2.0
+    version: 0.3.0
     adapter:
       listenAddr: 3333
       logLevel: info

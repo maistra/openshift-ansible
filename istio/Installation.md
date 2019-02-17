@@ -143,6 +143,22 @@ spec:
       filter: filter
       branch: branch
       repo: repo
+  threeScale:
+    enabled: false
+    prefix: openshift-istio-tech-preview/
+    version: 0.3.0
+    adapter:
+      listenAddr: 3333
+      logLevel: info
+      logJSON: true
+      reportMetrics: true
+      metricsPort: 8080
+      cacheTTLSeconds: 300
+      cacheRefreshSeconds: 180
+      cacheEntriesMax: 1000
+      cacheRefreshRetries: 1
+      allowInsecureConn: false
+      clientTimeoutSeconds: 10
 ```
 
 The minimal custom resource required to install an Istio Control Plane is as follows

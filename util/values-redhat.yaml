@@ -2,6 +2,8 @@ global:
   proxy:
     autoInject: disabled
     privileged: true
+  multiCluster:
+    enabled: false
 
 security:
   enabled: true

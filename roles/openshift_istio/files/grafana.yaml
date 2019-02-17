@@ -6,6 +6,7 @@ metadata:
   labels:
     app: grafana
 ---
+# Source: istio/charts/mixer/templates/poddisruptionbudget.yaml
 # Source: istio/charts/grafana/templates/configmap-custom-resources.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -17,7 +18,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-release-1-1
+    release: istio-1-1-0-snapshot-6
     istio: grafana
 data:
   custom-resources.yaml: |-    
@@ -31,7 +32,7 @@ data:
         chart: grafana
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-release-1-1
+        release: istio-1-1-0-snapshot-6
     spec:
       targets:
       - name: grafana
@@ -83,40 +84,10 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-release-1-1
+    release: istio-1-1-0-snapshot-6
     istio: grafana
 data:
   galley-dashboard.json: '{
-  "__inputs": [
-    {
-      "name": "DS_PROMETHEUS",
-      "label": "Prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "5.2.3"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": "5.0.0"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "5.0.0"
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -133,7 +104,6 @@ data:
   "editable": false,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": null,
   "links": [],
   "panels": [
     {
@@ -182,6 +152,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Galley Versions",
       "tooltip": {
@@ -328,6 +299,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Memory",
       "tooltip": {
@@ -426,6 +398,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "CPU",
       "tooltip": {
@@ -517,6 +490,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Disk",
       "tooltip": {
@@ -595,11 +569,27 @@ data:
           "expr": "go_goroutines{job=\"galley\"}",
           "format": "time_series",
           "intervalFactor": 2,
+          "legendFormat": "goroutines_total",
           "refId": "A"
+        },
+        {
+          "expr": "galley_mcp_source_clients_total",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "clients_total",
+          "refId": "B"
+        },
+        {
+          "expr": "go_goroutines{job=\"galley\"}/galley_mcp_source_clients_total",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "avg_goroutines_per_client",
+          "refId": "C"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Goroutines",
       "tooltip": {
@@ -711,6 +701,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Event Rates",
       "tooltip": {
@@ -809,6 +800,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Timer Rates",
       "tooltip": {
@@ -914,6 +906,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Events Per Snapshot",
       "tooltip": {
@@ -998,6 +991,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "State Type Instances",
       "tooltip": {
@@ -1102,6 +1096,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Validation Webhook Certificate",
       "tooltip": {
@@ -1193,6 +1188,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Resource Validation",
       "tooltip": {
@@ -1277,6 +1273,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Validation HTTP Errors",
       "tooltip": {
@@ -1365,14 +1362,14 @@ data:
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(galley_kube_source_listener_handle_event_success_total[1m]) * 60",
+          "expr": "rate(galley_source_kube_event_success_total[1m]) * 60",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Success",
           "refId": "A"
         },
         {
-          "expr": "rate(galley_kube_source_listener_handle_event_error_total[1m]) * 60",
+          "expr": "rate(galley_source_kube_event_error_total[1m]) * 60",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Error",
@@ -1381,6 +1378,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Source Event Rate",
       "tooltip": {
@@ -1456,7 +1454,7 @@ data:
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(galley_kube_source_source_converter_success_total[1m]) * 60",
+          "expr": "rate(galley_source_kube_dynamic_converter_success_total[1m]) * 60",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "{apiVersion=\"{{apiVersion}}\",group=\"{{group}}\",kind=\"{{kind}}\"}",
@@ -1465,6 +1463,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Kubernetes Object Conversion Successes",
       "tooltip": {
@@ -1540,7 +1539,7 @@ data:
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(galley_kube_source_source_converter_failure_total[1m]) * 60",
+          "expr": "rate(galley_source_kube_dynamic_converter_failure_total[1m]) * 60",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Error",
@@ -1549,6 +1548,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Kubernetes Object Conversion Failures",
       "tooltip": {
@@ -1637,7 +1637,7 @@ data:
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(galley_mcp_server_clients_total)",
+          "expr": "sum(galley_mcp_source_clients_total)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Clients",
@@ -1646,6 +1646,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Connected Clients",
       "tooltip": {
@@ -1721,7 +1722,7 @@ data:
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(galley_mcp_server_request_acks_total[1m]) * 60",
+          "expr": "sum by(collection)(irate(galley_mcp_source_request_acks_total[1m]) * 60)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "",
@@ -1730,6 +1731,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Request ACKs",
       "tooltip": {
@@ -1805,7 +1807,7 @@ data:
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(galley_mcp_server_request_nacks_total[1m]) * 60",
+          "expr": "rate(galley_mcp_source_request_nacks_total[1m]) * 60",
           "format": "time_series",
           "intervalFactor": 1,
           "refId": "A"
@@ -1813,6 +1815,7 @@ data:
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Request NACKs",
       "tooltip": {
@@ -1891,7 +1894,7 @@ data:
   "timezone": "",
   "title": "Istio Galley Dashboard",
   "uid": "TSEY6jLmk",
-  "version": 3
+  "version": 1
 }
 '
 ---
@@ -1905,7 +1908,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-release-1-1
+    release: istio-1-1-0-snapshot-6
     istio: grafana
 data:
   istio-mesh-dashboard.json: '{
@@ -2873,7 +2876,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-release-1-1
+    release: istio-1-1-0-snapshot-6
     istio: grafana
 data:
   istio-performance-dashboard.json: '{
@@ -3485,7 +3488,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-release-1-1
+    release: istio-1-1-0-snapshot-6
     istio: grafana
 data:
   istio-service-dashboard.json: '{
@@ -6101,7 +6104,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-release-1-1
+    release: istio-1-1-0-snapshot-6
     istio: grafana
 data:
   istio-workload-dashboard.json: '{
@@ -8419,7 +8422,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-release-1-1
+    release: istio-1-1-0-snapshot-6
     istio: grafana
 data:
   mixer-dashboard.json: '{
@@ -10242,7 +10245,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-release-1-1
+    release: istio-1-1-0-snapshot-6
     istio: grafana
 data:
   pilot-dashboard.json: '{
@@ -11855,7 +11858,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-release-1-1
+    release: istio-1-1-0-snapshot-6
     istio: grafana
 data:
   datasources.yaml: |
@@ -11883,17 +11886,18 @@ data:
       type: file
     
 ---
-# Source: istio/charts/security/templates/configmap.yaml
 # Source: istio/templates/sidecar-injector-configmap.yaml
 # Source: istio/charts/grafana/templates/create-custom-resources-job.yaml
 # Source: istio/charts/mixer/templates/serviceaccount.yaml
 # Source: istio/charts/security/templates/cleanup-secrets.yaml
-# Source: istio/charts/security/templates/create-custom-resources-job.yaml
 # Source: istio/charts/security/templates/serviceaccount.yaml
+# Source: istio/templates/serviceaccount.yaml
 # Source: istio/charts/mixer/templates/clusterrole.yaml
 # Source: istio/charts/security/templates/clusterrole.yaml
+# Source: istio/templates/clusterrole.yaml
 # Source: istio/charts/mixer/templates/clusterrolebinding.yaml
 # Source: istio/charts/security/templates/clusterrolebinding.yaml
+# Source: istio/templates/clusterrolebinding.yaml
 # Source: istio/charts/grafana/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -11906,7 +11910,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-release-1-1
+    release: istio-1-1-0-snapshot-6
 spec:
   type: ClusterIP
   ports:
@@ -11931,7 +11935,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-release-1-1
+    release: istio-1-1-0-snapshot-6
 spec:
   replicas: 1
   template:
@@ -11941,7 +11945,7 @@ spec:
         chart: grafana
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-release-1-1
+        release: istio-1-1-0-snapshot-6
       annotations:
         sidecar.istio.io/inject: "false"
         scheduler.alpha.kubernetes.io/critical-pod: ""
@@ -12076,8 +12080,8 @@ spec:
 ---
 # Source: istio/charts/mixer/templates/deployment.yaml
 # Source: istio/charts/security/templates/deployment.yaml
+# Source: istio/charts/security/templates/enable-mesh-permissive.yaml
 # Source: istio/charts/mixer/templates/autoscale.yaml
-# Source: istio/charts/mixer/templates/poddisruptionbudget.yaml
 # Source: istio/charts/grafana/templates/gateway.yaml
 
 
@@ -12098,9 +12102,10 @@ spec:
 
 ---
 # Source: istio/charts/security/templates/enable-mesh-mtls.yaml
-# Source: istio/charts/security/templates/enable-mesh-permissive.yaml
 # Source: istio/charts/security/templates/meshexpansion.yaml
 # Source: istio/charts/security/templates/tests/test-citadel-connection.yaml
 # Source: istio/templates/configmap.yaml
+# Source: istio/templates/endpoints.yaml
 # Source: istio/templates/install-custom-resources.sh.tpl
+# Source: istio/templates/service.yaml
 # Source: istio/charts/mixer/templates/config.yaml

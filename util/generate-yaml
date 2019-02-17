@@ -1,7 +1,7 @@
 DIR=$(cd $(dirname $0) ; pwd -P)
 
-#ISTIO_VERSION=1.0.5
-ISTIO_BRANCH=release-1.1
+ISTIO_VERSION=1.1.0-snapshot.6
+#ISTIO_BRANCH=release-1.1
 
 RELEASES_DIR=${DIR}/../../istio-releases
 
@@ -53,7 +53,10 @@ function retrieveIstioRelease() {
 # - update the namespaceSelector to ignore namespaces with the label istio.openshift.com/ignore-namespace
 # - add a maistra-version label to all objects which have a release label
 # - remove GODEBUG from the pilot environment
-# - add clusterrole to allow galley to update the finalizer for the webhook
+# - remove istio-multi service account
+# - remove istio-multi cluster role binding
+# - remove istio-reader cluster role
+# - switch prometheus init container image from busybox to prometheus
 function generateIstioTemplate() {
   VALUES=""
   while [ $# -gt 0 ] ; do
@@ -82,13 +85,17 @@ function generateIstioTemplate() {
            -e '/GODEBUG/,/gctrace/d' \
            -e 's/^\(.*\)release:\(.*\)$/\1maistra-version: MAISTRA_VERSION\
 \1release:\2/' | \
-   sed -e '/^# Source:.*istio\/charts\/galley\/templates\/clusterrole.yaml/,/^# Source:/ {
-    /^rules:/ a\
-\- apiGroups: ["extensions"]\
-\  resources: ["deployments/finalizers"]\
-\  resourceNames: ["istio-galley"]\
-\  verbs: ["update"]
-  }' | sed -e 's+gcr.io/istio-release+docker.io/istio+g' -e 's+master-latest-daily+1.1+'
+   sed -e 's+gcr.io/istio-release+docker.io/istio+g' | \
+   sed -e '/^# Source:.*istio\/templates\/serviceaccount.yaml/,/^# Source:/ {
+    /^# Source/b
+    d
+  }' | sed -e '/^# Source:.*istio\/templates\/clusterrolebinding.yaml/,/^# Source:/ {
+    /^# Source/b
+    d
+  }' | sed -e '/^# Source:.*istio\/templates\/clusterrole.yaml/,/^# Source:/ {
+    /^# Source/b
+    d
+  }' | sed -e 's/busybox/docker.io\/prom\/prometheus:v2.3.1/'
 }
 
 # The following modifications are made to the generated helm template to extract the CRDs
@@ -149,7 +156,6 @@ metadata:
 # The following modifications are made to the generated helm template for the Kiali yaml file
 # - remove all non kiali configuration
 # - remove the kiali username/password secret
-# - add release label to kiali clusterrole
 function generateKialiTemplate() {
   VALUES=""
   while [ $# -gt 0 ] ; do
@@ -168,9 +174,6 @@ function generateKialiTemplate() {
     | sed -e '/^# Source: istio\/charts\/kiali\/templates\/secrets.yaml/,/^# Source:/ {
       /^# Source/b
       d
-    }' | sed -e '/^# Source: istio\/charts\/kiali\/templates\/clusterrole.yaml/,/^# Source:/ {
-      /labels:/ a\
-\    release: '${ISTIO_NAME}'
     }'
 }
 

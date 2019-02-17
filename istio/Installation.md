@@ -131,7 +131,7 @@ spec:
     username: username
     password: password
     prefix: kiali/
-    version: v0.13.0
+    version: v0.14.0
   launcher:
     openshift:
       user: user

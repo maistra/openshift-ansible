@@ -112,7 +112,10 @@ function generateCRDsTemplate() {
  -e '/^# Source:/,/^---/d' \
      -e 's/^\(.*\)labels:$/\1labels:\
 \1  maistra-version: MAISTRA_VERSION'/ \
- -e 's/^# SOURCE:/# Source:/'
+ -e 's/^# SOURCE:/# Source:/' \
+  | sed 's/^\(.*\)\(name: istio-crd-1.*\)$/\1\2\
+\1labels:\
+\1  maistra-version: MAISTRA_VERSION/'
 }
 
 # The following modifications are made to the generated helm template for the Grafana yaml file

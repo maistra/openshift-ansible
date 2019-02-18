@@ -28,7 +28,7 @@ spec:
       token: token
     catalog:
       filter: booster.mission.metadata.istio
-      branch: v71
+      branch: v85
       repo: https://github.com/fabric8-launcher/launcher-booster-catalog.git
   threeScale:
     enabled: false

@@ -1495,6 +1495,7 @@ metadata:
 spec:
   ports:
   - port: 443
+    targetPort: webhook
     name: https-validation
   - port: 15014
     name: http-monitoring
@@ -1747,6 +1748,7 @@ metadata:
 spec:
   ports:
   - port: 443
+    targetPort: webhook
   selector:
     istio: sidecar-injector
 
@@ -1789,20 +1791,22 @@ spec:
           image: "docker.io/istio/galley:1.1.0-snapshot.6"
           imagePullPolicy: IfNotPresent
           ports:
-          - containerPort: 443
+          - name: webhook
+            containerPort: 8443
           - containerPort: 15014
           - containerPort: 9901
           command:
           - /usr/local/bin/galley
           - --meshConfigFile=/etc/mesh-config/mesh
           - --livenessProbeInterval=1s
-          - --livenessProbePath=/healthliveness
-          - --readinessProbePath=/healthready
+          - --livenessProbePath=/tmp/healthliveness
+          - --readinessProbePath=/tmp/healthready
           - --readinessProbeInterval=1s
           - --insecure=true
           - --validation-webhook-config-file
           - /etc/config/validatingwebhookconfiguration.yaml
           - --monitoringPort=15014
+          - --validation-port=8443
           volumeMounts:
           - name: certs
             mountPath: /etc/certs
@@ -1818,7 +1822,7 @@ spec:
               command:
                 - /usr/local/bin/galley
                 - probe
-                - --probe-path=/healthliveness
+                - --probe-path=/tmp/healthliveness
                 - --interval=10s
             initialDelaySeconds: 5
             periodSeconds: 5
@@ -1827,7 +1831,7 @@ spec:
               command:
                 - /usr/local/bin/galley
                 - probe
-                - --probe-path=/healthready
+                - --probe-path=/tmp/healthready
                 - --interval=10s
             initialDelaySeconds: 5
             periodSeconds: 5
@@ -2944,7 +2948,11 @@ spec:
             - --injectConfig=/etc/istio/inject/config
             - --meshConfig=/etc/istio/config/mesh
             - --healthCheckInterval=2s
-            - --healthCheckFile=/health
+            - --healthCheckFile=/tmp/health
+            - --port=8443
+          ports:
+          - name: webhook
+            containerPort: 8443
           volumeMounts:
           - name: config-volume
             mountPath: /etc/istio/config
@@ -2960,7 +2968,7 @@ spec:
               command:
                 - /usr/local/bin/sidecar-injector
                 - probe
-                - --probe-path=/health
+                - --probe-path=/tmp/health
                 - --interval=4s
             initialDelaySeconds: 4
             periodSeconds: 4
@@ -2969,7 +2977,7 @@ spec:
               command:
                 - /usr/local/bin/sidecar-injector
                 - probe
-                - --probe-path=/health
+                - --probe-path=/tmp/health
                 - --interval=4s
             initialDelaySeconds: 4
             periodSeconds: 4

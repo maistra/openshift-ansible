@@ -57,6 +57,8 @@ function retrieveIstioRelease() {
 # - remove istio-multi cluster role binding
 # - remove istio-reader cluster role
 # - switch prometheus init container image from busybox to prometheus
+# - switch webhook ports to 8443
+# - switch health check files into /tmp
 function generateIstioTemplate() {
   VALUES=""
   while [ $# -gt 0 ] ; do
@@ -95,7 +97,27 @@ function generateIstioTemplate() {
   }' | sed -e '/^# Source:.*istio\/templates\/clusterrole.yaml/,/^# Source:/ {
     /^# Source/b
     d
-  }' | sed -e 's/busybox/docker.io\/prom\/prometheus:v2.3.1/'
+  }' | sed -e 's/busybox/docker.io\/prom\/prometheus:v2.3.1/' \
+  | sed -e '/^# Source:.*istio\/charts\/galley\/templates\/service.yaml/,/^# Source:/ {
+    s/^\(.*\)\(- port: 443.*\)$/\1\2\
+\1  targetPort: webhook/
+  }' | sed -e '/^# Source:.*istio\/charts\/galley\/templates\/deployment.yaml/,/^# Source:/ {
+    s/^\(.*\)\- containerPort: 443.*$/\1- name: webhook\
+\1  containerPort: 8443/
+    s/\/health/\/tmp\/health/
+    s/^\(.*\)\(- --monitoringPort.*\)$/\1\2\
+\1- --validation-port=8443/
+  }' | sed -e '/^# Source:.*istio\/charts\/sidecarInjectorWebhook\/templates\/service.yaml/,/^# Source:/ {
+    s/^\(.*\)\(- port: 443.*\)$/\1\2\
+\1  targetPort: webhook/
+  }' | sed -e '/^# Source:.*istio\/charts\/sidecarInjectorWebhook\/templates\/deployment.yaml/,/^# Source:/ {
+    s/\/health/\/tmp\/health/
+    s/^\(.*\)\(volumeMounts:.*\)$/\1  - --port=8443\
+\1ports:\
+\1- name: webhook\
+\1  containerPort: 8443\
+\1\2/
+  }'
 }
 
 # The following modifications are made to the generated helm template to extract the CRDs

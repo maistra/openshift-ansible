@@ -10,7 +10,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
 data:
   config.yaml: |
     istio_namespace: istio-system
@@ -19,6 +19,8 @@ data:
       port: 20001
       static_content_root_directory: /opt/kiali/console
     external_services:
+      istio:
+        url_service_version: http://istio-pilot:8080/version
       jaeger:
         url: JAEGER_URL
       grafana:
@@ -39,7 +41,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
 
 ---
 # Source: istio/charts/mixer/templates/serviceaccount.yaml
@@ -55,24 +57,41 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
 rules:
-- apiGroups: ["", "apps", "autoscaling", "batch"]
+- apiGroups: [""]
   resources:
   - configmaps
-  - cronjobs
-  - deployments
   - endpoints
-  - horizontalpodautoscalers
-  - jobs
   - namespaces
   - nodes
   - pods
-  - projects
   - services
+  - replicationcontrollers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups: ["extensions", "apps"]
+  resources:
+  - deployments
   - statefulsets
   - replicasets
-  - replicationcontrollers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups: ["autoscaling"]
+  resources:
+  - horizontalpodautoscalers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups: ["batch"]
+  resources:
+  - cronjobs
+  - jobs
   verbs:
   - get
   - list
@@ -157,6 +176,16 @@ rules:
   - monitoringdashboards
   verbs:
   - get
+- apiGroups: ["authentication.istio.io"]
+  resources:
+  - policies
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - watch
 
 ---
 # Source: istio/charts/mixer/templates/clusterrole.yaml
@@ -171,7 +200,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -197,7 +226,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
 spec:
   ports:
   - name: http-kiali
@@ -219,7 +248,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
 spec:
   replicas: 1
   selector:
@@ -232,7 +261,7 @@ spec:
         app: kiali
         chart: kiali
         heritage: Tiller
-        release: istio-1-1-0-snapshot-6
+        release: istio-1-1-0-rc-2
       annotations:
         sidecar.istio.io/inject: "false"
         scheduler.alpha.kubernetes.io/critical-pod: ""
@@ -257,11 +286,13 @@ spec:
             secretKeyRef:
               name: kiali
               key: username
+              optional: true
         - name: SERVER_CREDENTIALS_PASSWORD
           valueFrom:
             secretKeyRef:
               name: kiali
               key: passphrase
+              optional: true
         volumeMounts:
         - name: kiali-configuration
           mountPath: "/kiali-configuration"

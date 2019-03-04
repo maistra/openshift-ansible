@@ -21,6 +21,7 @@ egressgateway:
 
 gateways:
   istio-egressgateway:
+    enabled: true
     autoscaleMin: 0
     autoscaleMax: 0
   istio-ingressgateway:
@@ -32,9 +33,11 @@ mixer:
   autoscaleMax: 0
 
   policy:
+    enabled: true
     autoscaleEnabled: false
 
   telemetry:
+    enabled: true
     autoscaleEnabled: false
 
 pilot:

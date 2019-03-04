@@ -151,3 +151,13 @@
 
 - name: Initialise maistra app labels
   set_fact: openshift_istio_maistra_component_labels="{{ default_istio_maistra_component_labels }} + [ 'maistra-version={{ openshift_istio_installed_maistra_version }}' ]"
+
+- name: Initialise the health check directory when running community
+  set_fact:
+    openshift_istio_sidecar_health_check_dir: ""
+  when: openshift_istio_install_community
+
+- name: Initialise the health check directory when not running community
+  set_fact:
+    openshift_istio_sidecar_health_check_dir: "/tmp"
+  when: not openshift_istio_install_community

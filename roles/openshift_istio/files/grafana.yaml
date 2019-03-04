@@ -18,7 +18,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
     istio: grafana
 data:
   custom-resources.yaml: |-    
@@ -32,7 +32,7 @@ data:
         chart: grafana
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-0-snapshot-6
+        release: istio-1-1-0-rc-2
     spec:
       targets:
       - name: grafana
@@ -84,7 +84,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
     istio: grafana
 data:
   galley-dashboard.json: '{
@@ -1908,7 +1908,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
     istio: grafana
 data:
   istio-mesh-dashboard.json: '{
@@ -2876,7 +2876,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
     istio: grafana
 data:
   istio-performance-dashboard.json: '{
@@ -2907,6 +2907,12 @@ data:
       "type": "datasource",
       "id": "prometheus",
       "name": "Prometheus",
+      "version": "5.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
       "version": "5.0.0"
     }
   ],
@@ -2966,28 +2972,28 @@ data:
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(container_cpu_usage_seconds_total{pod_name=~\"istio-telemetry-.*\"}[1m]))/ (round(sum(irate(istio_requests_total[1m])), 0.001)/1000)",
+          "expr": "(sum(rate(container_cpu_usage_seconds_total{pod_name=~\"istio-telemetry-.*\",container_name=~\"mixer|istio-proxy\"}[1m]))/ (round(sum(irate(istio_requests_total[1m])), 0.001)/1000))/ (sum(irate(istio_requests_total{source_workload=\"istio-ingressgateway\"}[1m])) >bool 10)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "istio-telemetry",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(container_cpu_usage_seconds_total{pod_name=~\"istio-ingressgateway-.*\"}[1m])) / (round(sum(irate(istio_requests_total{source_workload=\"istio-ingressgateway\", reporter=\"source\"}[1m])), 0.001)/1000)",
+          "expr": "sum(rate(container_cpu_usage_seconds_total{pod_name=~\"istio-ingressgateway-.*\",container_name=\"istio-proxy\"}[1m])) / (round(sum(irate(istio_requests_total{source_workload=\"istio-ingressgateway\", reporter=\"source\"}[1m])), 0.001)/1000)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "istio-ingressgateway",
           "refId": "B"
         },
         {
-          "expr": "sum(rate(container_cpu_usage_seconds_total{container_name=\"istio-proxy\"}[1m]))/ (round(sum(irate(istio_requests_total[1m])), 0.001)/1000)",
+          "expr": "(sum(rate(container_cpu_usage_seconds_total{namespace!=\"istio-system\",container_name=\"istio-proxy\"}[1m]))/ (round(sum(irate(istio_requests_total[1m])), 0.001)/1000))/ (sum(irate(istio_requests_total{source_workload=\"istio-ingressgateway\"}[1m])) >bool 10)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "istio-proxy",
           "refId": "C"
         },
         {
-          "expr": "sum(rate(container_cpu_usage_seconds_total{pod_name=~\"istio-policy-.*\"}[1m]))/ (round(sum(irate(istio_requests_total[1m])), 0.001)/1000)",
+          "expr": "(sum(rate(container_cpu_usage_seconds_total{pod_name=~\"istio-policy-.*\",container_name=~\"mixer|istio-proxy\"}[1m]))/ (round(sum(irate(istio_requests_total[1m])), 0.001)/1000)) / (sum(irate(istio_requests_total{source_workload=\"istio-ingressgateway\"}[1m])) >bool 10)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "istio-policy",
@@ -3071,28 +3077,28 @@ data:
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(container_cpu_usage_seconds_total{pod_name=~\"istio-telemetry-.*\"}[1m]))",
+          "expr": "sum(rate(container_cpu_usage_seconds_total{pod_name=~\"istio-telemetry-.*\",container_name=~\"mixer|istio-proxy\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "istio-telemetry",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(container_cpu_usage_seconds_total{pod_name=~\"istio-ingressgateway-.*\"}[1m]))",
+          "expr": "sum(rate(container_cpu_usage_seconds_total{pod_name=~\"istio-ingressgateway-.*\",container_name=\"istio-proxy\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "istio-ingressgateway",
           "refId": "B"
         },
         {
-          "expr": "sum(rate(container_cpu_usage_seconds_total{container_name=\"istio-proxy\"}[1m]))",
+          "expr": "sum(rate(container_cpu_usage_seconds_total{namespace!=\"istio-system\",container_name=\"istio-proxy\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "istio-proxy",
           "refId": "C"
         },
         {
-          "expr": "sum(rate(container_cpu_usage_seconds_total{pod_name=~\"istio-policy-.*\"}[1m]))",
+          "expr": "sum(rate(container_cpu_usage_seconds_total{pod_name=~\"istio-policy-.*\",container_name=~\"mixer|istio-proxy\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "istio-policy",
@@ -3176,28 +3182,28 @@ data:
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(container_memory_usage_bytes{pod_name=~\"istio-telemetry-.*\"}) / (sum(irate(istio_requests_total[1m])) / 1000)",
+          "expr": "(sum(container_memory_usage_bytes{pod_name=~\"istio-telemetry-.*\"}) / (sum(irate(istio_requests_total[1m])) / 1000)) / (sum(irate(istio_requests_total{source_workload=\"istio-ingressgateway\"}[1m])) >bool 10)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "istio-telemetry / 1k rps",
           "refId": "A"
         },
         {
-          "expr": "sum(container_memory_usage_bytes{pod_name=~\"istio-ingressgateway-.*\"}) / count(container_memory_usage_bytes{pod_name=~\"istio-ingressgateway-.*\"})",
+          "expr": "sum(container_memory_usage_bytes{pod_name=~\"istio-ingressgateway-.*\"}) / count(container_memory_usage_bytes{pod_name=~\"istio-ingressgateway-.*\",container_name!=\"POD\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "per istio-ingressgateway",
           "refId": "C"
         },
         {
-          "expr": "sum(container_memory_usage_bytes{container_name=\"istio-proxy\"}) / count(container_memory_usage_bytes{container_name=\"istio-proxy\"})",
+          "expr": "sum(container_memory_usage_bytes{namespace!=\"istio-system\",container_name=\"istio-proxy\"}) / count(container_memory_usage_bytes{namespace!=\"istio-system\",container_name=\"istio-proxy\"})",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "per istio-proxy",
           "refId": "B"
         },
         {
-          "expr": "sum(container_memory_usage_bytes{pod_name=~\"istio-policy-.*\"}) / (sum(irate(istio_requests_total[1m])) / 1000)",
+          "expr": "(sum(container_memory_usage_bytes{pod_name=~\"istio-policy-.*\"}) / (sum(irate(istio_requests_total[1m])) / 1000))/ (sum(irate(istio_requests_total{source_workload=\"istio-ingressgateway\"}[1m])) >bool 10)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "istio-policy / 1k rps",
@@ -3435,6 +3441,20 @@ data:
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "content": "The charts on this dashboard are intended to show Istio main components cost in terms resources utilization under steady load.\n\n- **vCPU/1k rps:** shows vCPU utilization by the main Istio components normalized by 1000 requests/second. When idle or low traffic, this chart will be blank. The curve for istio-proxy refers to the services sidecars only. \n- **vCPU:** vCPU utilization by Istio components, not normalized.\n- **Memory:** memory footprint for the components. Telemetry and policy are normalized by 1k rps, and no data is shown  when there is no traffic. For ingress and istio-proxy, the data is per instance. \n- **Bytes transferred/ sec:** shows the number of bytes flowing through each Istio component.",
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 11,
+      "links": [],
+      "mode": "markdown",
+      "title": "Istio Performance Dashboard Readme",
+      "type": "text"
     }
   ],
   "schemaVersion": 16,
@@ -3488,7 +3508,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
     istio: grafana
 data:
   istio-service-dashboard.json: '{
@@ -6104,7 +6124,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
     istio: grafana
 data:
   istio-workload-dashboard.json: '{
@@ -8422,7 +8442,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
     istio: grafana
 data:
   mixer-dashboard.json: '{
@@ -10245,7 +10265,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
     istio: grafana
 data:
   pilot-dashboard.json: '{
@@ -11858,7 +11878,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
     istio: grafana
 data:
   datasources.yaml: |
@@ -11910,7 +11930,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
 spec:
   type: ClusterIP
   ports:
@@ -11935,7 +11955,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0-snapshot-6
+    release: istio-1-1-0-rc-2
 spec:
   replicas: 1
   template:
@@ -11945,7 +11965,7 @@ spec:
         chart: grafana
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-0-snapshot-6
+        release: istio-1-1-0-rc-2
       annotations:
         sidecar.istio.io/inject: "false"
         scheduler.alpha.kubernetes.io/critical-pod: ""

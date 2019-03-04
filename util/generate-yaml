@@ -1,6 +1,6 @@
 DIR=$(cd $(dirname $0) ; pwd -P)
 
-ISTIO_VERSION=1.1.0-snapshot.6
+ISTIO_VERSION=1.1.0-rc.2
 #ISTIO_BRANCH=release-1.1
 
 RELEASES_DIR=${DIR}/../../istio-releases
@@ -97,7 +97,7 @@ function generateIstioTemplate() {
   }' | sed -e '/^# Source:.*istio\/templates\/clusterrole.yaml/,/^# Source:/ {
     /^# Source/b
     d
-  }' | sed -e 's/busybox/docker.io\/prom\/prometheus:v2.3.1/' \
+  }' | sed -e 's/busybox:[0-9.]*/docker.io\/prom\/prometheus:v2.3.1/' \
   | sed -e '/^# Source:.*istio\/charts\/galley\/templates\/service.yaml/,/^# Source:/ {
     s/^\(.*\)\(- port: 443.*\)$/\1\2\
 \1  targetPort: webhook/
@@ -111,7 +111,7 @@ function generateIstioTemplate() {
     s/^\(.*\)\(- port: 443.*\)$/\1\2\
 \1  targetPort: webhook/
   }' | sed -e '/^# Source:.*istio\/charts\/sidecarInjectorWebhook\/templates\/deployment.yaml/,/^# Source:/ {
-    s/\/health/\/tmp\/health/
+    s/\/health/HEALTH_CHECK_DIR\/health/
     s/^\(.*\)\(volumeMounts:.*\)$/\1  - --port=8443\
 \1ports:\
 \1- name: webhook\
@@ -284,12 +284,6 @@ function transformKialiOpenShift() {
 \  - monitoringdashboards\
 \  verbs:\
 \  - get
-  }' | sed -e '/apiGroups:.*config.istio.io/,/^-/ {
-      /verbs:/ a\
-\  - create
-  }' | sed -e '/apiGroups:.*networking.istio.io/,/^-/ {
-      /verbs:/ a\
-\  - create
   }'
 }
 

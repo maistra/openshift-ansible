@@ -15,6 +15,13 @@
     replace: "{{ openshift_istio_image_dict[openshift_deployment_type]['istio_version'] }}"
   with_items: "{{ openshift_istio_maistra_version_files }}"
 
+- name: Update HEALTH_CHECK_DIR within configuration
+  replace:
+    path: "{{ item }}"
+    regexp: "HEALTH_CHECK_DIR"
+    replace: "{{ openshift_istio_sidecar_health_check_dir }}"
+  with_items: "{{ openshift_istio_health_check_files }}"
+
 - name: Label Istio namespace so it is ignored by injection
   command: "{{ openshift_client_binary }} label --overwrite=true namespace {{ openshift_istio_namespace }} istio.openshift.com/ignore-namespace=ignore"
 

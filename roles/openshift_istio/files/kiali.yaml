@@ -113,6 +113,18 @@ rules:
   - get
   - list
   - watch
+- apiGroups: ["rbac.istio.io"]
+  resources:
+  - clusterrbacconfigs
+  - serviceroles
+  - servicerolebindings
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - watch
 - apiGroups: ["config.istio.io"]
   resources:
   - apikeys

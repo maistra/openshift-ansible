@@ -28,6 +28,27 @@
     regexp: "ISTIO_NAMESPACE"
     replace: "{{ openshift_istio_namespace }}"
 
+- name: Update Kiali Version
+  replace:
+    path: "{{ openshift_kiali_yaml }}"
+    regexp: "KIALI_VERSION"
+    replace: "{{ openshift_istio_kiali_image_version }}"
+
+- name: Add Kiali CRDs
+  command: "{{ openshift_client_binary }} create -f {{ openshift_kiali_crds_yaml }} -n {{ openshift_istio_namespace }}"
+
+- name: Wait for resource CRDs to establish
+  shell: "{{ openshift_client_binary }} get --raw /apis/{{ item.group }}/{{ item.version }}/{{ item.name }}"
+  register: result
+  until: result.rc == 0
+  retries: 10
+  delay: 2
+  ignore_errors: yes
+  with_items: "{{ openshift_kiali_resources }}"
+
+- name: Add Kiali dashboard components
+  command: "{{ openshift_client_binary }} create -f {{ openshift_kiali_dashboards_yaml }} -n {{ openshift_istio_namespace }}"
+
 - name: Add Kiali components
   command: "{{ openshift_client_binary }} create -f {{ openshift_kiali_yaml }} -n {{ openshift_istio_namespace }}"
 

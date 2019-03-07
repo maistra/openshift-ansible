@@ -176,6 +176,7 @@ rules:
 - apiGroups: ["authentication.istio.io"]
   resources:
   - policies
+  - meshpolicies
   verbs:
   - create
   - delete
@@ -191,6 +192,7 @@ rules:
 - apiGroups: ["authentication.istio.io"]
   resources:
   - policies
+  - meshpolicies
   verbs:
   - create
   - delete

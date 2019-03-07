@@ -211,6 +211,7 @@ function generateKialiTemplate() {
 # - Add the kiali-cert volume
 # - Add istio namespace to the configmap
 # - Add rbac.istio.io to the ClusterRole
+# - Add support for MeshPolicies
 function transformKialiOpenShift() {
   sed -e '/^# Source: istio\/charts\/kiali\/templates\/configmap.yaml/,/^# Source:/ {
       /server:/ i\
@@ -297,7 +298,8 @@ function transformKialiOpenShift() {
 \  - monitoringdashboards\
 \  verbs:\
 \  - get
-  }'
+  }' | sed -e '/- policies/ a\
+\  - meshpolicies'
 }
 
 retrieveIstioRelease

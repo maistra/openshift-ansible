@@ -212,6 +212,7 @@ function generateKialiTemplate() {
 # - Add istio namespace to the configmap
 # - Add rbac.istio.io to the ClusterRole
 # - Add support for MeshPolicies
+# - Add support for Kiali monitoring and dashboards
 function transformKialiOpenShift() {
   sed -e '/^# Source: istio\/charts\/kiali\/templates\/configmap.yaml/,/^# Source:/ {
       /server:/ i\
@@ -247,6 +248,11 @@ function transformKialiOpenShift() {
 \  - get\
 \  - list\
 \  - watch\
+\- apiGroups: ["monitoring.kiali.io"]\
+\  resources:\
+\  - monitoringdashboards\
+\  verbs:\
+\  - get\
 \- apiGroups: ["rbac.istio.io"]\
 \  resources:\
 \  - clusterrbacconfigs\

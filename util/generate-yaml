@@ -210,6 +210,7 @@ function generateKialiTemplate() {
 # - Add the kiali-cert volume mount
 # - Add the kiali-cert volume
 # - Add istio namespace to the configmap
+# - Add rbac.istio.io to the ClusterRole
 function transformKialiOpenShift() {
   sed -e '/^# Source: istio\/charts\/kiali\/templates\/configmap.yaml/,/^# Source:/ {
       /server:/ i\
@@ -244,6 +245,18 @@ function transformKialiOpenShift() {
 \  verbs:\
 \  - get\
 \  - list\
+\  - watch\
+\- apiGroups: ["rbac.istio.io"]\
+\  resources:\
+\  - clusterrbacconfigs\
+\  - serviceroles\
+\  - servicerolebindings\
+\  verbs:\
+\  - create\
+\  - delete\
+\  - get\
+\  - list\
+\  - patch\
 \  - watch' \
   | sed -e '/kind.*Service$/,/metadata/ {
     /metadata/ a\

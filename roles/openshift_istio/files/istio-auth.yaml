@@ -882,7 +882,7 @@ data:
             memory: "[[ index .ObjectMeta.Annotations `sidecar.istio.io/proxyMemory` ]]"
         [[ else -]]
           limits:
-            cpu: 2000m
+            cpu: 500m
             memory: 128Mi
           requests:
             cpu: 100m
@@ -2363,7 +2363,7 @@ spec:
               fieldPath: status.podIP
         resources:
           limits:
-            cpu: 2000m
+            cpu: 500m
             memory: 128Mi
           requests:
             cpu: 100m
@@ -2488,10 +2488,10 @@ spec:
           value: "6"
         resources:
           limits:
-            cpu: 4800m
+            cpu: 500m
             memory: 4G
           requests:
-            cpu: 1000m
+            cpu: 100m
             memory: 1G
           
         volumeMounts:
@@ -2546,7 +2546,7 @@ spec:
               fieldPath: status.podIP
         resources:
           limits:
-            cpu: 2000m
+            cpu: 500m
             memory: 128Mi
           requests:
             cpu: 100m
@@ -2683,7 +2683,7 @@ spec:
                 fieldPath: status.podIP
           resources:
             limits:
-              cpu: 2000m
+              cpu: 500m
               memory: 128Mi
             requests:
               cpu: 100m

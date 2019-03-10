@@ -2,6 +2,13 @@ global:
   proxy:
     autoInject: disabled
     privileged: true
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 128Mi
   multiCluster:
     enabled: false
 
@@ -39,6 +46,13 @@ mixer:
   telemetry:
     enabled: true
     autoscaleEnabled: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 1G
+      limits:
+        cpu: 500m
+        memory: 4G
 
 pilot:
   autoscaleMin: 0

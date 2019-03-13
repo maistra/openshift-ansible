@@ -12,13 +12,13 @@ spec:
     version: 0.9.0
   jaeger:
     prefix: distributed-tracing-tech-preview/
-    version: 1.9.0
+    version: 1.11.0
     elasticsearch_memory: 1Gi
   kiali:
     username: username
     password: password
     prefix: kiali/
-    version: v0.14.0
+    version: v0.15.0
   launcher:
     openshift:
       user: user
@@ -33,7 +33,7 @@ spec:
   threeScale:
     enabled: false
     prefix: openshift-istio-tech-preview/
-    version: 0.3.0
+    version: 0.4.1
     adapter:
       listenAddr: 3333
       logLevel: info

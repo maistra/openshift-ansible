@@ -675,7 +675,6 @@ data:
         - containerPort: 15090
           protocol: TCP
           name: http-envoy-prom
-
         args:
         - proxy
         - sidecar
@@ -716,6 +715,8 @@ data:
         - "[[ annotation .ObjectMeta `readiness.status.sidecar.istio.io/applicationPorts` (applicationPorts .Spec.Containers) ]]"
       [[- end ]]
         env:
+        - name: ISTIO_META_ISTIO_PROXY_VERSION
+          value: 1.0.2
         - name: POD_NAME
           valueFrom:
             fieldRef:

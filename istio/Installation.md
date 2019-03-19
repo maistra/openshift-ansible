@@ -197,11 +197,18 @@ launcher-frontend-2-jxjsd     1/1       Running   0          1m
 
 ## Removing Istio
 
-The following step will remove Istio from an existing installation, it can be executed from any host with access to the cluster.
+The following step will remove Istio from an existing installation. It can be
+executed by any user with access to delete the CustomResource.
 
 ```
-oc delete -n istio-operator Installation istio-installation
+oc delete -n istio-operator Installation istio-installation 
 ```
+
+The removal of the CustomResource (Installation) will tell the Istio operator
+to begin un-installing everything that it installed. This will create a job
+in the `istio-system` project called `openshift-ansible-istio-removal-job`.
+Once this job completes, the operator will delete the `istio-system` project.
+At that point you can continue to the next step.
 
 ## Removing the Istio Operator
 
@@ -217,4 +224,11 @@ For product images run
 
 ```
 oc process -f istio_product_operator_template.yaml | oc delete -f -
+```
+
+## Removing the istio-operator Project
+Finally, you can remove the `istio-operator` project that you created:
+
+```
+oc delete project istio-operator
 ```

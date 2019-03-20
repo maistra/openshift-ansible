@@ -95,6 +95,12 @@
 - name: Patch the mutating webhook
   command: "{{ openshift_client_binary }} patch mutatingwebhookconfiguration istio-sidecar-injector -p '{\"metadata\":{\"ownerReferences\": [{\"apiVersion\": \"extensions/v1beta1\", \"blockOwnerDeletion\": true, \"controller\": true, \"kind\": \"Deployment\", \"name\": \"istio-sidecar-injector\", \"uid\": \"{{ uid_result.stdout }}\"}]}}'"
 
+- name: Retrieve istio-security-custom-resources custom resources
+  command: "{{ openshift_client_binary }} extract -n {{ openshift_istio_namespace }} configmap/istio-security-custom-resources --confirm --to=/tmp --keys=custom-resources.yaml"
+
+- name: Install istio-security-custom-resources custom resources
+  command: "{{ openshift_client_binary }} create -f /tmp/custom-resources.yaml"
+
 - name: Set authenticated cluster role to enable access for all authenticated users
   command: "{{ openshift_client_binary }} create -f {{ openshift_istio_authenticated_clusterrole_yaml }}"
 

@@ -10,7 +10,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-0-rc-2
+    release: istio-1-1-0
 data:
   config.yaml: |
     istio_namespace: istio-system
@@ -30,6 +30,7 @@ data:
       private_key_file: /kiali-cert/tls.key
 
 ---
+# Source: istio/charts/security/templates/configmap.yaml
 # Source: istio/templates/sidecar-injector-configmap.yaml
 # Source: istio/charts/kiali/templates/serviceaccount.yaml
 apiVersion: v1
@@ -41,11 +42,12 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-0-rc-2
+    release: istio-1-1-0
 
 ---
 # Source: istio/charts/mixer/templates/serviceaccount.yaml
 # Source: istio/charts/security/templates/cleanup-secrets.yaml
+# Source: istio/charts/security/templates/create-custom-resources-job.yaml
 # Source: istio/charts/security/templates/serviceaccount.yaml
 # Source: istio/templates/serviceaccount.yaml
 # Source: istio/charts/kiali/templates/clusterrole.yaml
@@ -57,7 +59,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-0-rc-2
+    release: istio-1-1-0
 rules:
 - apiGroups: [""]
   resources:
@@ -219,7 +221,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-0-rc-2
+    release: istio-1-1-0
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -245,7 +247,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-0-rc-2
+    release: istio-1-1-0
 spec:
   ports:
   - name: http-kiali
@@ -267,7 +269,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-0-rc-2
+    release: istio-1-1-0
 spec:
   replicas: 1
   selector:
@@ -280,7 +282,7 @@ spec:
         app: kiali
         chart: kiali
         heritage: Tiller
-        release: istio-1-1-0-rc-2
+        release: istio-1-1-0
       annotations:
         sidecar.istio.io/inject: "false"
         scheduler.alpha.kubernetes.io/critical-pod: ""
@@ -365,13 +367,8 @@ spec:
 ---
 # Source: istio/charts/mixer/templates/deployment.yaml
 # Source: istio/charts/security/templates/deployment.yaml
-# Source: istio/charts/security/templates/enable-mesh-permissive.yaml
 # Source: istio/charts/mixer/templates/autoscale.yaml
 # Source: istio/charts/kiali/templates/demosecret.yaml
-
-
----
-# Source: istio/charts/kiali/templates/gateway.yaml
 
 
 ---
@@ -383,6 +380,7 @@ spec:
 
 ---
 # Source: istio/charts/security/templates/enable-mesh-mtls.yaml
+# Source: istio/charts/security/templates/enable-mesh-permissive.yaml
 # Source: istio/charts/security/templates/meshexpansion.yaml
 # Source: istio/charts/security/templates/tests/test-citadel-connection.yaml
 # Source: istio/templates/configmap.yaml

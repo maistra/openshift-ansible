@@ -19,6 +19,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: networking.istio.io
       names:
@@ -60,6 +62,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: networking.istio.io
       names:
@@ -97,6 +101,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: networking.istio.io
       names:
@@ -142,6 +148,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: networking.istio.io
       names:
@@ -166,6 +174,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: networking.istio.io
       names:
@@ -188,6 +198,8 @@ data:
         istio: rbac
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: rbac.istio.io
       names:
@@ -210,6 +222,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: authentication.istio.io
       names:
@@ -232,6 +246,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: authentication.istio.io
       names:
@@ -255,6 +271,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -277,6 +295,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -299,6 +319,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -321,6 +343,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -345,6 +369,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -369,6 +395,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -393,6 +421,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -417,6 +447,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -441,6 +473,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -465,6 +499,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -489,6 +525,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -513,6 +551,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -537,6 +577,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -561,6 +603,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -585,6 +629,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -609,6 +655,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -633,6 +681,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -657,6 +707,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -678,6 +730,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -702,6 +756,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -726,6 +782,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -750,6 +808,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -774,6 +834,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -798,6 +860,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -822,6 +886,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -846,6 +912,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -870,6 +938,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -894,6 +964,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -918,6 +990,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -962,6 +1036,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -986,6 +1062,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -1010,6 +1088,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -1034,6 +1114,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -1058,6 +1140,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -1082,6 +1166,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: rbac.istio.io
       names:
@@ -1106,6 +1192,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: rbac.istio.io
       names:
@@ -1130,6 +1218,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: rbac.istio.io
       names:
@@ -1166,6 +1256,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -1190,6 +1282,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -1214,6 +1308,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -1238,6 +1334,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -1272,6 +1370,8 @@ data:
         app: mixer
         package: cloudwatch
         istio: mixer-adapter
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -1293,6 +1393,8 @@ data:
         app: mixer
         package: dogstatsd
         istio: mixer-adapter
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:
@@ -1315,6 +1417,8 @@ data:
         chart: istio
         heritage: Tiller
         release: istio
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: networking.istio.io
       names:
@@ -1331,13 +1435,13 @@ data:
     apiVersion: apiextensions.k8s.io/v1beta1
     metadata:
       name: zipkins.config.istio.io
-      annotations:
-        "helm.sh/hook": crd-install
       labels:
         maistra-version: MAISTRA_VERSION
         app: mixer
         package: zipkin
         istio: mixer-adapter
+      annotations:
+        "helm.sh/resource-policy": keep
     spec:
       group: config.istio.io
       names:

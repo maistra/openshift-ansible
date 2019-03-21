@@ -194,7 +194,6 @@ istio-ingressgateway-7fd59bd49c-4vfwt         1/1       Running     0          1
 istio-pilot-5c988db7dd-2p746                  2/2       Running     0          1m
 istio-policy-576bd648fd-mtcln                 2/2       Running     0          1m
 istio-sidecar-injector-6695744d96-kqd9q       1/1       Running     0          1m
-istio-statsd-prom-bridge-7f44bb5ddb-vvtmm     1/1       Running     0          1m
 istio-telemetry-c777d7595-w6dps               2/2       Running     0          1m
 jaeger-agent-7s4vb                            1/1       Running     0          26s
 jaeger-collector-588589c867-6bhn4             1/1       Running     1          28s

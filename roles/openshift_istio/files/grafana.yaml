@@ -18,7 +18,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0
+    release: istio-1-1-1
     istio: grafana
 data:
   custom-resources.yaml: |-    
@@ -32,7 +32,7 @@ data:
         chart: grafana
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-0
+        release: istio-1-1-1
     spec:
       targets:
       - name: grafana
@@ -84,7 +84,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0
+    release: istio-1-1-1
     istio: grafana
 data:
   galley-dashboard.json: '{
@@ -1908,7 +1908,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0
+    release: istio-1-1-1
     istio: grafana
 data:
   istio-mesh-dashboard.json: '{
@@ -2876,7 +2876,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0
+    release: istio-1-1-1
     istio: grafana
 data:
   istio-performance-dashboard.json: '{
@@ -3508,7 +3508,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0
+    release: istio-1-1-1
     istio: grafana
 data:
   istio-service-dashboard.json: '{
@@ -6124,7 +6124,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0
+    release: istio-1-1-1
     istio: grafana
 data:
   istio-workload-dashboard.json: '{
@@ -8442,7 +8442,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0
+    release: istio-1-1-1
     istio: grafana
 data:
   mixer-dashboard.json: '{
@@ -10265,7 +10265,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0
+    release: istio-1-1-1
     istio: grafana
 data:
   pilot-dashboard.json: '{
@@ -11878,7 +11878,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0
+    release: istio-1-1-1
     istio: grafana
 data:
   datasources.yaml: |
@@ -11932,7 +11932,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0
+    release: istio-1-1-1
 spec:
   type: ClusterIP
   ports:
@@ -11957,7 +11957,7 @@ metadata:
     chart: grafana
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-0
+    release: istio-1-1-1
 spec:
   replicas: 1
   template:
@@ -11967,7 +11967,7 @@ spec:
         chart: grafana
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-0
+        release: istio-1-1-1
       annotations:
         sidecar.istio.io/inject: "false"
         scheduler.alpha.kubernetes.io/critical-pod: ""

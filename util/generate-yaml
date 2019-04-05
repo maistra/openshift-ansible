@@ -1,6 +1,6 @@
 DIR=$(cd $(dirname $0) ; pwd -P)
 
-ISTIO_VERSION=1.1.0
+ISTIO_VERSION=1.1.2
 #ISTIO_BRANCH=release-1.1
 
 RELEASES_DIR=${DIR}/../../istio-releases
@@ -188,8 +188,138 @@ function generateKialiTemplate() {
     shift
   done
 
-  helm template -n ${ISTIO_NAME} --namespace=istio-system ${VALUES} ${HELM_DIR}/istio \
-    | sed -e 's/^# Source:/# MAISTRA:/' \
+  (
+    echo 'apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: kiali-viewer
+  labels:
+    app: kiali
+rules:
+- apiGroups: [""]
+  resources:
+  - configmaps
+  - endpoints
+  - namespaces
+  - nodes
+  - pods
+  - services
+  - replicationcontrollers
+  - routes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups: ["extensions", "apps"]
+  resources:
+  - deployments
+  - statefulsets
+  - replicasets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups: ["autoscaling"]
+  resources:
+  - horizontalpodautoscalers
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups: ["batch"]
+  resources:
+  - cronjobs
+  - jobs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups: ["config.istio.io"]
+  resources:
+  - apikeys
+  - authorizations
+  - checknothings
+  - circonuses
+  - deniers
+  - fluentds
+  - handlers
+  - kubernetesenvs
+  - kuberneteses
+  - listcheckers
+  - listentries
+  - logentries
+  - memquotas
+  - metrics
+  - opas
+  - prometheuses
+  - quotas
+  - quotaspecbindings
+  - quotaspecs
+  - rbacs
+  - reportnothings
+  - rules
+  - servicecontrolreports
+  - servicecontrols
+  - solarwindses
+  - stackdrivers
+  - statsds
+  - stdios
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups: ["networking.istio.io"]
+  resources:
+  - destinationrules
+  - gateways
+  - serviceentries
+  - virtualservices
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups: ["authentication.istio.io"]
+  resources:
+  - policies
+  - meshpolicies
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups: ["rbac.istio.io"]
+  resources:
+  - clusterrbacconfigs
+  - rbacconfigs
+  - serviceroles
+  - servicerolebindings
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups: ["apps.openshift.io"]
+  resources:
+  - deploymentconfigs
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups: ["project.openshift.io"]
+  resources:
+  - projects
+  verbs:
+  - get
+- apiGroups: ["route.openshift.io"]
+  resources:
+  - routes
+  verbs:
+  - get
+- apiGroups: ["monitoring.kiali.io"]
+  resources:
+  - monitoringdashboards
+  verbs:
+  - get' ;
+    helm template -n ${ISTIO_NAME} --namespace=istio-system ${VALUES} ${HELM_DIR}/istio
+  ) | sed -e 's/^# Source:/# MAISTRA:/' \
     | sed -e 's/^# MAISTRA: \(istio\/charts\/kiali\)/# Source: \1/' \
     | sed -e '/^# MAISTRA:/,/^# Source:/ {
       /^# Source/ b
@@ -241,6 +371,11 @@ function transformKialiOpenShift() {
 \  - routes\
 \  verbs:\
 \  - get\
+\- apiGroups: [""]\
+\  resources:\
+\  - routes\
+\  verbs:\
+\  - get\
 \- apiGroups: ["apps.openshift.io"]\
 \  resources:\
 \  - deploymentconfigs\
@@ -269,7 +404,7 @@ function transformKialiOpenShift() {
     /metadata/ a\
 \  annotations:\
 \    service.alpha.openshift.io/serving-cert-secret-name: kiali-cert-secret
-  }' | sed -e '/PROMETHEUS_SERVICE_URL/,/volumeMounts/ {
+  }' | sed -e '/SERVER_CREDENTIALS_USERNAME/,/volumeMounts/ {
     /volumeMounts/b
     d
   }' | sed -e '/kind.*Deployment$/,/^# Source:/ {
@@ -278,14 +413,19 @@ function transformKialiOpenShift() {
       N
       a\
 \        - name: kiali-cert\
-\          mountPath: "/kiali-cert"
+\          mountPath: "/kiali-cert"\
+\        - name: kiali-secret\
+\          mountPath: "/kiali-secret"\
     }
     /configMap:/ {
       N
       a\
 \      - name: kiali-cert\
 \        secret:\
-\          secretName: kiali-cert-secret
+\          secretName: kiali-cert-secret\
+\      - name: kiali-secret\
+\        secret:\
+\          secretName: \{\{ .Values.dashboard.secretName \}\}\
     }
   }' | sed -e '/apiGroups:.*networking.istio.io/,/^-/ {
       /- watch/ a\

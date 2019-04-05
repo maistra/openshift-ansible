@@ -1,6 +1,6 @@
 DIR=$(cd $(dirname $0) ; pwd -P)
 
-ISTIO_VERSION=1.1.2
+ISTIO_VERSION=1.1.1
 #ISTIO_BRANCH=release-1.1
 
 RELEASES_DIR=${DIR}/../../istio-releases
@@ -37,6 +37,7 @@ function retrieveIstioRelease() {
         cd "${RELEASES_DIR}"
         curl -LO "${ISTIO_URL}"
         ${EXTRACT_CMD}
+        cp -rv "${DIR}/../istio/helm" "${RELEASE_DIR}/install/kubernetes"
         (
           cd "${RELEASE_DIR}/install/kubernetes/helm/istio"
           helm dep update
@@ -415,7 +416,7 @@ function transformKialiOpenShift() {
 \        - name: kiali-cert\
 \          mountPath: "/kiali-cert"\
 \        - name: kiali-secret\
-\          mountPath: "/kiali-secret"\
+\          mountPath: "/kiali-secret"
     }
     /configMap:/ {
       N
@@ -425,7 +426,7 @@ function transformKialiOpenShift() {
 \          secretName: kiali-cert-secret\
 \      - name: kiali-secret\
 \        secret:\
-\          secretName: \{\{ .Values.dashboard.secretName \}\}\
+\          secretName: \{\{ .Values.dashboard.secretName \}\}
     }
   }' | sed -e '/apiGroups:.*networking.istio.io/,/^-/ {
       /- watch/ a\

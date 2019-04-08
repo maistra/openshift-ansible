@@ -1,6 +1,6 @@
 DIR=$(cd $(dirname $0) ; pwd -P)
 
-ISTIO_VERSION=1.1.1
+ISTIO_VERSION=1.1.2
 #ISTIO_BRANCH=release-1.1
 
 RELEASES_DIR=${DIR}/../../istio-releases

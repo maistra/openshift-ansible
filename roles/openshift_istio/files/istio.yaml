@@ -11,7 +11,7 @@ metadata:
     chart: galley
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: galley
 spec:
 
@@ -20,7 +20,7 @@ spec:
     matchLabels:
       app: galley
       maistra-version: MAISTRA_VERSION
-      release: istio-1-1-1
+      release: istio-1-1-2
       istio: galley
 
 ---
@@ -35,7 +35,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     app: istio-egressgateway
     istio: egressgateway
 spec:
@@ -44,7 +44,7 @@ spec:
   selector:
     matchLabels:
       maistra-version: MAISTRA_VERSION
-      release: istio-1-1-1
+      release: istio-1-1-2
       app: istio-egressgateway
       istio: egressgateway
 ---
@@ -57,7 +57,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     app: istio-ingressgateway
     istio: ingressgateway
 spec:
@@ -66,7 +66,7 @@ spec:
   selector:
     matchLabels:
       maistra-version: MAISTRA_VERSION
-      release: istio-1-1-1
+      release: istio-1-1-2
       app: istio-ingressgateway
       istio: ingressgateway
 ---
@@ -84,7 +84,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     version: 1.1.0
     istio: mixer
     istio-mixer-type: policy
@@ -95,7 +95,7 @@ spec:
     matchLabels:
       app: policy
       maistra-version: MAISTRA_VERSION
-      release: istio-1-1-1
+      release: istio-1-1-2
       istio: mixer
       istio-mixer-type: policy
 ---
@@ -109,7 +109,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     version: 1.1.0
     istio: mixer
     istio-mixer-type: telemetry
@@ -120,7 +120,7 @@ spec:
     matchLabels:
       app: telemetry
       maistra-version: MAISTRA_VERSION
-      release: istio-1-1-1
+      release: istio-1-1-2
       istio: mixer
       istio-mixer-type: telemetry
 ---
@@ -138,7 +138,7 @@ metadata:
     chart: pilot
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: pilot
 spec:
 
@@ -147,7 +147,7 @@ spec:
     matchLabels:
       app: pilot
       maistra-version: MAISTRA_VERSION
-      release: istio-1-1-1
+      release: istio-1-1-2
       istio: pilot
 
 ---
@@ -162,7 +162,7 @@ metadata:
     chart: galley
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: galley
 data:
   validatingwebhookconfiguration.yaml: |-    
@@ -176,7 +176,7 @@ data:
         chart: galley
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-1
+        release: istio-1-1-2
         istio: galley
     webhooks:
       - name: pilot.validation.istio.io
@@ -289,7 +289,7 @@ metadata:
     chart: prometheus
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 data:
   prometheus.yml: |-
     global:
@@ -605,7 +605,7 @@ metadata:
     chart: security	
     heritage: Tiller	
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1	
+    release: istio-1-1-2	
     istio: citadel	
 data:	
   custom-resources.yaml: |-    
@@ -619,7 +619,7 @@ data:
         chart: security
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-1
+        release: istio-1-1-2
     spec:
       peers:
       - mtls:
@@ -670,7 +670,7 @@ metadata:
     chart: istio-1.1.0
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 data:
   mesh: |-
     # Set the following variable to true to disable policy checks by the Mixer.
@@ -808,7 +808,7 @@ metadata:
     chart: istio-1.1.0
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: sidecar-injector
 data:
   config: |-
@@ -818,7 +818,7 @@ data:
       initContainers:
       [[ if ne (annotation .ObjectMeta `sidecar.istio.io/interceptionMode` .ProxyConfig.InterceptionMode) "NONE" ]]
       - name: istio-init
-        image: "docker.io/istio/proxy_init:1.1.1"
+        image: "docker.io/istio/proxy_init:1.1.2"
         args:
         - "-p"
         - [[ .MeshConfig.ProxyListenPort ]]
@@ -855,7 +855,7 @@ data:
       [[ end -]]
       containers:
       - name: istio-proxy
-        image: [[ annotation .ObjectMeta `sidecar.istio.io/proxyImage`  "docker.io/istio/proxyv2:1.1.1"  ]]
+        image: [[ annotation .ObjectMeta `sidecar.istio.io/proxyImage`  "docker.io/istio/proxyv2:1.1.2"  ]]
         ports:
         - containerPort: 15090
           protocol: TCP
@@ -1027,7 +1027,7 @@ metadata:
     chart: galley
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 
 ---
 # Source: istio/charts/gateways/templates/ior-serviceaccount.yaml
@@ -1042,7 +1042,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 
 ---
 # Source: istio/charts/gateways/templates/serviceaccount.yaml
@@ -1057,7 +1057,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -1069,7 +1069,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 ---
 
 
@@ -1086,7 +1086,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 
 ---
 # Source: istio/charts/pilot/templates/serviceaccount.yaml
@@ -1100,7 +1100,7 @@ metadata:
     chart: pilot
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 
 ---
 # Source: istio/charts/prometheus/templates/serviceaccount.yaml
@@ -1114,7 +1114,7 @@ metadata:
     chart: prometheus
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 
 ---
 # Source: istio/charts/security/templates/cleanup-secrets.yaml
@@ -1130,7 +1130,7 @@ metadata:
     chart: security
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 
 ---
 # Source: istio/charts/sidecarInjectorWebhook/templates/serviceaccount.yaml
@@ -1144,7 +1144,7 @@ metadata:
     chart: sidecarInjectorWebhook
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: sidecar-injector
 
 ---
@@ -1159,7 +1159,7 @@ metadata:
     chart: galley
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 rules:
 - apiGroups: ["admissionregistration.k8s.io"]
   resources: ["validatingwebhookconfigurations"]
@@ -1203,7 +1203,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 rules:
 - apiGroups: ["networking.istio.io"]
   resources: ["virtualservices", "destinationrules", "gateways"]
@@ -1218,7 +1218,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 rules:
 - apiGroups: ["networking.istio.io"]
   resources: ["virtualservices", "destinationrules", "gateways"]
@@ -1237,7 +1237,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 rules:
 - apiGroups: ["config.istio.io"] # istio CRD watcher
   resources: ["*"]
@@ -1263,7 +1263,7 @@ metadata:
     chart: pilot
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 rules:
 - apiGroups: ["config.istio.io"]
   resources: ["*"]
@@ -1301,7 +1301,7 @@ metadata:
     chart: prometheus
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 rules:
 - apiGroups: [""]
   resources:
@@ -1329,7 +1329,7 @@ metadata:
     chart: security
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 rules:
 - apiGroups: [""]
   resources: ["configmaps"]
@@ -1355,7 +1355,7 @@ metadata:
     chart: sidecarInjectorWebhook
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: sidecar-injector
 rules:
 - apiGroups: [""]
@@ -1377,7 +1377,7 @@ metadata:
     chart: galley
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1399,7 +1399,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1418,7 +1418,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1441,7 +1441,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1462,7 +1462,7 @@ metadata:
     chart: pilot
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1483,7 +1483,7 @@ metadata:
     chart: prometheus
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1504,7 +1504,7 @@ metadata:
     chart: security
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -1525,7 +1525,7 @@ metadata:
     chart: sidecarInjectorWebhook
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: sidecar-injector
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -1550,7 +1550,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 rules:
 - apiGroups: ["route.openshift.io"]
   resources: ["routes", "routes/custom-host"]
@@ -1583,7 +1583,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 roleRef:
   kind: Role
   namespace: istio-system
@@ -1621,7 +1621,7 @@ metadata:
     chart: galley
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: galley
 spec:
   ports:
@@ -1648,14 +1648,14 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     app: istio-egressgateway
     istio: egressgateway
 spec:
   type: ClusterIP
   selector:
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     app: istio-egressgateway
     istio: egressgateway
   ports:
@@ -1680,14 +1680,14 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     app: istio-ingressgateway
     istio: ingressgateway
 spec:
   type: LoadBalancer
   selector:
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     app: istio-ingressgateway
     istio: ingressgateway
   ports:
@@ -1745,7 +1745,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: mixer
 spec:
   ports:
@@ -1771,7 +1771,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: mixer
 spec:
   ports:
@@ -1801,7 +1801,7 @@ metadata:
     chart: pilot
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: pilot
 spec:
   ports:
@@ -1830,7 +1830,7 @@ metadata:
     chart: prometheus
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   selector:
     app: prometheus
@@ -1853,7 +1853,7 @@ metadata:
     chart: security
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: citadel
 spec:
   ports:
@@ -1878,7 +1878,7 @@ metadata:
     chart: sidecarInjectorWebhook
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: sidecar-injector
 spec:
   ports:
@@ -1899,7 +1899,7 @@ metadata:
     chart: galley
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: galley
 spec:
   replicas: 1
@@ -1914,7 +1914,7 @@ spec:
         chart: galley
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-1      
+        release: istio-1-1-2      
         istio: galley
       annotations:
         sidecar.istio.io/inject: "false"
@@ -1923,7 +1923,7 @@ spec:
       serviceAccountName: istio-galley-service-account
       containers:
         - name: galley
-          image: "docker.io/istio/galley:1.1.1"
+          image: "docker.io/istio/galley:1.1.2"
           imagePullPolicy: IfNotPresent
           ports:
           - name: webhook
@@ -2031,7 +2031,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     app: istio-egressgateway
     istio: egressgateway
 spec:
@@ -2041,7 +2041,7 @@ spec:
         chart: gateways
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-1
+        release: istio-1-1-2
         app: istio-egressgateway
         istio: egressgateway
       annotations:
@@ -2051,7 +2051,7 @@ spec:
       serviceAccountName: istio-egressgateway-service-account
       containers:
         - name: istio-proxy
-          image: "docker.io/istio/proxyv2:1.1.1"
+          image: "docker.io/istio/proxyv2:1.1.2"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -2192,7 +2192,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     app: istio-ingressgateway
     istio: ingressgateway
 spec:
@@ -2202,7 +2202,7 @@ spec:
         chart: gateways
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-1
+        release: istio-1-1-2
         app: istio-ingressgateway
         istio: ingressgateway
       annotations:
@@ -2212,7 +2212,7 @@ spec:
       serviceAccountName: istio-ingressgateway-service-account
       containers:
         - name: istio-proxy
-          image: "docker.io/istio/proxyv2:1.1.1"
+          image: "docker.io/istio/proxyv2:1.1.2"
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -2364,7 +2364,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   replicas: 1
   selector:
@@ -2377,12 +2377,12 @@ spec:
         chart: gateways
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-1
+        release: istio-1-1-2
     spec:
       serviceAccountName: ior
       containers:
       - name: ior
-        image: "docker.io/istio/ior:1.1.1"
+        image: "docker.io/istio/ior:1.1.2"
         imagePullPolicy: IfNotPresent
         args:
         - --mcp-address=istio-galley.istio-system:9901
@@ -2437,7 +2437,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: mixer
 spec:
   replicas: 1
@@ -2456,7 +2456,7 @@ spec:
         chart: mixer
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-1
+        release: istio-1-1-2
         istio: mixer
         istio-mixer-type: policy
       annotations:
@@ -2510,7 +2510,7 @@ spec:
                 - s390x
       containers:
       - name: mixer
-        image: "docker.io/istio/mixer:1.1.1"
+        image: "docker.io/istio/mixer:1.1.2"
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 15014
@@ -2543,7 +2543,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
       - name: istio-proxy
-        image: "docker.io/istio/proxyv2:1.1.1"
+        image: "docker.io/istio/proxyv2:1.1.2"
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9091
@@ -2606,7 +2606,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: mixer
 spec:
   replicas: 1
@@ -2625,7 +2625,7 @@ spec:
         chart: mixer
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-1
+        release: istio-1-1-2
         istio: mixer
         istio-mixer-type: telemetry
       annotations:
@@ -2679,7 +2679,7 @@ spec:
                 - s390x
       containers:
       - name: mixer
-        image: "docker.io/istio/mixer:1.1.1"
+        image: "docker.io/istio/mixer:1.1.2"
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 15014
@@ -2723,7 +2723,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
       - name: istio-proxy
-        image: "docker.io/istio/proxyv2:1.1.1"
+        image: "docker.io/istio/proxyv2:1.1.2"
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 9091
@@ -2787,7 +2787,7 @@ metadata:
     chart: pilot
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: pilot
   annotations:
     checksum/config-volume: f8da08b6b8c170dde721efd680270b2901e750d4aa186ebb6c22bef5b78a43f9
@@ -2806,7 +2806,7 @@ spec:
         chart: pilot
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-1
+        release: istio-1-1-2
         istio: pilot
       annotations:
         sidecar.istio.io/inject: "false"
@@ -2815,7 +2815,7 @@ spec:
       serviceAccountName: istio-pilot-service-account
       containers:
         - name: discovery
-          image: "docker.io/istio/pilot:1.1.1"
+          image: "docker.io/istio/pilot:1.1.2"
           imagePullPolicy: IfNotPresent
           args:
           - "discovery"
@@ -2865,7 +2865,7 @@ spec:
             mountPath: /etc/certs
             readOnly: true
         - name: istio-proxy
-          image: "docker.io/istio/proxyv2:1.1.1"
+          image: "docker.io/istio/proxyv2:1.1.2"
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 15003
@@ -2965,7 +2965,7 @@ metadata:
     chart: prometheus
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   replicas: 1
   selector:
@@ -2978,7 +2978,7 @@ spec:
         chart: prometheus
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-1
+        release: istio-1-1-2
       annotations:
         sidecar.istio.io/inject: "false"
         scheduler.alpha.kubernetes.io/critical-pod: ""
@@ -3075,7 +3075,7 @@ metadata:
     chart: security
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: citadel
 spec:
   replicas: 1
@@ -3090,7 +3090,7 @@ spec:
         chart: security
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-1
+        release: istio-1-1-2
         istio: citadel
       annotations:
         sidecar.istio.io/inject: "false"
@@ -3099,7 +3099,7 @@ spec:
       serviceAccountName: istio-citadel-service-account
       containers:
         - name: citadel
-          image: "docker.io/istio/citadel:1.1.1"
+          image: "docker.io/istio/citadel:1.1.2"
           imagePullPolicy: IfNotPresent
           args:
             - --append-dns-names=true
@@ -3159,7 +3159,7 @@ metadata:
     chart: sidecarInjectorWebhook
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     istio: sidecar-injector
 spec:
   replicas: 1
@@ -3174,7 +3174,7 @@ spec:
         chart: sidecarInjectorWebhook
         heritage: Tiller
         maistra-version: MAISTRA_VERSION
-        release: istio-1-1-1
+        release: istio-1-1-2
         istio: sidecar-injector
       annotations:
         sidecar.istio.io/inject: "false"
@@ -3183,7 +3183,7 @@ spec:
       serviceAccountName: istio-sidecar-injector-service-account
       containers:
         - name: sidecar-injector-webhook
-          image: "docker.io/istio/sidecar_injector:1.1.1"
+          image: "docker.io/istio/sidecar_injector:1.1.2"
           imagePullPolicy: IfNotPresent
           args:
             - --caCertFile=/etc/istio/certs/root-cert.pem
@@ -3288,7 +3288,7 @@ metadata:
     chart: sidecarInjectorWebhook
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 webhooks:
   - name: sidecar-injector.istio.io
     clientConfig:
@@ -3320,7 +3320,7 @@ metadata:
     chart: gateways
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
     app: istio-ingressgateway
     istio: ingressgateway
 spec:
@@ -3403,7 +3403,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   attributes:
     origin.ip:
@@ -3545,7 +3545,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   attributes:
     source.ip:
@@ -3612,7 +3612,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   value: "1"
   dimensions:
@@ -3648,7 +3648,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   value: response.duration | "0ms"
   dimensions:
@@ -3684,7 +3684,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   value: request.size | 0
   dimensions:
@@ -3720,7 +3720,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   value: response.size | 0
   dimensions:
@@ -3756,7 +3756,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   value: connection.sent.bytes | 0
   dimensions:
@@ -3788,7 +3788,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   value: connection.received.bytes | 0
   dimensions:
@@ -3872,7 +3872,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   compiledAdapter: prometheus
   params:
@@ -4079,7 +4079,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   match: (context.protocol == "http" || context.protocol == "grpc") && (match((request.useragent | "-"), "kube-probe*") == false)
   actions:
@@ -4100,7 +4100,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   match: context.protocol == "tcp"
   actions:
@@ -4143,7 +4143,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   compiledAdapter: kubernetesenv
   params:
@@ -4165,7 +4165,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   actions:
   - handler: kubernetesenv
@@ -4182,7 +4182,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   match: context.protocol == "tcp"
   actions:
@@ -4200,7 +4200,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   # Pass the required attribute data to the adapter
   source_uid: source.uid | ""
@@ -4245,7 +4245,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   host: istio-policy.istio-system.svc.cluster.local
   trafficPolicy:
@@ -4264,7 +4264,7 @@ metadata:
     chart: mixer
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   host: istio-telemetry.istio-system.svc.cluster.local
   trafficPolicy:

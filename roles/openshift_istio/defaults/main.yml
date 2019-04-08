@@ -1,5 +1,5 @@
 ---
-default_istio_image_tag: "1.1.0"
+default_istio_image_tag: "1.1.2"
 default_istio_namespace: "istio-system"
 default_istio_maistra_image_tag: "0.10.0"
 default_istio_maistra_image_prefix: "maistra/"

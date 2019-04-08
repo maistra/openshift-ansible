@@ -194,7 +194,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-1
+    release: istio-1-1-2
 data:
   config.yaml: |
     istio_namespace: istio-system
@@ -226,7 +226,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-1
+    release: istio-1-1-2
 
 ---
 # Source: istio/charts/mixer/templates/serviceaccount.yaml
@@ -243,7 +243,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-1
+    release: istio-1-1-2
 rules:
 - apiGroups: [""]
   resources:
@@ -410,7 +410,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-1
+    release: istio-1-1-2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -436,7 +436,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   ports:
   - name: http-kiali
@@ -458,7 +458,7 @@ metadata:
     app: kiali
     chart: kiali
     heritage: Tiller
-    release: istio-1-1-1
+    release: istio-1-1-2
 spec:
   replicas: 1
   selector:
@@ -471,7 +471,7 @@ spec:
         app: kiali
         chart: kiali
         heritage: Tiller
-        release: istio-1-1-1
+        release: istio-1-1-2
       annotations:
         sidecar.istio.io/inject: "false"
         scheduler.alpha.kubernetes.io/critical-pod: ""

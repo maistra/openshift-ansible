@@ -426,7 +426,7 @@ function transformKialiOpenShift() {
 \          secretName: kiali-cert-secret\
 \      - name: kiali-secret\
 \        secret:\
-\          secretName: \{\{ .Values.dashboard.secretName \}\}
+\          secretName: "kiali"
     }
   }' | sed -e '/apiGroups:.*networking.istio.io/,/^-/ {
       /- watch/ a\

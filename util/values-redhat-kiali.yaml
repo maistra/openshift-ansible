@@ -28,4 +28,4 @@ tracing:
 kiali:
   enabled: true
   hub: kiali
-  tag: v0.15.0
+  tag: v0.16.2

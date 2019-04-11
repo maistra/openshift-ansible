@@ -17,9 +17,9 @@ default_istio_kiali_image_tag: "v0.16.2"
 default_istio_kiali_productised_image_prefix: "{{ default_istio_productised_image_prefix }}"
 default_istio_kiali_productised_image_tag: "0.16.2"
 default_istio_threescale_image_prefix: "quay.io/3scale/"
-default_istio_threescale_image_tag: "v0.4.1"
+default_istio_threescale_image_tag: "v0.5.0"
 default_istio_threescale_productised_image_prefix: "{{ default_istio_productised_image_prefix }}"
-default_istio_threescale_productised_image_tag: "0.4.1"
+default_istio_threescale_productised_image_tag: "0.5.0"
 
 default_istio_elasticsearch_memory: "1Gi"
 

@@ -60,6 +60,9 @@ function retrieveIstioRelease() {
 # - switch prometheus init container image from busybox to prometheus
 # - switch webhook ports to 8443
 # - switch health check files into /tmp
+# - Update sidecar injector cluster role for setting owner reference
+# - Update sidecar injector deployment to add additional arguments and volumes
+# - Update sidecar injector mutatingwebhook into a configmap
 function generateIstioTemplate() {
   VALUES=""
   while [ $# -gt 0 ] ; do
@@ -118,6 +121,68 @@ function generateIstioTemplate() {
 \1- name: webhook\
 \1  containerPort: 8443\
 \1\2/
+  }' | sed -e '/^# Source:.*istio\/charts\/sidecarInjectorWebhook\/templates\/clusterrole.yaml/,/^# Source:/ {
+     s/verbs.*patch.*$/verbs: ["*"]/
+     /^$/ i\
+\- apiGroups: ["extensions","apps"]\
+\  resources: ["deployments"]\
+\  resourceNames: ["istio-sidecar-injector"]\
+\  verbs: ["get"]\
+\- apiGroups: ["extensions"]\
+\  resources: ["deployments/finalizers"]\
+\  resourceNames: ["istio-sidecar-injector"]\
+\  verbs: ["update"]\
+\- apiGroups: [""]\
+\  resources: ["secrets"]\
+\  verbs: ["get", "list", "watch", "create"]
+  }' | sed -e '/^# Source:.*istio\/charts\/sidecarInjectorWebhook\/templates\/deployment.yaml/,/^# Source:/ {
+    s/^\(.*\)\(- --healthCheckInterval.*$\)/\1\2\
+\1- --mutating-webhook-config-file\
+\1- \/etc\/istio\/webhook\/mutatingwebhookconfiguration.yaml\
+\1- --namespace=istio-system/
+    /volumeMounts:/,/livenessProbe:/ {
+      s/^\(.*\)\(- name: certs.*$\)/\1- name: webhook\
+\1  mountPath: \/etc\/istio\/webhook\
+\1  readOnly: true\
+\1\2/
+    }
+    /volumes:/,/affinity:/ {
+      s/^\(.*\)\(- name: certs.*$\)/\1- name: webhook\
+\1  configMap:\
+\1    name: istio-sidecar-webhook-configuration\
+\1\2/
+    }
+  }' | sed -e '/^# Source:.*istio\/charts\/sidecarInjectorWebhook\/templates\/mutatingwebhook.yaml/,/^# Source:/ {
+     s/mutatingwebhook.yaml/configmap.yaml/
+     s/apiVersion: .*$/apiVersion: v1/
+     s/kind: .*$/kind: ConfigMap/
+     s/name: istio-sidecar-injector/name: istio-sidecar-webhook-configuration/
+     /app:/,/release:/ H
+     /release:/ {
+      a\
+\    istio: sidecar-injector\
+\data:\
+\  mutatingwebhookconfiguration.yaml: |-\
+\    apiVersion: admissionregistration.k8s.io/v1beta1\
+\    kind: MutatingWebhookConfiguration\
+\    metadata:\
+\      name: istio-sidecar-injector\
+\      namespace: istio-system\
+\      labels:
+     }
+     /webhooks:/ {
+       x
+       s/\n/    /
+       s/\n/\
+\    /g
+       p
+       x
+       s/^/    /
+     }
+    /name: sidecar-injector.istio.io/,/^$/ {
+      s/\(.\)/    \1/
+      s/istio-sidecar-webhook-configuration/istio-sidecar-injector/
+    }
   }'
 }
 

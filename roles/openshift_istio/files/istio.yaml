@@ -1363,7 +1363,18 @@ rules:
   verbs: ["get", "list", "watch"]
 - apiGroups: ["admissionregistration.k8s.io"]
   resources: ["mutatingwebhookconfigurations"]
-  verbs: ["get", "list", "watch", "patch"]
+  verbs: ["*"]
+- apiGroups: ["extensions","apps"]
+  resources: ["deployments"]
+  resourceNames: ["istio-sidecar-injector"]
+  verbs: ["get"]
+- apiGroups: ["extensions"]
+  resources: ["deployments/finalizers"]
+  resourceNames: ["istio-sidecar-injector"]
+  verbs: ["update"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list", "watch", "create"]
 
 ---
 # Source: istio/templates/clusterrole.yaml
@@ -3192,6 +3203,9 @@ spec:
             - --injectConfig=/etc/istio/inject/config
             - --meshConfig=/etc/istio/config/mesh
             - --healthCheckInterval=2s
+            - --mutating-webhook-config-file
+            - /etc/istio/webhook/mutatingwebhookconfiguration.yaml
+            - --namespace=istio-system
             - --healthCheckFile=HEALTH_CHECK_DIR/health
             - --port=8443
           ports:
@@ -3200,6 +3214,9 @@ spec:
           volumeMounts:
           - name: config-volume
             mountPath: /etc/istio/config
+            readOnly: true
+          - name: webhook
+            mountPath: /etc/istio/webhook
             readOnly: true
           - name: certs
             mountPath: /etc/istio/certs
@@ -3233,6 +3250,9 @@ spec:
       - name: config-volume
         configMap:
           name: istio
+      - name: webhook
+        configMap:
+          name: istio-sidecar-webhook-configuration
       - name: certs
         secret:
           secretName: istio.istio-sidecar-injector-service-account
@@ -3277,11 +3297,11 @@ spec:
                 - s390x
 
 ---
-# Source: istio/charts/sidecarInjectorWebhook/templates/mutatingwebhook.yaml
-apiVersion: admissionregistration.k8s.io/v1beta1
-kind: MutatingWebhookConfiguration
+# Source: istio/charts/sidecarInjectorWebhook/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: istio-sidecar-injector
+  name: istio-sidecar-webhook-configuration
   namespace: istio-system
   labels:
     app: sidecarInjectorWebhook
@@ -3289,23 +3309,37 @@ metadata:
     heritage: Tiller
     maistra-version: MAISTRA_VERSION
     release: istio-1-1-2
-webhooks:
-  - name: sidecar-injector.istio.io
-    clientConfig:
-      service:
-        name: istio-sidecar-injector
-        namespace: istio-system
-        path: "/inject"
-      caBundle: ""
-    rules:
-      - operations: [ "CREATE" ]
-        apiGroups: [""]
-        apiVersions: ["v1"]
-        resources: ["pods"]
-    failurePolicy: Fail
-    namespaceSelector:
-      matchExpressions:
-        - {key: istio.openshift.com/ignore-namespace, operator: DoesNotExist}
+    istio: sidecar-injector
+data:
+  mutatingwebhookconfiguration.yaml: |-
+    apiVersion: admissionregistration.k8s.io/v1beta1
+    kind: MutatingWebhookConfiguration
+    metadata:
+      name: istio-sidecar-injector
+      namespace: istio-system
+      labels:
+        app: sidecarInjectorWebhook
+        chart: sidecarInjectorWebhook
+        heritage: Tiller
+        maistra-version: MAISTRA_VERSION
+        release: istio-1-1-2
+    webhooks:
+      - name: sidecar-injector.istio.io
+        clientConfig:
+          service:
+            name: istio-sidecar-injector
+            namespace: istio-system
+            path: "/inject"
+          caBundle: ""
+        rules:
+          - operations: [ "CREATE" ]
+            apiGroups: [""]
+            apiVersions: ["v1"]
+            resources: ["pods"]
+        failurePolicy: Fail
+        namespaceSelector:
+          matchExpressions:
+            - {key: istio.openshift.com/ignore-namespace, operator: DoesNotExist}
 
 
 ---

@@ -1,3 +1,11 @@
+# Deprecating Ansible based installation
+
+**Please note** the ansible based installation is now deprecated and is being replaced by a helm template based solution.  The updated operator currently supports both approaches however the ansible based installer will be removed within the next sprint or two.
+
+Please migrate your current deployments over to the new Custom Resource and helm based installation approach.
+
+For more information refer to the instructions within the [maistra documentation](https://maistra.io/docs/getting_started/install/) and [istio-operator](https://github.com/Maistra/istio-operator) repository.
+
 # Installing Istio into an existing OCP 3.11 Installation
 
 This document describes the steps for installing the Istio Tech Preview release into an existing installation of OCP 3.11 which was installed using the OpenShift ansible installer.  If you wish to use `oc cluster up` then please check https://github.com/Maistra/origin/releases for a version of `oc` which incorporates the Istio operator.
